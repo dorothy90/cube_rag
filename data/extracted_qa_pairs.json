@@ -1,0 +1,135 @@
+[
+  {
+    "question":"보안상 주의할 점이 있나요?",
+    "answer":"보안 헤더 설정 방법을 알려주세요.",
+    "question_author":"대기업개발자",
+    "answer_author":"백엔드신입",
+    "timestamp":"2024-01-17 17:00:00"
+  },
+  {
+    "question":"저도 궁금했던 내용이에요.",
+    "answer":"추가 정보를 드리면요.",
+    "question_author":"김개발",
+    "answer_author":"클라우드아키텍트",
+    "timestamp":"2024-01-17 17:28:00"
+  },
+  {
+    "question":"예제 코드를 보여주실 수 있나요?",
+    "answer":"성능 최적화 방법이 궁금해요.",
+    "question_author":"성능튜닝",
+    "answer_author":"배포전문가",
+    "timestamp":"2024-01-18 14:20:00"
+  },
+  {
+    "question":"보안상 주의할 점이 있나요?",
+    "answer":"패스워드 해싱은 어떻게 해야 하나요?",
+    "question_author":"보안개발자",
+    "answer_author":"데이터베이스관리자",
+    "timestamp":"2024-01-19 05:00:00"
+  },
+  {
+    "question":"JavaScript에서 var, let, const의 차이점을 알려주세요.",
+    "answer":"변수와 함수 선언이 스코프의 최상단으로 끌어올려지는 현상이에요.",
+    "question_author":"배포전문가",
+    "answer_author":"정프론트",
+    "timestamp":"2024-01-19 19:00:00"
+  },
+  {
+    "question":"성능 최적화 방법이 궁금해요.",
+    "answer":"대안으로 이런 방법도 있습니다.",
+    "question_author":"SQL최적화",
+    "answer_author":"클라우드아키텍트",
+    "timestamp":"[2024-01-20 02:20:00]"
+  },
+  {
+    "question":"bcrypt, scrypt, Argon2 같은 안전한 해싱 알고리즘을 사용하세요.",
+    "answer":"대안으로 이런 방법도 있습니다.",
+    "question_author":"배포전문가",
+    "answer_author":"SQL최적화",
+    "timestamp":"[2024-01-20 02:26:00]"
+  },
+  {
+    "question":"파이썬에서 리스트와 튜플의 차이점은 뭔가요?",
+    "answer":"numpy는 수치 계산에 특화되어 있고, pandas는 데이터 분석과 조작에 특화되어 있어요.",
+    "question_author":"백엔드신입",
+    "answer_author":"SQL최적화",
+    "timestamp":"[2024-01-20 03:15:00]"
+  },
+  {
+    "question":"간단한 예제로 설명해주실 수 있나요?",
+    "answer":"예제 코드를 보여주실 수 있나요?",
+    "question_author":"백엔드신입",
+    "answer_author":"멘토",
+    "timestamp":"[2024-01-20 03:36:00]"
+  },
+  {
+    "question":"HTTPS 설정 시 주의사항이 뭔가요?",
+    "answer":"Docker Compose로 여러 서비스를 어떻게 관리하나요?",
+    "question_author":"클라우드아키텍트",
+    "answer_author":"클라우드아키텍트",
+    "timestamp":"[2024-01-20 18:00:00]"
+  },
+  {
+    "question":"React에서 성능 최적화는 어떻게 하나요?",
+    "answer":"React.memo, useMemo, useCallback을 사용하거나 컴포넌트 분할을 통해 최적화할 수 있어요.",
+    "question_author":"기술블로거",
+    "answer_author":"데브옵스",
+    "timestamp":"[2024-01-20 16:26:00]"
+  },
+  {
+    "question":"React에서 상태 관리를 할 때 useState와 useReducer 중에 어떤 걸 선택해야 할까요?",
+    "answer":"useState는 간단한 상태에 적합하고, useReducer는 복잡한 상태 로직에 적합해요.",
+    "question_author":"배포전문가",
+    "answer_author":"빅데이터엔지니어",
+    "timestamp":"[2024-01-20 21:00:00]"
+  },
+  {
+    "question":"컨테이너 오케스트레이션이 뭔가요?",
+    "answer":"컨테이너 배포, 관리, 스케일링을 자동화하는 기술이에요. Kubernetes가 대표적이에요.",
+    "question_author":"시니어개발자",
+    "answer_author":"김개발",
+    "timestamp":"[2024-01-20 15:24:00]"
+  },
+  {
+    "question":"정규화와 비정규화의 차이점을 알려주세요.",
+    "answer":"정규화는 중복을 줄이고 무결성을 보장하지만, 비정규화는 성능을 위해 중복을 허용해요.",
+    "question_author":"컨퍼런스스피커",
+    "answer_author":"도커마스터",
+    "timestamp":"[2024-01-20 19:00:00]"
+  },
+  {
+    "question":"인프라를 코드로 관리하는 IaC가 뭔가요?",
+    "answer":"Docker Compose로 여러 서비스를 어떻게 관리하나요?",
+    "question_author":"스터디리더",
+    "answer_author":"서버개발자",
+    "timestamp":"[2024-01-22 07:00:00]"
+  },
+  {
+    "question":"에러가 발생했는데 도움을 주실 수 있나요?",
+    "answer":"코드로 직접 보여주시면 이해하기 쉬울 것 같아요.",
+    "question_author":"김개발",
+    "answer_author":"대기업개발자",
+    "timestamp":"[2024-01-23 00:40:00]"
+  },
+  {
+    "question":"에러가 발생했는데 도움을 주실 수 있나요?",
+    "answer":"코드로 직접 보여주시면 이해하기 쉬울 것 같아요.",
+    "question_author":"김개발",
+    "answer_author":"데브옵스",
+    "timestamp":"[2024-01-23 06:27:00]"
+  },
+  {
+    "question":"에러가 발생했는데 도움을 주실 수 있나요?",
+    "answer":"코드로 직접 보여주세요!",
+    "question_author":"코딩부트캠프강사",
+    "answer_author":"데이터분석가",
+    "timestamp":"[2024-01-23 16:25:00]"
+  },
+  {
+    "question":"에러가 발생했는데 도움을 주실 수 있나요?",
+    "answer":"코드 예제를 보여주세요!",
+    "question_author":"로드분석가",
+    "answer_author":"코드리뷰어",
+    "timestamp":"[2024-01-23 16:32:00]"
+  }
+]

@@ -1,0 +1,80 @@
+# 한국어 개발자 채팅 데이터 기반 RAG Agent 시스템 PRD
+
+## 프로젝트 개요
+한국어 개발자 커뮤니티 채팅 데이터를 활용한 지능적인 질문-답변 시스템을 구축합니다. 기본 RAG 시스템에서 시작하여 핵심 AI Agent들을 단계적으로 도입하여 사용자 질문에 대한 정확하고 맥락에 맞는 답변을 제공합니다.
+
+## 프로젝트 목표
+- 2주 내에 동작하는 RAG Agent 시스템 완성
+- 한국어 개발자 질문에 대한 정확한 답변 제공
+- 질문 유형별 맞춤형 검색 및 답변 생성
+- 답변 품질 자동 검증 및 개선
+
+## 기술 스택
+- **Core**: LangChain, LangGraph
+- **LLM**: OpenAI GPT-4o-mini
+- **Embedding**: OpenAI text-embedding-3-large
+- **Vector DB**: Chroma
+- **Web Framework**: FastAPI
+- **Data Processing**: Pandas
+
+## 데이터 소스
+- CSV 형태의 한국어 개발자 채팅 데이터 (korean_dev_chat_sample.csv)
+- 질문-답변 쌍으로 구성된 기술 관련 대화
+- Python, JavaScript, React, Docker, Kubernetes 등 다양한 기술 스택 포함
+
+## Phase 1: 기본 RAG 시스템 (Week 1)
+### 목표
+동작하는 기본 RAG 웹 서비스 구축
+
+### 주요 기능
+1. CSV 데이터 전처리 및 벡터화
+2. 유사도 기반 문서 검색
+3. LLM을 통한 답변 생성
+4. 웹 인터페이스를 통한 질문-답변
+
+### 성공 기준
+- CSV 데이터로부터 의미있는 답변 생성
+- 웹 인터페이스에서 한국어 질문 처리 가능
+- 기본적인 기술 질문에 대한 적절한 답변 제공
+
+## Phase 2: 핵심 Agent 도입 (Week 2)
+### 목표
+지능적인 질문 분석 및 검색 전략 구현
+
+### 주요 Agent
+1. **Query Analyzer Agent**: 질문 의도 및 기술 스택 분석
+2. **Search Coordinator Agent**: 질문 유형별 검색 전략 선택
+3. **Quality Validator Agent**: 답변 품질 검증 및 재시도
+
+### 성공 기준
+- 질문 유형별 맞춤형 검색 전략 적용
+- 답변 품질 자동 검증 및 개선
+- 품질 미달 시 자동 재시도 메커니즘
+
+## 시스템 아키텍처
+### Phase 1 아키텍처
+CSV → 전처리 → 청킹 → 임베딩 → 벡터스토어 → 검색 → LLM → 답변
+
+### Phase 2 아키텍처
+질문 → Query Analyzer → Search Coordinator → 검색 → 답변생성 → Quality Validator → 최종답변
+
+## 성능 요구사항
+- 응답 시간: 평균 3초 이내
+- 정확도: 기술 질문에 대해 80% 이상 적절한 답변
+- 가용성: 99% 이상 서비스 가용성
+
+## 확장성 고려사항
+- 향후 Memory Agent, Self-Improvement Agent 추가 가능
+- 다중 사용자 지원을 위한 세션 관리
+- 실시간 피드백 수집 및 학습 시스템
+
+## 제약사항
+- 개발 기간: 2주
+- 예산: OpenAI API 사용료
+- 데이터: 기존 CSV 데이터만 사용
+- 인프라: 로컬 개발 환경 우선
+
+## 위험 요소 및 대응 방안
+- OpenAI API 제한: 요청량 모니터링 및 캐싱
+- 한국어 처리 품질: 적절한 프롬프트 엔지니어링
+- 개발 일정 지연: Phase별 우선순위 조정

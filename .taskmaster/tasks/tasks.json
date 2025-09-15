@@ -1,0 +1,535 @@
+{
+  "master": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Initialize Project Repository and Environment",
+        "description": "Set up the project repository, initialize Python environment, and configure ENV-based secret management.",
+        "details": "Create a new Git repository. Initialize Python environment (e.g., venv or poetry). Add .env file for secret keys and configure dotenv loading. Set up basic folder structure for agent, tools, and output.",
+        "testStrategy": "Verify repository setup, environment activation, and ENV variable loading via test script.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 2,
+        "title": "Implement LangGraph State Machine Skeleton",
+        "description": "Develop the LangGraph-based state machine with nodes for Collect, Summarize, Validate, Report, and End.",
+        "details": "Define state model using Pydantic. Implement nodes as Python functions for each workflow step. Configure edges for sequential execution and failure handling. Integrate exponential backoff for retries. Ensure state persistence for recovery.",
+        "testStrategy": "Unit test each node for correct state transitions. Simulate failure and verify retry/backoff logic.",
+        "priority": "high",
+        "dependencies": [
+          1
+        ],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 3,
+        "title": "Wrap and Integrate Four Tools",
+        "description": "Develop wrappers for the four required tools and integrate them into the LangGraph nodes.",
+        "details": "Implement Python wrappers for scraping, summarization (DirectLLMSummarizer), validation, and HTML report generation. Ensure each tool exposes a consistent interface and handles exceptions. Integrate wrappers into corresponding LangGraph nodes.",
+        "testStrategy": "Mock tool inputs/outputs and verify correct integration and error handling in each node.",
+        "priority": "high",
+        "dependencies": [
+          2
+        ],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 4,
+        "title": "Implement Scraping Node with Retry Logic",
+        "description": "Develop the Collect node to scrape messages (≥50) from URL/room_id, with up to 3 retries on failure.",
+        "details": "Use requests or appropriate API to fetch messages. Implement retry logic with exponential backoff. Validate message count and log INFO-level details. Store results in state.",
+        "testStrategy": "Test with valid/invalid URLs and room_ids. Simulate failures and verify retry and logging.",
+        "priority": "high",
+        "dependencies": [
+          3
+        ],
+        "status": "deferred",
+        "subtasks": []
+      },
+      {
+        "id": 5,
+        "title": "Implement Summarization Node with Message Mapping",
+        "description": "Develop the Summarize node to call DirectLLMSummarizer and maintain integer message_id mapping.",
+        "details": "Pass collected messages to DirectLLMSummarizer. Map each message to a unique integer ID. Store summary and mapping in state. Handle single failure with retry.",
+        "testStrategy": "Verify correct summary output and message_id mapping. Simulate LLM failure and ensure retry.",
+        "priority": "high",
+        "dependencies": [
+          4
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 6,
+        "title": "Implement Validation Node with Topic and Field Checks",
+        "description": "Develop the Validate node to check for ≥3 topics, required fields, and handle JSON parsing errors with retry.",
+        "details": "Parse summary output, check for at least 3 topics and required fields. On JSON parsing error, retry up to 3 times. Log validation results and errors. Set exit code for failures.",
+        "testStrategy": "Test with valid/invalid summaries, missing fields, and parsing errors. Verify retry and exit code behavior.",
+        "priority": "high",
+        "dependencies": [
+          5
+        ],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 7,
+        "title": "Implement Report Node for HTML Generation and Storage",
+        "description": "Develop the Report node to generate and save HTML output using generate_html_email.",
+        "details": "Call generate_html_email with validated summary. Save output as community_report_YYYYmmdd_HHMMSS.html. Ensure correct formatting and error handling.",
+        "testStrategy": "Verify HTML file creation, formatting, and error handling with various summary inputs.",
+        "priority": "medium",
+        "dependencies": [
+          6
+        ],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 8,
+        "title": "Implement CLI Interface and Exit Code Handling",
+        "description": "Develop CLI interface for agent execution with required arguments and exit code management.",
+        "details": "Use argparse or click to parse --chat_url, --room_id, --max_topics. Ensure correct propagation of exit codes (0 for success, non-zero for failure). Log execution details at INFO level.",
+        "testStrategy": "Test CLI with all argument combinations. Verify exit codes and logs for success/failure scenarios.",
+        "priority": "medium",
+        "dependencies": [
+          7
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 9,
+        "title": "Implement CRON Scheduling and Output Storage",
+        "description": "Set up CRON job for daily execution and ensure output files are saved as JSON/HTML with timestamped filenames.",
+        "details": "Create CRON configuration for daily agent run. Ensure outputs are saved as summary_result_YYYYmmdd_HHMMSS.json and community_report_YYYYmmdd_HHMMSS.html. Handle file overwrites and directory management.",
+        "testStrategy": "Simulate scheduled runs, verify output files are created with correct names and contents.",
+        "priority": "medium",
+        "dependencies": [
+          8
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 10,
+        "title": "Document Implementation and Acceptance Criteria",
+        "description": "Write documentation covering setup, usage, workflow, and acceptance criteria verification.",
+        "details": "Document installation, CLI usage, CRON setup, ENV management, and workflow details. Include test cases for AC1 (HTML/JSON generation), AC2 (LLM retry), AC3 (exit code/logging on failure).",
+        "testStrategy": "Review documentation for completeness. Validate acceptance criteria with manual and automated tests.",
+        "priority": "medium",
+        "dependencies": [
+          9
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 11,
+        "title": "Project Environment Setup",
+        "description": "Initialize the project repository and set up the development environment with required dependencies for LangChain, LangGraph, FastAPI, Chroma, Pandas, and OpenAI APIs.",
+        "details": "Create a new Python project. Set up a virtual environment. Install dependencies: langchain, langgraph, fastapi, chromadb, pandas, openai, and any other required packages. Configure .env for API keys. Prepare a basic project structure with separate modules for data, API, and agents.",
+        "testStrategy": "Verify all dependencies are installed. Run a sample script to ensure imports and API keys work. Confirm FastAPI server starts without errors.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 12,
+        "title": "CSV Data Loading and Preprocessing",
+        "description": "Load and preprocess the Korean developer chat CSV data for downstream processing.",
+        "details": "Implement a data loader using Pandas to read 'korean_dev_chat_sample.csv'. Clean and normalize text (remove noise, handle encoding, strip whitespace). Structure data into question-answer pairs. Handle missing or malformed entries gracefully.",
+        "testStrategy": "Unit test data loader with sample CSVs. Validate output structure and data integrity. Check for correct handling of edge cases (missing values, encoding issues).",
+        "priority": "high",
+        "dependencies": [
+          11
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 13,
+        "title": "Text Chunking and Splitting",
+        "description": "Split preprocessed chat data into manageable text chunks for embedding and retrieval.",
+        "details": "Use LangChain's RecursiveCharacterTextSplitter or similar to divide each Q&A pair into contextually meaningful chunks (e.g., 500-1000 characters, with overlap). Ensure chunk boundaries do not split sentences unnaturally. Store chunk metadata (source, position).",
+        "testStrategy": "Test chunking on various Q&A pairs. Validate chunk sizes and overlaps. Ensure no sentence is split mid-way. Confirm metadata correctness.",
+        "priority": "high",
+        "dependencies": [
+          12
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 14,
+        "title": "Embedding Generation with OpenAI",
+        "description": "Generate vector embeddings for each text chunk using OpenAI's text-embedding-3-large model.",
+        "details": "Integrate OpenAI API for embedding generation. Batch process chunks to minimize API calls. Store resulting vectors with chunk metadata. Implement error handling and retry logic for API rate limits.",
+        "testStrategy": "Validate embeddings are generated for all chunks. Check vector dimensions and consistency. Simulate API failures to test retry logic.",
+        "priority": "high",
+        "dependencies": [
+          13
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 15,
+        "title": "Vector Store Integration with Chroma",
+        "description": "Store and index embeddings in Chroma vector database for efficient similarity search.",
+        "details": "Set up Chroma DB locally. Define schema for storing vectors and metadata. Implement insertion of all embeddings. Ensure efficient indexing and retrieval performance.",
+        "testStrategy": "Insert sample vectors and query for similarity. Measure retrieval latency. Validate metadata retrieval with vectors.",
+        "priority": "high",
+        "dependencies": [
+          14
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 16,
+        "title": "Similarity-Based Document Retrieval",
+        "description": "Implement retrieval logic to fetch relevant chunks from Chroma based on user queries.",
+        "details": "Use LangChain's Retriever interface to query Chroma DB with user input. Retrieve top-N most similar chunks. Return both content and metadata for downstream use.",
+        "testStrategy": "Test retrieval with various queries. Validate relevance of returned chunks. Measure response time to ensure <3s latency.",
+        "priority": "high",
+        "dependencies": [
+          15
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 17,
+        "title": "LLM-Based Answer Generation",
+        "description": "Generate answers to user questions using GPT-4o-mini, grounded in retrieved context.",
+        "details": "Format prompt with user question and retrieved context. Use OpenAI's GPT-4o-mini via LangChain for answer generation. Apply prompt engineering for Korean technical Q&A. Handle API errors and retries.",
+        "testStrategy": "Test with sample questions. Validate answer relevance and fluency. Check for prompt injection and hallucination risks.",
+        "priority": "high",
+        "dependencies": [
+          16
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 18,
+        "title": "FastAPI Web Interface Implementation",
+        "description": "Develop a FastAPI-based web interface for user Q&A interaction.",
+        "details": "Design REST endpoints for submitting questions and receiving answers. Implement request validation and response formatting. Ensure UTF-8 support for Korean text. Add basic error handling and logging.",
+        "testStrategy": "Test API endpoints with various Korean queries. Validate response structure and error handling. Check CORS and encoding support.",
+        "priority": "high",
+        "dependencies": [
+          17
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 19,
+        "title": "Frontend UI for Q&A (Optional MVP)",
+        "description": "Create a minimal web frontend for user interaction with the RAG system.",
+        "details": "Implement a simple HTML/JS frontend or use FastAPI's templating. Provide input for questions and display answers. Ensure Korean language support and responsive design.",
+        "testStrategy": "Manual UI testing for usability and language support. Validate end-to-end flow from question input to answer display.",
+        "priority": "medium",
+        "dependencies": [
+          18
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 20,
+        "title": "Query Analyzer Agent Implementation",
+        "description": "Develop an agent to analyze user questions for intent and relevant tech stack.",
+        "details": "Use LangChain's agent framework. Implement logic to extract intent and technology keywords from Korean queries. Optionally use LLM for classification. Output structured analysis for downstream agents.",
+        "testStrategy": "Unit test with diverse question types. Validate correct extraction of intent and tech stack. Check for false positives/negatives.",
+        "priority": "high",
+        "dependencies": [
+          18
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 21,
+        "title": "Search Coordinator Agent Implementation",
+        "description": "Implement an agent to select optimal retrieval strategies based on question type.",
+        "details": "Design agent logic to choose between different retrieval strategies (e.g., keyword, semantic, hybrid) based on Query Analyzer output. Integrate with LangChain agent framework. Ensure extensibility for future strategies.",
+        "testStrategy": "Test with various question types. Validate correct strategy selection. Simulate edge cases and fallback logic.",
+        "priority": "high",
+        "dependencies": [
+          20
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 22,
+        "title": "Quality Validator Agent Implementation",
+        "description": "Develop an agent to automatically assess answer quality and trigger retries if needed.",
+        "details": "Implement answer quality checks (e.g., relevance, completeness, fluency) using heuristics or LLM-based scoring. If quality is insufficient, trigger answer regeneration. Log validation results for monitoring.",
+        "testStrategy": "Test with low- and high-quality answers. Validate retry mechanism. Measure false positive/negative rates for quality assessment.",
+        "priority": "high",
+        "dependencies": [
+          21,
+          17
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 23,
+        "title": "End-to-End Orchestration with LangGraph",
+        "description": "Integrate all agents and RAG steps into a unified workflow using LangGraph.",
+        "details": "Define application state (question, context, answer, quality). Use StateGraph to sequence Query Analyzer, Search Coordinator, Retrieval, Generation, and Quality Validator. Ensure error handling and logging at each step.",
+        "testStrategy": "Run integration tests for full question-to-answer flow. Validate state transitions and agent interactions. Simulate failures and recovery.",
+        "priority": "high",
+        "dependencies": [
+          22
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 24,
+        "title": "Performance Optimization and Caching",
+        "description": "Optimize system for latency and cost, including OpenAI API usage and vector search.",
+        "details": "Implement caching for repeated queries and embeddings. Monitor and optimize API call patterns. Tune Chroma DB for faster retrieval. Profile end-to-end latency to meet <3s requirement.",
+        "testStrategy": "Benchmark system under load. Validate cache hits and latency improvements. Test for correctness with cached vs. fresh results.",
+        "priority": "medium",
+        "dependencies": [
+          23
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 25,
+        "title": "Automated Testing and Quality Assurance",
+        "description": "Develop comprehensive test suites for all modules and end-to-end flows.",
+        "details": "Write unit, integration, and regression tests for data, retrieval, agents, and API. Use pytest or similar. Automate test execution in CI/CD pipeline. Include tests for Korean language handling and edge cases.",
+        "testStrategy": "Run all tests and ensure >90% coverage. Validate against PRD success criteria. Review test logs for failures and edge case handling.",
+        "priority": "high",
+        "dependencies": [
+          24
+        ],
+        "status": "pending",
+        "subtasks": []
+      }
+    ],
+    "metadata": {
+      "created": "2025-09-14T11:30:55.083Z",
+      "updated": "2025-09-15T12:40:03.658Z",
+      "description": "Tasks for master context"
+    }
+  },
+  "rag-agent-system": {
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Setup Project Repository and Environment",
+        "description": "Initialize the project repository, set up Python virtual environment, and install required dependencies (LangChain, LangGraph, FastAPI, Chroma, Pandas, OpenAI SDK).",
+        "details": "- Create a new Git repository.\n- Set up a Python virtual environment (e.g., venv or conda).\n- Install dependencies: langchain, langgraph, fastapi, chromadb, pandas, openai, uvicorn, and any other required libraries.\n- Configure .env for API keys and environment variables.\n- Add basic README and .gitignore.",
+        "testStrategy": "Verify all dependencies are installed and Python scripts can import required modules. Run 'pip freeze' and basic import tests.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 2,
+        "title": "Ingest and Preprocess CSV Chat Data",
+        "description": "Load and preprocess the Korean developer chat CSV data for downstream processing.",
+        "details": "- Use Pandas to load 'korean_dev_chat_sample.csv'.\n- Clean and normalize text (remove special characters, extra whitespace, handle encoding issues).\n- Extract question-answer pairs and relevant metadata.\n- Save preprocessed data for further steps.",
+        "testStrategy": "Check for nulls, encoding errors, and verify that question-answer pairs are correctly extracted. Unit test with sample rows.",
+        "priority": "high",
+        "dependencies": [
+          1
+        ],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 3,
+        "title": "Chunk and Structure Data for Embedding",
+        "description": "Split preprocessed chat data into manageable chunks for embedding and retrieval.",
+        "details": "- Implement chunking logic (e.g., 1000 tokens per chunk, 200 token overlap) using LangChain's text splitter utilities.\n- Ensure chunks preserve context and do not split mid-sentence.\n- Store chunk metadata (source, position, etc.).",
+        "testStrategy": "Validate chunk sizes, overlap, and context preservation. Unit test chunking on sample data.",
+        "priority": "high",
+        "dependencies": [
+          2
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 4,
+        "title": "Generate Embeddings with OpenAI API",
+        "description": "Embed all data chunks using OpenAI text-embedding-3-large model.",
+        "details": "- Use OpenAI's API to generate embeddings for each chunk.\n- Batch requests to respect API rate limits and minimize cost.\n- Store embeddings with associated chunk metadata.\n<info added on 2025-09-15T14:34:23.242Z>\nNote: For rapid prototyping, embeddings are currently generated using OpenAI text-embedding-3-small instead of text-embedding-3-large to improve speed. This approach can be switched to the large model later if needed.\n</info added on 2025-09-15T14:34:23.242Z>",
+        "testStrategy": "Check embedding vector shapes, ensure all chunks have embeddings, and handle API errors gracefully.",
+        "priority": "high",
+        "dependencies": [
+          3
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 5,
+        "title": "Initialize and Populate Chroma Vector Database",
+        "description": "Set up Chroma vector DB and store all embeddings for similarity search.",
+        "details": "- Initialize Chroma DB instance locally.\n- Insert all chunk embeddings and metadata.\n- Verify data integrity and indexing.",
+        "testStrategy": "Query Chroma for random chunks and verify retrieval by metadata and vector similarity.",
+        "priority": "high",
+        "dependencies": [
+          4
+        ],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 6,
+        "title": "Implement Similarity-Based Retriever",
+        "description": "Develop a retriever to fetch relevant chunks from Chroma based on user queries.",
+        "details": "- Use LangChain's retriever interface with Chroma backend.\n- Configure retrieval parameters (e.g., top-k, similarity threshold).\n- Ensure retriever supports Korean queries.",
+        "testStrategy": "Run retrieval tests with sample queries and verify relevant chunks are returned.",
+        "priority": "high",
+        "dependencies": [
+          5
+        ],
+        "status": "in-progress",
+        "subtasks": []
+      },
+      {
+        "id": 7,
+        "title": "Integrate OpenAI GPT-4o-mini for Answer Generation",
+        "description": "Connect the retriever output to GPT-4o-mini for answer synthesis.",
+        "details": "- Use LangChain's RetrievalQA chain with OpenAI LLM.\n- Design prompts optimized for Korean developer Q&A.\n- Ensure context from retrieved chunks is passed to the LLM.",
+        "testStrategy": "Test end-to-end answer generation with sample questions. Validate answer relevance and language quality.",
+        "priority": "high",
+        "dependencies": [
+          6
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 8,
+        "title": "Develop FastAPI Web Backend",
+        "description": "Build a FastAPI backend to expose RAG Q&A functionality via REST endpoints.",
+        "details": "- Create endpoints for question submission and answer retrieval.\n- Handle request validation, error handling, and logging.\n- Integrate with retrieval and answer generation pipeline.",
+        "testStrategy": "Use HTTP client (e.g., curl, Postman) to test endpoints. Validate response structure and error handling.",
+        "priority": "high",
+        "dependencies": [
+          7
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 9,
+        "title": "Implement Basic Web Frontend for Q&A",
+        "description": "Develop a simple web interface for users to submit questions and view answers.",
+        "details": "- Use FastAPI's templating or a minimal frontend framework (e.g., React or Jinja2).\n- Support Korean input and output.\n- Display question history and answers.",
+        "testStrategy": "Manual UI testing for input/output, language support, and usability.",
+        "priority": "medium",
+        "dependencies": [
+          8
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 10,
+        "title": "Develop Query Analyzer Agent",
+        "description": "Implement an agent to analyze user questions for intent and technology stack.",
+        "details": "- Use LangChain agent framework to parse and classify questions.\n- Extract technology keywords (e.g., Python, Docker).\n- Output structured analysis for downstream agents.",
+        "testStrategy": "Unit test with diverse question types. Validate correct extraction and classification.",
+        "priority": "high",
+        "dependencies": [
+          9
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 11,
+        "title": "Develop Search Coordinator Agent",
+        "description": "Create an agent to select search strategies based on question type and analysis.",
+        "details": "- Implement logic to choose retrieval parameters or methods (e.g., keyword vs. semantic search).\n- Integrate with Query Analyzer output.\n- Route queries to appropriate retriever configuration.",
+        "testStrategy": "Test with various question types and verify correct search strategy selection.",
+        "priority": "high",
+        "dependencies": [
+          10
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 12,
+        "title": "Develop Quality Validator Agent",
+        "description": "Build an agent to automatically assess answer quality and trigger retries if needed.",
+        "details": "- Use LLM-based or rule-based evaluation of answer relevance and completeness.\n- Define quality thresholds and retry logic.\n- Log validation results for monitoring.",
+        "testStrategy": "Test with low-quality and high-quality answers. Verify retry triggers and logging.",
+        "priority": "high",
+        "dependencies": [
+          11
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 13,
+        "title": "Implement Automated Answer Quality Feedback Loop",
+        "description": "Enable system to learn from answer validation and improve over time.",
+        "details": "- Store validation outcomes and user feedback.\n- Use feedback to adjust prompts, retrieval parameters, or retraining signals.\n- Prepare for future self-improvement agent integration.",
+        "testStrategy": "Simulate feedback scenarios and verify system adaptation or logging.",
+        "priority": "medium",
+        "dependencies": [
+          12
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 14,
+        "title": "Monitor OpenAI API Usage and Implement Caching",
+        "description": "Track API usage and implement caching to handle rate limits and reduce costs.",
+        "details": "- Log all OpenAI API requests and responses.\n- Implement caching layer for repeated queries (e.g., Redis or in-memory cache).\n- Alert on approaching rate limits.",
+        "testStrategy": "Stress test with repeated queries. Verify cache hits, API usage logs, and alerting.",
+        "priority": "medium",
+        "dependencies": [
+          13
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 15,
+        "title": "Performance and Availability Optimization",
+        "description": "Optimize system for response time, accuracy, and availability per requirements.",
+        "details": "- Profile end-to-end latency and identify bottlenecks.\n- Tune retrieval and LLM parameters for speed and accuracy.\n- Implement basic health checks and availability monitoring.",
+        "testStrategy": "Benchmark response times, run load tests, and verify uptime monitoring.",
+        "priority": "medium",
+        "dependencies": [
+          14
+        ],
+        "status": "pending",
+        "subtasks": []
+      }
+    ],
+    "metadata": {
+      "created": "2025-09-15T12:40:19.784Z",
+      "updated": "2025-09-15T14:34:10.249Z",
+      "description": "Tasks for rag-agent-system context"
+    }
+  }
+}

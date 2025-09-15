@@ -1,0 +1,4794 @@
+[
+  {
+    "content": "질문: NoSQL과 SQL 데이터베이스의 차이점은 뭔가요?\n\n답변:\n1. WHERE 절에서 함수 사용, LIKE 패턴 문제, 데이터 타입 불일치 등을 확인해보세요.\n2. 이런 접근 방식도 좋을 것 같아요.\n3. 추가 정보를 드리면요.\n4. 다른 관점에서 보면요.\n",
+    "metadata": {
+      "question": "NoSQL과 SQL 데이터베이스의 차이점은 뭔가요?",
+      "question_author": "서버개발자",
+      "question_team": "dev_user_001",
+      "question_timestamp": "2024-01-15 09:00:00",
+      "num_answers": 4,
+      "answer_authors": [
+        "API설계자",
+        "배포전문가",
+        "한리액트",
+        "멘토"
+      ],
+      "answer_teams": [
+        "dev_user_002",
+        "dev_user_003",
+        "dev_user_004",
+        "dev_user_005"
+      ]
+    }
+  },
+  {
+    "content": "질문: 좋은 정보네요! 혹시 관련 자료나 문서가 있나요?\n\n답변:\n1. 실제로 적용해봐야겠어요.\n",
+    "metadata": {
+      "question": "좋은 정보네요! 혹시 관련 자료나 문서가 있나요?",
+      "question_author": "서버개발자",
+      "question_team": "dev_user_001",
+      "question_timestamp": "2024-01-15 11:00:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "코딩부트캠프강사"
+      ],
+      "answer_teams": [
+        "dev_user_007"
+      ]
+    }
+  },
+  {
+    "content": "질문: 보안상 주의할 점이 있나요?\n\n답변:\n1. 추가로 궁금한 점이 있어요.\n2. 도움이 되는 정보 감사합니다.\n",
+    "metadata": {
+      "question": "보안상 주의할 점이 있나요?",
+      "question_author": "스타트업개발자",
+      "question_team": "dev_user_008",
+      "question_timestamp": "2024-01-15 12:00:00",
+      "num_answers": 2,
+      "answer_authors": [
+        "신입개발자",
+        "주니어개발자"
+      ],
+      "answer_teams": [
+        "dev_user_009",
+        "dev_user_010"
+      ]
+    }
+  },
+  {
+    "content": "질문: JavaScript에서 var, let, const의 차이점을 알려주세요.\n\n답변:\n1. asyncawait가 더 읽기 쉽고 에러 처리가 간단해요. Promise 체이닝보다 선호됩니다.\n2. 추가 정보를 드리면요.\n3. 참고로 이런 정보도 도움이 될 거예요.\n4. 그런데 이런 에러가 발생했어요.\n",
+    "metadata": {
+      "question": "JavaScript에서 var, let, const의 차이점을 알려주세요.",
+      "question_author": "보안개발자",
+      "question_team": "dev_user_011",
+      "question_timestamp": "2024-01-15 11:00:00",
+      "num_answers": 4,
+      "answer_authors": [
+        "도커마스터",
+        "김개발",
+        "인프라엔지니어",
+        "보안개발자"
+      ],
+      "answer_teams": [
+        "dev_user_012",
+        "dev_user_013",
+        "dev_user_014",
+        "dev_user_011"
+      ]
+    }
+  },
+  {
+    "content": "질문: 성능 최적화 방법이 궁금해요.\n\n답변:\n1. 컴포넌트 생명주기가 궁금해요.\n2. 최상위 레벨에서만 호출하고, 조건문이나 반복문 안에서는 호출하면 안 돼요.\n",
+    "metadata": {
+      "question": "성능 최적화 방법이 궁금해요.",
+      "question_author": "도커마스터",
+      "question_team": "dev_user_019",
+      "question_timestamp": "2024-01-15 14:33:00",
+      "num_answers": 2,
+      "answer_authors": [
+        "성능최적화",
+        "품질관리자"
+      ],
+      "answer_teams": [
+        "dev_user_020",
+        "dev_user_021"
+      ]
+    }
+  },
+  {
+    "content": "질문: 다른 해결 방법도 있어요.\n\n답변:\n1. 다른 관점에서 보면요.\n",
+    "metadata": {
+      "question": "다른 해결 방법도 있어요.",
+      "question_author": "SQL최적화",
+      "question_team": "dev_user_022",
+      "question_timestamp": "2024-01-15 12:56:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "최웹개발"
+      ],
+      "answer_teams": [
+        "dev_user_023"
+      ]
+    }
+  },
+  {
+    "content": "질문: 아 그렇군요! 더 자세히 설명해주실 수 있나요?\n\n답변:\n1. 좋은 질문이네요!\n",
+    "metadata": {
+      "question": "아 그렇군요! 더 자세히 설명해주실 수 있나요?",
+      "question_author": "성능최적화",
+      "question_team": "dev_user_020",
+      "question_timestamp": "2024-01-15 14:00:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "정프론트"
+      ],
+      "answer_teams": [
+        "dev_user_025"
+      ]
+    }
+  },
+  {
+    "content": "질문: 성능 최적화 방법이 궁금해요.\n\n답변:\n1. 좋은 질문이네요!\n",
+    "metadata": {
+      "question": "성능 최적화 방법이 궁금해요.",
+      "question_author": "기술블로거",
+      "question_team": "dev_user_027",
+      "question_timestamp": "2024-01-15 14:44:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "빅데이터엔지니어"
+      ],
+      "answer_teams": [
+        "dev_user_028"
+      ]
+    }
+  },
+  {
+    "content": "질문: Docker Compose로 여러 서비스를 어떻게 관리하나요?\n\n답변:\n1. Kubernetes는 컨테이너 오케스트레이션 플랫폼이고, Docker는 컨테이너 런타임이에요.\n2. 한 가지 더 말씀드리면요.\n3. 한 가지 더 말씀드리면요.\n",
+    "metadata": {
+      "question": "Docker Compose로 여러 서비스를 어떻게 관리하나요?",
+      "question_author": "마이크로서비스",
+      "question_team": "dev_user_029",
+      "question_timestamp": "2024-01-15 13:00:00",
+      "num_answers": 3,
+      "answer_authors": [
+        "성능튜닝",
+        "빅데이터엔지니어",
+        "API설계자"
+      ],
+      "answer_teams": [
+        "dev_user_030",
+        "dev_user_031",
+        "dev_user_032"
+      ]
+    }
+  },
+  {
+    "content": "질문: 예제 코드를 보여주실 수 있나요?\n\n답변:\n1. 좋은 질문이네요!\n",
+    "metadata": {
+      "question": "예제 코드를 보여주실 수 있나요?",
+      "question_author": "빅데이터엔지니어",
+      "question_team": "dev_user_034",
+      "question_timestamp": "2024-01-16 00:13:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "테스트엔지니어"
+      ],
+      "answer_teams": [
+        "dev_user_035"
+      ]
+    }
+  },
+  {
+    "content": "질문: React에서 라우팅은 어떻게 하나요?\n\n답변:\n1. 최상위 레벨에서만 호출하고, 조건문이나 반복문 안에서는 호출하면 안 돼요.\n",
+    "metadata": {
+      "question": "React에서 라우팅은 어떻게 하나요?",
+      "question_author": "외국계개발자",
+      "question_team": "dev_user_037",
+      "question_timestamp": "2024-01-15 16:00:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "성능최적화"
+      ],
+      "answer_teams": [
+        "dev_user_038"
+      ]
+    }
+  },
+  {
+    "content": "질문: 대안으로 이런 방법도 있습니다.\n\n답변:\n1. 코드로 직접 보여주시면 이해하기 쉬울 것 같아요.\n",
+    "metadata": {
+      "question": "대안으로 이런 방법도 있습니다.",
+      "question_author": "테스트엔지니어",
+      "question_team": "dev_user_039",
+      "question_timestamp": "2024-01-15 16:54:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "외국계개발자"
+      ],
+      "answer_teams": [
+        "dev_user_037"
+      ]
+    }
+  },
+  {
+    "content": "질문: 이런 방법도 있군요!\n\n답변:\n1. 도움이 되는 정보 감사합니다.\n",
+    "metadata": {
+      "question": "이런 방법도 있군요!",
+      "question_author": "외국계개발자",
+      "question_team": "dev_user_041",
+      "question_timestamp": "2024-01-16 03:30:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "클라우드아키텍트"
+      ],
+      "answer_teams": [
+        "dev_user_042"
+      ]
+    }
+  },
+  {
+    "content": "질문: Promise와 asyncawait 중에 어떤 걸 사용해야 할까요?\n\n답변:\n1. JavaScript 엔진이 비동기 작업을 처리하는 방식이에요. 콜 스택, 힙, 큐로 구성되어 있어요.\n2. 참고로 이런 정보도 도움이 될 거예요.\n3. 참고로 이런 정보도 도움이 될 거예요.\n4. 코드로 직접 보여주시면 이해하기 쉬울 것 같아요.\n5. 좋은 질문이네요!\n6. 실제로 적용해봐야겠어요.\n",
+    "metadata": {
+      "question": "Promise와 asyncawait 중에 어떤 걸 사용해야 할까요?",
+      "question_author": "백엔드신입",
+      "question_team": "dev_user_045",
+      "question_timestamp": "2024-01-15 17:00:00",
+      "num_answers": 6,
+      "answer_authors": [
+        "SQL최적화",
+        "데브옵스",
+        "김개발",
+        "백엔드신입",
+        "데이터베이스관리자",
+        "정프론트"
+      ],
+      "answer_teams": [
+        "dev_user_046",
+        "dev_user_047",
+        "dev_user_048",
+        "dev_user_045",
+        "dev_user_050",
+        "dev_user_051"
+      ]
+    }
+  },
+  {
+    "content": "질문: JWT 토큰을 사용할 때 보안상 주의해야 할 점들이 뭐가 있나요?\n\n답변:\n1. Prepared Statement 사용, 입력값 검증, 에스케이프 처리 등을 해야 해요.\n2. 한 가지 더 말씀드리면요.\n",
+    "metadata": {
+      "question": "JWT 토큰을 사용할 때 보안상 주의해야 할 점들이 뭐가 있나요?",
+      "question_author": "프리랜서",
+      "question_team": "dev_user_054",
+      "question_timestamp": "2024-01-15 18:00:00",
+      "num_answers": 2,
+      "answer_authors": [
+        "외국계개발자",
+        "데브옵스"
+      ],
+      "answer_teams": [
+        "dev_user_055",
+        "dev_user_056"
+      ]
+    }
+  },
+  {
+    "content": "질문: 보안상 주의할 점이 있나요?\n\n답변:\n1. 저도 궁금했던 내용이에요.\n",
+    "metadata": {
+      "question": "보안상 주의할 점이 있나요?",
+      "question_author": "데브옵스",
+      "question_team": "dev_user_057",
+      "question_timestamp": "2024-01-16 09:55:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "코드리뷰어"
+      ],
+      "answer_teams": [
+        "dev_user_058"
+      ]
+    }
+  },
+  {
+    "content": "질문: 예제 코드를 보여주실 수 있나요?\n\n답변:\n1. 저도 궁금했던 내용이에요.\n",
+    "metadata": {
+      "question": "예제 코드를 보여주실 수 있나요?",
+      "question_author": "품질관리자",
+      "question_team": "dev_user_059",
+      "question_timestamp": "2024-01-15 21:33:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "자동화전문가"
+      ],
+      "answer_teams": [
+        "dev_user_060"
+      ]
+    }
+  },
+  {
+    "content": "질문: 데이터베이스 복제는 어떻게 하나요?\n\n답변:\n1. 마스터-슬레이브 구조나 마스터-마스터 구조로 복제를 설정할 수 있어요.\n2. 추가로 고려해볼 점이 있어요.\n",
+    "metadata": {
+      "question": "데이터베이스 복제는 어떻게 하나요?",
+      "question_author": "서버개발자",
+      "question_team": "dev_user_061",
+      "question_timestamp": "2024-01-15 21:00:00",
+      "num_answers": 2,
+      "answer_authors": [
+        "배포전문가",
+        "코드리뷰어"
+      ],
+      "answer_teams": [
+        "dev_user_062",
+        "dev_user_063"
+      ]
+    }
+  },
+  {
+    "content": "질문: 보안상 주의할 점이 있나요?\n\n답변:\n1. 저도 궁금했던 내용이에요.\n2. 저도 궁금했던 내용이에요.\n3. 추가로 궁금한 점이 있어요.\n4. MySQL에서 인덱스가 제대로 사용되지 않는 경우가 있어요.\n5. 두 개 이상의 트랜잭션이 서로의 리소스를 기다리며 무한 대기하는 상황이에요.\n6. 업계 표준 관행은 이런 거예요.\n7. 이런 접근 방식도 좋을 것 같아요.\n",
+    "metadata": {
+      "question": "보안상 주의할 점이 있나요?",
+      "question_author": "성능최적화",
+      "question_team": "dev_user_064",
+      "question_timestamp": "2024-01-16 08:12:00",
+      "num_answers": 7,
+      "answer_authors": [
+        "도커마스터",
+        "최웹개발",
+        "품질관리자",
+        "오픈소스기여자",
+        "박코딩",
+        "백엔드신입",
+        "마이크로서비스"
+      ],
+      "answer_teams": [
+        "dev_user_065",
+        "dev_user_066",
+        "dev_user_067",
+        "dev_user_068",
+        "dev_user_069",
+        "dev_user_070",
+        "dev_user_071"
+      ]
+    }
+  },
+  {
+    "content": "질문: 에러가 발생했는데 도움을 주실 수 있나요?\n\n답변:\n1. 도움이 되는 정보 감사합니다.\n2. 저도 궁금했던 내용이에요.\n",
+    "metadata": {
+      "question": "에러가 발생했는데 도움을 주실 수 있나요?",
+      "question_author": "판다스전문가",
+      "question_team": "dev_user_073",
+      "question_timestamp": "2024-01-16 09:06:00",
+      "num_answers": 2,
+      "answer_authors": [
+        "자동화전문가",
+        "쿠버네티스"
+      ],
+      "answer_teams": [
+        "dev_user_074",
+        "dev_user_075"
+      ]
+    }
+  },
+  {
+    "content": "질문: React와 Vue의 차이점을 알려주세요.\n\n답변:\n1. props로 전달하거나 Context API, 상태 관리 라이브러리를 사용할 수 있어요.\n2. 또 다른 접근법을 제안드려요.\n3. 참고로 이런 정보도 도움이 될 거예요.\n",
+    "metadata": {
+      "question": "React와 Vue의 차이점을 알려주세요.",
+      "question_author": "시니어개발자",
+      "question_team": "dev_user_076",
+      "question_timestamp": "2024-01-16 00:00:00",
+      "num_answers": 3,
+      "answer_authors": [
+        "웹보안",
+        "데이터분석가",
+        "스타트업개발자"
+      ],
+      "answer_teams": [
+        "dev_user_077",
+        "dev_user_078",
+        "dev_user_079"
+      ]
+    }
+  },
+  {
+    "content": "질문: 이런 방법도 있군요!\n\n답변:\n1. 저도 궁금했던 내용이에요.\n",
+    "metadata": {
+      "question": "이런 방법도 있군요!",
+      "question_author": "한리액트",
+      "question_team": "dev_user_081",
+      "question_timestamp": "2024-01-16 15:02:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "도커마스터"
+      ],
+      "answer_teams": [
+        "dev_user_082"
+      ]
+    }
+  },
+  {
+    "content": "질문: pandas로 대용량 CSV 파일을 읽을 때 메모리 사용량을 줄이는 방법이 있나요?\n\n답변:\n1. numpy는 수치 계산에 특화되어 있고, pandas는 데이터 분석과 조작에 특화되어 있어요.\n2. 이런 접근 방식도 좋을 것 같아요.\n3. 다른 관점에서 보면요.\n",
+    "metadata": {
+      "question": "pandas로 대용량 CSV 파일을 읽을 때 메모리 사용량을 줄이는 방법이 있나요?",
+      "question_author": "데브옵스",
+      "question_team": "dev_user_085",
+      "question_timestamp": "2024-01-16 02:00:00",
+      "num_answers": 3,
+      "answer_authors": [
+        "스타트업개발자",
+        "외국계개발자",
+        "성능최적화"
+      ],
+      "answer_teams": [
+        "dev_user_086",
+        "dev_user_087",
+        "dev_user_088"
+      ]
+    }
+  },
+  {
+    "content": "질문: 보안상 주의할 점이 있나요?\n\n답변:\n1. 실제로 적용해봐야겠어요.\n2. 도움이 되는 정보 감사합니다.\n3. 저도 궁금했던 내용이에요.\n",
+    "metadata": {
+      "question": "보안상 주의할 점이 있나요?",
+      "question_author": "클라우드아키텍트",
+      "question_team": "dev_user_089",
+      "question_timestamp": "2024-01-16 21:51:00",
+      "num_answers": 3,
+      "answer_authors": [
+        "테스트엔지니어",
+        "박코딩",
+        "정프론트"
+      ],
+      "answer_teams": [
+        "dev_user_090",
+        "dev_user_091",
+        "dev_user_092"
+      ]
+    }
+  },
+  {
+    "content": "질문: 블루-그린 배포와 카나리 배포의 차이점을 알려주세요.\n\n답변:\n1. 라운드 로빈, 가중치 기반, 지리적 분산 등의 전략이 있어요.\n",
+    "metadata": {
+      "question": "블루-그린 배포와 카나리 배포의 차이점을 알려주세요.",
+      "question_author": "웹보안",
+      "question_team": "dev_user_093",
+      "question_timestamp": "2024-01-16 04:00:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "모니터링전문가"
+      ],
+      "answer_teams": [
+        "dev_user_094"
+      ]
+    }
+  },
+  {
+    "content": "질문: 다른 해결 방법도 있어요.\n\n답변:\n1. 좋은 습관으로는 이런 게 있어요.\n2. 보완 설명을 드리면요.\n",
+    "metadata": {
+      "question": "다른 해결 방법도 있어요.",
+      "question_author": "API설계자",
+      "question_team": "dev_user_095",
+      "question_timestamp": "2024-01-16 05:00:00",
+      "num_answers": 2,
+      "answer_authors": [
+        "대기업개발자",
+        "웹보안"
+      ],
+      "answer_teams": [
+        "dev_user_096",
+        "dev_user_097"
+      ]
+    }
+  },
+  {
+    "content": "질문: 이런 방법도 있군요!\n\n답변:\n1. 추가로 궁금한 점이 있어요.\n2. 좋은 질문이네요!\n",
+    "metadata": {
+      "question": "이런 방법도 있군요!",
+      "question_author": "배포전문가",
+      "question_team": "dev_user_098",
+      "question_timestamp": "2024-01-16 20:52:00",
+      "num_answers": 2,
+      "answer_authors": [
+        "API설계자",
+        "코딩부트캠프강사"
+      ],
+      "answer_teams": [
+        "dev_user_099",
+        "dev_user_100"
+      ]
+    }
+  },
+  {
+    "content": "질문: React에서 라우팅은 어떻게 하나요?\n\n답변:\n1. 작은 앱은 Context API, 큰 앱은 Redux가 적합해요.\n2. 추가 정보를 드리면요.\n3. 추가 정보를 드리면요.\n4. 업계 표준 관행은 이런 거예요.\n5. 이해했습니다. 실제 코드로 보여주시면 더 좋을 것 같아요.\n6. 도움이 되는 정보 감사합니다.\n",
+    "metadata": {
+      "question": "React에서 라우팅은 어떻게 하나요?",
+      "question_author": "보안개발자",
+      "question_team": "dev_user_102",
+      "question_timestamp": "2024-01-16 05:00:00",
+      "num_answers": 6,
+      "answer_authors": [
+        "빅데이터엔지니어",
+        "한리액트",
+        "빅데이터엔지니어",
+        "풀스택개발자",
+        "보안개발자",
+        "모니터링전문가"
+      ],
+      "answer_teams": [
+        "dev_user_103",
+        "dev_user_104",
+        "dev_user_105",
+        "dev_user_106",
+        "dev_user_102",
+        "dev_user_108"
+      ]
+    }
+  },
+  {
+    "content": "질문: 이런 방법도 있군요!\n\n답변:\n1. 좋은 질문이네요!\n2. 저도 궁금했던 내용이에요.\n",
+    "metadata": {
+      "question": "이런 방법도 있군요!",
+      "question_author": "데이터분석가",
+      "question_team": "dev_user_109",
+      "question_timestamp": "2024-01-16 19:24:00",
+      "num_answers": 2,
+      "answer_authors": [
+        "스타트업개발자",
+        "박코딩"
+      ],
+      "answer_teams": [
+        "dev_user_110",
+        "dev_user_111"
+      ]
+    }
+  },
+  {
+    "content": "질문: 모니터링 시스템을 구축하는 방법이 궁금해요.\n\n답변:\n1. 컨테이너 배포, 관리, 스케일링을 자동화하는 기술이에요. Kubernetes가 대표적이에요.\n",
+    "metadata": {
+      "question": "모니터링 시스템을 구축하는 방법이 궁금해요.",
+      "question_author": "클라우드아키텍트",
+      "question_team": "dev_user_112",
+      "question_timestamp": "2024-01-16 07:00:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "시니어개발자"
+      ],
+      "answer_teams": [
+        "dev_user_113"
+      ]
+    }
+  },
+  {
+    "content": "질문: 보안상 주의할 점이 있나요?\n\n답변:\n1. 저도 궁금했던 내용이에요.\n",
+    "metadata": {
+      "question": "보안상 주의할 점이 있나요?",
+      "question_author": "멘토",
+      "question_team": "dev_user_116",
+      "question_timestamp": "2024-01-17 02:36:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "김개발"
+      ],
+      "answer_teams": [
+        "dev_user_117"
+      ]
+    }
+  },
+  {
+    "content": "질문: CICD 파이프라인에서 테스트가 실패했을 때 자동으로 롤백하는 방법이 있나요?\n\n답변:\n1. 장점은 독립적 배포, 기술 스택 다양성이고, 단점은 복잡성 증가, 네트워크 지연이에요.\n2. 참고로 이런 정보도 도움이 될 거예요.\n3. 실제로 적용해보니 문제가 있네요.\n",
+    "metadata": {
+      "question": "CICD 파이프라인에서 테스트가 실패했을 때 자동으로 롤백하는 방법이 있나요?",
+      "question_author": "보안개발자",
+      "question_team": "dev_user_120",
+      "question_timestamp": "2024-01-16 09:00:00",
+      "num_answers": 3,
+      "answer_authors": [
+        "데이터분석가",
+        "김개발",
+        "보안개발자"
+      ],
+      "answer_teams": [
+        "dev_user_121",
+        "dev_user_122",
+        "dev_user_120"
+      ]
+    }
+  },
+  {
+    "content": "질문: 이런 방법도 있군요!\n\n답변:\n1. 추가로 궁금한 점이 있어요.\n",
+    "metadata": {
+      "question": "이런 방법도 있군요!",
+      "question_author": "배포전문가",
+      "question_team": "dev_user_124",
+      "question_timestamp": "2024-01-16 15:55:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "최웹개발"
+      ],
+      "answer_teams": [
+        "dev_user_125"
+      ]
+    }
+  },
+  {
+    "content": "질문: API 보안을 강화하는 방법이 뭔가요?\n\n답변:\n1. 토큰 만료 시간 설정, HTTPS 사용, 민감한 정보 포함 금지, 서명 검증 필수 등이 있어요.\n",
+    "metadata": {
+      "question": "API 보안을 강화하는 방법이 뭔가요?",
+      "question_author": "백엔드신입",
+      "question_team": "dev_user_128",
+      "question_timestamp": "2024-01-16 10:00:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "이프로그래머"
+      ],
+      "answer_teams": [
+        "dev_user_129"
+      ]
+    }
+  },
+  {
+    "content": "질문: 다른 방법도 시도해보세요.\n\n답변:\n1. 추가 정보를 드리면요.\n",
+    "metadata": {
+      "question": "다른 방법도 시도해보세요.",
+      "question_author": "백엔드신입",
+      "question_team": "dev_user_130",
+      "question_timestamp": "2024-01-16 10:10:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "보안개발자"
+      ],
+      "answer_teams": [
+        "dev_user_131"
+      ]
+    }
+  },
+  {
+    "content": "질문: 성능 최적화 방법이 궁금해요.\n\n답변:\n1. 좋은 질문이네요!\n",
+    "metadata": {
+      "question": "성능 최적화 방법이 궁금해요.",
+      "question_author": "쿠버네티스",
+      "question_team": "dev_user_133",
+      "question_timestamp": "2024-01-17 12:23:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "최웹개발"
+      ],
+      "answer_teams": [
+        "dev_user_134"
+      ]
+    }
+  },
+  {
+    "content": "질문: 이런 방법도 있군요!\n\n답변:\n1. 이벤트 루프가 뭔지 궁금해요.\n2. asyncawait가 더 읽기 쉽고 에러 처리가 간단해요. Promise 체이닝보다 선호됩니다.\n",
+    "metadata": {
+      "question": "이런 방법도 있군요!",
+      "question_author": "프리랜서",
+      "question_team": "dev_user_135",
+      "question_timestamp": "2024-01-17 13:01:00",
+      "num_answers": 2,
+      "answer_authors": [
+        "멘토",
+        "정프론트"
+      ],
+      "answer_teams": [
+        "dev_user_136",
+        "dev_user_137"
+      ]
+    }
+  },
+  {
+    "content": "질문: 대안으로 이런 방법도 있습니다.\n\n답변:\n1. 이해했습니다. 실제 코드로 보여주시면 더 좋을 것 같아요.\n2. 저도 궁금했던 내용이에요.\n3. 저도 궁금했던 내용이에요.\n4. 도움이 되는 정보 감사합니다.\n",
+    "metadata": {
+      "question": "대안으로 이런 방법도 있습니다.",
+      "question_author": "대기업개발자",
+      "question_team": "dev_user_138",
+      "question_timestamp": "2024-01-16 12:54:00",
+      "num_answers": 4,
+      "answer_authors": [
+        "멘토",
+        "클라우드아키텍트",
+        "외국계개발자",
+        "웹보안"
+      ],
+      "answer_teams": [
+        "dev_user_136",
+        "dev_user_140",
+        "dev_user_141",
+        "dev_user_142"
+      ]
+    }
+  },
+  {
+    "content": "질문: 인프라를 코드로 관리하는 IaC가 뭔가요?\n\n답변:\n1. 오토 스케일링, 스팟 인스턴스, 리소스 최적화 등을 고려하세요.\n2. 한 가지 더 말씀드리면요.\n",
+    "metadata": {
+      "question": "인프라를 코드로 관리하는 IaC가 뭔가요?",
+      "question_author": "최웹개발",
+      "question_team": "dev_user_144",
+      "question_timestamp": "2024-01-16 13:00:00",
+      "num_answers": 2,
+      "answer_authors": [
+        "서버개발자",
+        "코딩부트캠프강사"
+      ],
+      "answer_teams": [
+        "dev_user_145",
+        "dev_user_146"
+      ]
+    }
+  },
+  {
+    "content": "질문: 감사합니다! 그럼 구체적인 예제를 보여주실 수 있나요?\n\n답변:\n1. 추가로 궁금한 점이 있어요.\n2. 실제로 적용해봐야겠어요.\n",
+    "metadata": {
+      "question": "감사합니다! 그럼 구체적인 예제를 보여주실 수 있나요?",
+      "question_author": "최웹개발",
+      "question_team": "dev_user_144",
+      "question_timestamp": "2024-01-16 13:55:00",
+      "num_answers": 2,
+      "answer_authors": [
+        "이프로그래머",
+        "서버개발자"
+      ],
+      "answer_teams": [
+        "dev_user_150",
+        "dev_user_151"
+      ]
+    }
+  },
+  {
+    "content": "질문: 블루-그린 배포와 카나리 배포의 차이점을 알려주세요.\n\n답변:\n1. 컨테이너 배포, 관리, 스케일링을 자동화하는 기술이에요. Kubernetes가 대표적이에요.\n",
+    "metadata": {
+      "question": "블루-그린 배포와 카나리 배포의 차이점을 알려주세요.",
+      "question_author": "판다스전문가",
+      "question_team": "dev_user_154",
+      "question_timestamp": "2024-01-16 15:00:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "기술블로거"
+      ],
+      "answer_teams": [
+        "dev_user_155"
+      ]
+    }
+  },
+  {
+    "content": "질문: 대안으로 이런 방법도 있습니다.\n\n답변:\n1. 업계 표준 관행은 이런 거예요.\n2. 추가로 궁금한 점이 있어요.\n3. 실제로 적용해봐야겠어요.\n4. 실제로 적용해봐야겠어요.\n5. 좋은 질문이네요!\n",
+    "metadata": {
+      "question": "대안으로 이런 방법도 있습니다.",
+      "question_author": "테스트엔지니어",
+      "question_team": "dev_user_156",
+      "question_timestamp": "2024-01-16 15:32:00",
+      "num_answers": 5,
+      "answer_authors": [
+        "오픈소스기여자",
+        "코딩부트캠프강사",
+        "성능최적화",
+        "오픈소스기여자",
+        "보안개발자"
+      ],
+      "answer_teams": [
+        "dev_user_157",
+        "dev_user_158",
+        "dev_user_159",
+        "dev_user_160",
+        "dev_user_161"
+      ]
+    }
+  },
+  {
+    "content": "질문: JavaScript에서 메모리 누수를 방지하는 방법이 있나요?\n\n답변:\n1. var는 함수 스코프, let과 const는 블록 스코프예요. const는 재할당이 불가능해요.\n2. 한 가지 더 말씀드리면요.\n3. 보완 설명을 드리면요.\n",
+    "metadata": {
+      "question": "JavaScript에서 메모리 누수를 방지하는 방법이 있나요?",
+      "question_author": "성능최적화",
+      "question_team": "dev_user_162",
+      "question_timestamp": "2024-01-16 18:00:00",
+      "num_answers": 3,
+      "answer_authors": [
+        "기술블로거",
+        "데이터베이스관리자",
+        "시니어개발자"
+      ],
+      "answer_teams": [
+        "dev_user_163",
+        "dev_user_164",
+        "dev_user_165"
+      ]
+    }
+  },
+  {
+    "content": "질문: 이런 방법도 있군요!\n\n답변:\n1. 실제로 적용해봐야겠어요.\n2. 좋은 질문이네요!\n3. 좋은 질문이네요!\n",
+    "metadata": {
+      "question": "이런 방법도 있군요!",
+      "question_author": "백엔드신입",
+      "question_team": "dev_user_166",
+      "question_timestamp": "2024-01-18 15:12:00",
+      "num_answers": 3,
+      "answer_authors": [
+        "코드리뷰어",
+        "스터디리더",
+        "주니어개발자"
+      ],
+      "answer_teams": [
+        "dev_user_167",
+        "dev_user_168",
+        "dev_user_169"
+      ]
+    }
+  },
+  {
+    "content": "질문: 블루-그린 배포와 카나리 배포의 차이점을 알려주세요.\n\n답변:\n1. 장점은 독립적 배포, 기술 스택 다양성이고, 단점은 복잡성 증가, 네트워크 지연이에요.\n",
+    "metadata": {
+      "question": "블루-그린 배포와 카나리 배포의 차이점을 알려주세요.",
+      "question_author": "박코딩",
+      "question_team": "dev_user_170",
+      "question_timestamp": "2024-01-16 20:00:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "테스트엔지니어"
+      ],
+      "answer_teams": [
+        "dev_user_171"
+      ]
+    }
+  },
+  {
+    "content": "질문: 다른 해결 방법도 있어요.\n\n답변:\n1. 추가 정보를 드리면요.\n2. 좋은 습관으로는 이런 게 있어요.\n",
+    "metadata": {
+      "question": "다른 해결 방법도 있어요.",
+      "question_author": "기술리더",
+      "question_team": "dev_user_172",
+      "question_timestamp": "2024-01-16 20:54:00",
+      "num_answers": 2,
+      "answer_authors": [
+        "코딩부트캠프강사",
+        "인프라엔지니어"
+      ],
+      "answer_teams": [
+        "dev_user_173",
+        "dev_user_174"
+      ]
+    }
+  },
+  {
+    "content": "질문: 예제 코드를 보여주실 수 있나요?\n\n답변:\n1. 좋은 질문이네요!\n",
+    "metadata": {
+      "question": "예제 코드를 보여주실 수 있나요?",
+      "question_author": "성능튜닝",
+      "question_team": "dev_user_176",
+      "question_timestamp": "2024-01-17 01:22:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "판다스전문가"
+      ],
+      "answer_teams": [
+        "dev_user_177"
+      ]
+    }
+  },
+  {
+    "content": "질문: 보안상 주의할 점이 있나요?\n\n답변:\n1. 도움이 되는 정보 감사합니다.\n",
+    "metadata": {
+      "question": "보안상 주의할 점이 있나요?",
+      "question_author": "대기업개발자",
+      "question_team": "dev_user_178",
+      "question_timestamp": "2024-01-17 16:53:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "대기업개발자"
+      ],
+      "answer_teams": [
+        "dev_user_179"
+      ]
+    }
+  },
+  {
+    "content": "질문: React에서 상태 관리를 할 때 useState와 useReducer 중에 어떤 걸 선택해야 할까요?\n\n답변:\n1. 제어 컴포넌트나 비제어 컴포넌트 방식으로 폼을 처리할 수 있어요.\n2. 또 다른 접근법을 제안드려요.\n3. 모범 사례를 말씀드리면요.\n",
+    "metadata": {
+      "question": "React에서 상태 관리를 할 때 useState와 useReducer 중에 어떤 걸 선택해야 할까요?",
+      "question_author": "기술리더",
+      "question_team": "dev_user_180",
+      "question_timestamp": "2024-01-16 22:00:00",
+      "num_answers": 3,
+      "answer_authors": [
+        "데이터분석가",
+        "판다스전문가",
+        "서버개발자"
+      ],
+      "answer_teams": [
+        "dev_user_181",
+        "dev_user_182",
+        "dev_user_183"
+      ]
+    }
+  },
+  {
+    "content": "질문: 에러가 발생했는데 도움을 주실 수 있나요?\n\n답변:\n1. 저도 궁금했던 내용이에요.\n2. 추가로 궁금한 점이 있어요.\n3. 실제로 적용해봐야겠어요.\n",
+    "metadata": {
+      "question": "에러가 발생했는데 도움을 주실 수 있나요?",
+      "question_author": "성능튜닝",
+      "question_team": "dev_user_184",
+      "question_timestamp": "2024-01-18 20:10:00",
+      "num_answers": 3,
+      "answer_authors": [
+        "백엔드신입",
+        "판다스전문가",
+        "쿠버네티스"
+      ],
+      "answer_teams": [
+        "dev_user_185",
+        "dev_user_186",
+        "dev_user_187"
+      ]
+    }
+  },
+  {
+    "content": "질문: 트랜잭션의 ACID 특성이 뭔가요?\n\n답변:\n1. 인덱스 최적화, 쿼리 튜닝, 하드웨어 업그레이드 등을 고려해보세요.\n",
+    "metadata": {
+      "question": "트랜잭션의 ACID 특성이 뭔가요?",
+      "question_author": "스타트업개발자",
+      "question_team": "dev_user_188",
+      "question_timestamp": "2024-01-17 00:00:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "빅데이터엔지니어"
+      ],
+      "answer_teams": [
+        "dev_user_189"
+      ]
+    }
+  },
+  {
+    "content": "질문: 일반적으로 권장하는 방법은요.\n\n답변:\n1. 업계 표준 관행은 이런 거예요.\n",
+    "metadata": {
+      "question": "일반적으로 권장하는 방법은요.",
+      "question_author": "클라우드아키텍트",
+      "question_team": "dev_user_190",
+      "question_timestamp": "2024-01-17 00:04:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "배포전문가"
+      ],
+      "answer_teams": [
+        "dev_user_191"
+      ]
+    }
+  },
+  {
+    "content": "질문: 다른 방법도 시도해보세요.\n\n답변:\n1. 그런데 이런 에러가 발생했어요.\n",
+    "metadata": {
+      "question": "다른 방법도 시도해보세요.",
+      "question_author": "주니어개발자",
+      "question_team": "dev_user_192",
+      "question_timestamp": "2024-01-17 00:20:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "스타트업개발자"
+      ],
+      "answer_teams": [
+        "dev_user_188"
+      ]
+    }
+  },
+  {
+    "content": "질문: 보안상 주의할 점이 있나요?\n\n답변:\n1. 추가로 궁금한 점이 있어요.\n2. 추가로 궁금한 점이 있어요.\n",
+    "metadata": {
+      "question": "보안상 주의할 점이 있나요?",
+      "question_author": "주니어개발자",
+      "question_team": "dev_user_195",
+      "question_timestamp": "2024-01-17 18:48:00",
+      "num_answers": 2,
+      "answer_authors": [
+        "신입개발자",
+        "기술리더"
+      ],
+      "answer_teams": [
+        "dev_user_196",
+        "dev_user_197"
+      ]
+    }
+  },
+  {
+    "content": "질문: 블루-그린 배포와 카나리 배포의 차이점을 알려주세요.\n\n답변:\n1. 인프라를 코드로 정의하고 버전 관리하는 방식이에요. Terraform, CloudFormation 등이 있어요.\n2. 이런 접근 방식도 좋을 것 같아요.\n3. 이런 접근 방식도 좋을 것 같아요.\n4. 다른 관점에서 보면요.\n5. 코드로 직접 보여주시면 이해하기 쉬울 것 같아요.\n6. 추가로 궁금한 점이 있어요.\n7. 저도 궁금했던 내용이에요.\n",
+    "metadata": {
+      "question": "블루-그린 배포와 카나리 배포의 차이점을 알려주세요.",
+      "question_author": "정프론트",
+      "question_team": "dev_user_198",
+      "question_timestamp": "2024-01-17 02:00:00",
+      "num_answers": 7,
+      "answer_authors": [
+        "API설계자",
+        "품질관리자",
+        "백엔드신입",
+        "오픈소스기여자",
+        "정프론트",
+        "정프론트",
+        "한리액트"
+      ],
+      "answer_teams": [
+        "dev_user_199",
+        "dev_user_200",
+        "dev_user_201",
+        "dev_user_202",
+        "dev_user_198",
+        "dev_user_204",
+        "dev_user_205"
+      ]
+    }
+  },
+  {
+    "content": "질문: chunksize 파라미터로 청크 단위로 읽거나, 필요한 컬럼만 선택해서 읽는 방법이 있어요.\n\n답변:\n1. 보완 설명을 드리면요.\n2. 추가로 고려해볼 점이 있어요.\n3. 모범 사례를 말씀드리면요.\n",
+    "metadata": {
+      "question": "chunksize 파라미터로 청크 단위로 읽거나, 필요한 컬럼만 선택해서 읽는 방법이 있어요.",
+      "question_author": "성능튜닝",
+      "question_team": "dev_user_209",
+      "question_timestamp": "2024-01-17 05:24:00",
+      "num_answers": 3,
+      "answer_authors": [
+        "도커마스터",
+        "풀스택개발자",
+        "최웹개발"
+      ],
+      "answer_teams": [
+        "dev_user_210",
+        "dev_user_211",
+        "dev_user_212"
+      ]
+    }
+  },
+  {
+    "content": "질문: 문제가 생겼는데 도움을 주실 수 있나요?\n\n답변:\n1. 좋은 질문이네요!\n2. 도움이 되는 정보 감사합니다.\n3. 도움이 되는 정보 감사합니다.\n4. 추가로 궁금한 점이 있어요.\n",
+    "metadata": {
+      "question": "문제가 생겼는데 도움을 주실 수 있나요?",
+      "question_author": "최웹개발",
+      "question_team": "dev_user_208",
+      "question_timestamp": "2024-01-17 05:20:00",
+      "num_answers": 4,
+      "answer_authors": [
+        "테스트엔지니어",
+        "컨퍼런스스피커",
+        "인프라엔지니어",
+        "기술리더"
+      ],
+      "answer_teams": [
+        "dev_user_214",
+        "dev_user_215",
+        "dev_user_216",
+        "dev_user_217"
+      ]
+    }
+  },
+  {
+    "content": "질문: CICD 파이프라인에서 테스트가 실패했을 때 자동으로 롤백하는 방법이 있나요?\n\n답변:\n1. Prometheus, Grafana, ELK 스택 등을 사용해서 메트릭과 로그를 수집하고 시각화하세요.\n2. 또 다른 접근법을 제안드려요.\n",
+    "metadata": {
+      "question": "CICD 파이프라인에서 테스트가 실패했을 때 자동으로 롤백하는 방법이 있나요?",
+      "question_author": "오픈소스기여자",
+      "question_team": "dev_user_218",
+      "question_timestamp": "2024-01-17 08:00:00",
+      "num_answers": 2,
+      "answer_authors": [
+        "쿠버네티스",
+        "로그분석가"
+      ],
+      "answer_teams": [
+        "dev_user_219",
+        "dev_user_220"
+      ]
+    }
+  },
+  {
+    "content": "질문: 보안상 주의할 점이 있나요?\n\n답변:\n1. 좋은 질문이네요!\n2. 실제로 적용해봐야겠어요.\n",
+    "metadata": {
+      "question": "보안상 주의할 점이 있나요?",
+      "question_author": "코딩부트캠프강사",
+      "question_team": "dev_user_222",
+      "question_timestamp": "2024-01-19 23:54:00",
+      "num_answers": 2,
+      "answer_authors": [
+        "김개발",
+        "쿠버네티스"
+      ],
+      "answer_teams": [
+        "dev_user_223",
+        "dev_user_224"
+      ]
+    }
+  },
+  {
+    "content": "질문: 파이썬에서 비동기 프로그래밍을 어떻게 하면 될까요?\n\n답변:\n1. 클래스는 객체를 만들기 위한 설계도이고, 객체는 그 설계도로 만든 실제 인스턴스예요.\n2. 추가로 고려해볼 점이 있어요.\n3. 코드로 직접 보여주시면 이해하기 쉬울 것 같아요.\n",
+    "metadata": {
+      "question": "파이썬에서 비동기 프로그래밍을 어떻게 하면 될까요?",
+      "question_author": "데이터베이스관리자",
+      "question_team": "dev_user_226",
+      "question_timestamp": "2024-01-17 11:00:00",
+      "num_answers": 3,
+      "answer_authors": [
+        "코딩부트캠프강사",
+        "풀스택개발자",
+        "데이터베이스관리자"
+      ],
+      "answer_teams": [
+        "dev_user_227",
+        "dev_user_228",
+        "dev_user_226"
+      ]
+    }
+  },
+  {
+    "content": "질문: 이런 방법도 있군요!\n\n답변:\n1. 도움이 되는 정보 감사합니다.\n",
+    "metadata": {
+      "question": "이런 방법도 있군요!",
+      "question_author": "판다스전문가",
+      "question_team": "dev_user_230",
+      "question_timestamp": "2024-01-19 14:02:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "배포전문가"
+      ],
+      "answer_teams": [
+        "dev_user_231"
+      ]
+    }
+  },
+  {
+    "content": "질문: 이런 방법도 있군요!\n\n답변:\n1. 클래스와 객체의 개념을 쉽게 설명해주세요.\n2. asyncio와 asyncawait 키워드를 사용하면 비동기 프로그래밍이 가능해요.\n3. 또 다른 접근법을 제안드려요.\n4. 또 다른 접근법을 제안드려요.\n",
+    "metadata": {
+      "question": "이런 방법도 있군요!",
+      "question_author": "외국계개발자",
+      "question_team": "dev_user_233",
+      "question_timestamp": "2024-01-20 09:00:00",
+      "num_answers": 4,
+      "answer_authors": [
+        "데이터분석가",
+        "판다스전문가",
+        "김개발",
+        "데이터베이스관리자"
+      ],
+      "answer_teams": [
+        "dev_user_234",
+        "dev_user_235",
+        "dev_user_236",
+        "dev_user_237"
+      ]
+    }
+  },
+  {
+    "content": "질문: 보안상 주의할 점이 있나요?\n\n답변:\n1. 좋은 질문이네요!\n",
+    "metadata": {
+      "question": "보안상 주의할 점이 있나요?",
+      "question_author": "인증전문가",
+      "question_team": "dev_user_241",
+      "question_timestamp": "2024-01-18 16:00:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "보안개발자"
+      ],
+      "answer_teams": [
+        "dev_user_242"
+      ]
+    }
+  },
+  {
+    "content": "질문: 보안 헤더 설정 방법을 알려주세요.\n\n답변:\n1. 입력값 검증, 출력값 이스케이프, CSP 헤더 설정 등을 적용하세요.\n2. 추가 정보를 드리면요.\n",
+    "metadata": {
+      "question": "보안 헤더 설정 방법을 알려주세요.",
+      "question_author": "백엔드신입",
+      "question_team": "dev_user_243",
+      "question_timestamp": "2024-01-17 17:00:00",
+      "num_answers": 2,
+      "answer_authors": [
+        "외국계개발자",
+        "클라우드아키텍트"
+      ],
+      "answer_teams": [
+        "dev_user_244",
+        "dev_user_245"
+      ]
+    }
+  },
+  {
+    "content": "질문: 간단한 예제로 설명해주실 수 있나요?\n\n답변:\n1. 도움이 되는 정보 감사합니다.\n",
+    "metadata": {
+      "question": "간단한 예제로 설명해주실 수 있나요?",
+      "question_author": "백엔드신입",
+      "question_team": "dev_user_243",
+      "question_timestamp": "2024-01-17 18:05:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "인증전문가"
+      ],
+      "answer_teams": [
+        "dev_user_249"
+      ]
+    }
+  },
+  {
+    "content": "질문: 보안상 주의할 점이 있나요?\n\n답변:\n1. 실제로 적용해봐야겠어요.\n2. 좋은 질문이네요!\n",
+    "metadata": {
+      "question": "보안상 주의할 점이 있나요?",
+      "question_author": "서버개발자",
+      "question_team": "dev_user_250",
+      "question_timestamp": "2024-01-18 13:56:00",
+      "num_answers": 2,
+      "answer_authors": [
+        "박코딩",
+        "이프로그래머"
+      ],
+      "answer_teams": [
+        "dev_user_251",
+        "dev_user_252"
+      ]
+    }
+  },
+  {
+    "content": "질문: 파이썬에서 비동기 프로그래밍을 어떻게 하면 될까요?\n\n답변:\n1. 데코레이터는 함수나 클래스를 수정하지 않고도 기능을 추가할 수 있게 해주는 패턴이에요.\n",
+    "metadata": {
+      "question": "파이썬에서 비동기 프로그래밍을 어떻게 하면 될까요?",
+      "question_author": "서버개발자",
+      "question_team": "dev_user_253",
+      "question_timestamp": "2024-01-17 19:00:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "오픈소스기여자"
+      ],
+      "answer_teams": [
+        "dev_user_254"
+      ]
+    }
+  },
+  {
+    "content": "질문: 다른 해결 방법도 있어요.\n\n답변:\n1. 업계 표준 관행은 이런 거예요.\n2. 이해했습니다. 실제 코드로 보여주시면 더 좋을 것 같아요.\n",
+    "metadata": {
+      "question": "다른 해결 방법도 있어요.",
+      "question_author": "오픈소스기여자",
+      "question_team": "dev_user_255",
+      "question_timestamp": "2024-01-17 19:34:00",
+      "num_answers": 2,
+      "answer_authors": [
+        "성능최적화",
+        "서버개발자"
+      ],
+      "answer_teams": [
+        "dev_user_256",
+        "dev_user_253"
+      ]
+    }
+  },
+  {
+    "content": "질문: 성능 최적화 방법이 궁금해요.\n\n답변:\n1. 추가로 궁금한 점이 있어요.\n",
+    "metadata": {
+      "question": "성능 최적화 방법이 궁금해요.",
+      "question_author": "배포전문가",
+      "question_team": "dev_user_258",
+      "question_timestamp": "2024-01-19 09:30:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "대기업개발자"
+      ],
+      "answer_teams": [
+        "dev_user_259"
+      ]
+    }
+  },
+  {
+    "content": "질문: 파이썬에서 비동기 프로그래밍을 어떻게 하면 될까요?\n\n답변:\n1. 리스트는 변경 가능하고 튜플은 변경 불가능해요. 튜플이 메모리 효율적이에요.\n2. 다른 관점에서 보면요.\n3. 이런 접근 방식도 좋을 것 같아요.\n4. 이런 접근 방식도 좋을 것 같아요.\n",
+    "metadata": {
+      "question": "파이썬에서 비동기 프로그래밍을 어떻게 하면 될까요?",
+      "question_author": "빅데이터엔지니어",
+      "question_team": "dev_user_262",
+      "question_timestamp": "2024-01-17 21:00:00",
+      "num_answers": 4,
+      "answer_authors": [
+        "대기업개발자",
+        "풀스택개발자",
+        "오픈소스기여자",
+        "스터디리더"
+      ],
+      "answer_teams": [
+        "dev_user_263",
+        "dev_user_264",
+        "dev_user_265",
+        "dev_user_266"
+      ]
+    }
+  },
+  {
+    "content": "질문: 이런 방법도 있군요!\n\n답변:\n1. 도움이 되는 정보 감사합니다.\n2. 실제로 적용해봐야겠어요.\n",
+    "metadata": {
+      "question": "이런 방법도 있군요!",
+      "question_author": "박코딩",
+      "question_team": "dev_user_269",
+      "question_timestamp": "2024-01-19 15:32:00",
+      "num_answers": 2,
+      "answer_authors": [
+        "판다스전문가",
+        "신입개발자"
+      ],
+      "answer_teams": [
+        "dev_user_270",
+        "dev_user_271"
+      ]
+    }
+  },
+  {
+    "content": "질문: 세션 관리 보안은 어떻게 하나요?\n\n답변:\n1. 강력한 암호화 알고리즘, 인증서 검증, HSTS 헤더 설정 등을 고려하세요.\n",
+    "metadata": {
+      "question": "세션 관리 보안은 어떻게 하나요?",
+      "question_author": "데이터베이스관리자",
+      "question_team": "dev_user_272",
+      "question_timestamp": "2024-01-17 23:00:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "주니어개발자"
+      ],
+      "answer_teams": [
+        "dev_user_273"
+      ]
+    }
+  },
+  {
+    "content": "질문: 일반적으로 권장하는 방법은요.\n\n답변:\n1. 이해했습니다. 실제 코드로 보여주시면 더 좋을 것 같아요.\n",
+    "metadata": {
+      "question": "일반적으로 권장하는 방법은요.",
+      "question_author": "기술블로거",
+      "question_team": "dev_user_274",
+      "question_timestamp": "2024-01-17 23:14:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "데이터베이스관리자"
+      ],
+      "answer_teams": [
+        "dev_user_272"
+      ]
+    }
+  },
+  {
+    "content": "질문: 에러가 발생했는데 도움을 주실 수 있나요?\n\n답변:\n1. 실제로 적용해봐야겠어요.\n2. 도움이 되는 정보 감사합니다.\n3. 추가로 궁금한 점이 있어요.\n4. 데이터베이스 백업 전략을 알려주세요.\n5. 마스터-슬레이브 구조나 마스터-마스터 구조로 복제를 설정할 수 있어요.\n6. 추가로 고려해볼 점이 있어요.\n7. 도움이 되는 정보 감사합니다.\n",
+    "metadata": {
+      "question": "에러가 발생했는데 도움을 주실 수 있나요?",
+      "question_author": "풀스택개발자",
+      "question_team": "dev_user_276",
+      "question_timestamp": "2024-01-20 23:12:00",
+      "num_answers": 7,
+      "answer_authors": [
+        "김개발",
+        "프리랜서",
+        "주니어개발자",
+        "클라우드아키텍트",
+        "보안개발자",
+        "백엔드신입",
+        "클라우드아키텍트"
+      ],
+      "answer_teams": [
+        "dev_user_277",
+        "dev_user_278",
+        "dev_user_279",
+        "dev_user_280",
+        "dev_user_281",
+        "dev_user_282",
+        "dev_user_283"
+      ]
+    }
+  },
+  {
+    "content": "질문: 성능 최적화 방법이 궁금해요.\n\n답변:\n1. 저도 궁금했던 내용이에요.\n",
+    "metadata": {
+      "question": "성능 최적화 방법이 궁금해요.",
+      "question_author": "SQL최적화",
+      "question_team": "dev_user_285",
+      "question_timestamp": "2024-01-21 12:30:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "멘토"
+      ],
+      "answer_teams": [
+        "dev_user_286"
+      ]
+    }
+  },
+  {
+    "content": "질문: SQL 인젝션 공격을 어떻게 방지하나요?\n\n답변:\n1. 입력값 검증, 출력값 이스케이프, CSP 헤더 설정 등을 적용하세요.\n2. 추가 정보를 드리면요.\n3. 다른 관점에서 보면요.\n4. 참고로 이런 정보도 도움이 될 거예요.\n5. 이해했습니다. 실제 코드로 보여주시면 더 좋을 것 같아요.\n",
+    "metadata": {
+      "question": "SQL 인젝션 공격을 어떻게 방지하나요?",
+      "question_author": "데이터베이스관리자",
+      "question_team": "dev_user_287",
+      "question_timestamp": "2024-01-18 03:00:00",
+      "num_answers": 5,
+      "answer_authors": [
+        "테스트엔지니어",
+        "이프로그래머",
+        "쿠버네티스",
+        "데이터분석가",
+        "데이터베이스관리자"
+      ],
+      "answer_teams": [
+        "dev_user_288",
+        "dev_user_289",
+        "dev_user_290",
+        "dev_user_291",
+        "dev_user_287"
+      ]
+    }
+  },
+  {
+    "content": "질문: 보안상 주의할 점이 있나요?\n\n답변:\n1. 추가로 궁금한 점이 있어요.\n2. 저도 궁금했던 내용이에요.\n",
+    "metadata": {
+      "question": "보안상 주의할 점이 있나요?",
+      "question_author": "인증전문가",
+      "question_team": "dev_user_293",
+      "question_timestamp": "2024-01-20 15:06:00",
+      "num_answers": 2,
+      "answer_authors": [
+        "한리액트",
+        "대기업개발자"
+      ],
+      "answer_teams": [
+        "dev_user_294",
+        "dev_user_295"
+      ]
+    }
+  },
+  {
+    "content": "질문: 인프라 비용을 최적화하는 방법이 뭔가요?\n\n답변:\n1. 장점은 서버 관리 불필요, 자동 스케일링이고, 단점은 콜드 스타트, 벤더 락인이에요.\n",
+    "metadata": {
+      "question": "인프라 비용을 최적화하는 방법이 뭔가요?",
+      "question_author": "빅데이터엔지니어",
+      "question_team": "dev_user_297",
+      "question_timestamp": "2024-01-18 05:00:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "최웹개발"
+      ],
+      "answer_teams": [
+        "dev_user_298"
+      ]
+    }
+  },
+  {
+    "content": "질문: 일반적으로 권장하는 방법은요.\n\n답변:\n1. 추가로 고려해볼 점이 있어요.\n2. 그런데 이런 에러가 발생했어요.\n3. 좋은 질문이네요!\n",
+    "metadata": {
+      "question": "일반적으로 권장하는 방법은요.",
+      "question_author": "대기업개발자",
+      "question_team": "dev_user_299",
+      "question_timestamp": "2024-01-18 05:46:00",
+      "num_answers": 3,
+      "answer_authors": [
+        "클라우드아키텍트",
+        "빅데이터엔지니어",
+        "쿠버네티스"
+      ],
+      "answer_teams": [
+        "dev_user_300",
+        "dev_user_297",
+        "dev_user_302"
+      ]
+    }
+  },
+  {
+    "content": "질문: 성능 최적화 방법이 궁금해요.\n\n답변:\n1. 저도 궁금했던 내용이에요.\n",
+    "metadata": {
+      "question": "성능 최적화 방법이 궁금해요.",
+      "question_author": "대기업개발자",
+      "question_team": "dev_user_304",
+      "question_timestamp": "2024-01-20 09:01:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "정프론트"
+      ],
+      "answer_teams": [
+        "dev_user_305"
+      ]
+    }
+  },
+  {
+    "content": "질문: 파이썬에서 리스트와 튜플의 차이점은 뭔가요?\n\n답변:\n1. 리스트는 변경 가능하고 튜플은 변경 불가능해요. 튜플이 메모리 효율적이에요.\n2. 다른 관점에서 보면요.\n3. 추가로 고려해볼 점이 있어요.\n",
+    "metadata": {
+      "question": "파이썬에서 리스트와 튜플의 차이점은 뭔가요?",
+      "question_author": "코딩부트캠프강사",
+      "question_team": "dev_user_306",
+      "question_timestamp": "2024-01-18 08:00:00",
+      "num_answers": 3,
+      "answer_authors": [
+        "스타트업개발자",
+        "빅데이터엔지니어",
+        "코딩부트캠프강사"
+      ],
+      "answer_teams": [
+        "dev_user_307",
+        "dev_user_308",
+        "dev_user_309"
+      ]
+    }
+  },
+  {
+    "content": "질문: 대안으로 이런 방법도 있습니다.\n\n답변:\n1. 실제 구현 코드를 보고 싶어요.\n2. 추가로 궁금한 점이 있어요.\n3. 도움이 되는 정보 감사합니다.\n",
+    "metadata": {
+      "question": "대안으로 이런 방법도 있습니다.",
+      "question_author": "주니어개발자",
+      "question_team": "dev_user_310",
+      "question_timestamp": "2024-01-18 08:28:00",
+      "num_answers": 3,
+      "answer_authors": [
+        "코딩부트캠프강사",
+        "풀스택개발자",
+        "인프라엔지니어"
+      ],
+      "answer_teams": [
+        "dev_user_306",
+        "dev_user_312",
+        "dev_user_313"
+      ]
+    }
+  },
+  {
+    "content": "질문: 에러가 발생했는데 도움을 주실 수 있나요?\n\n답변:\n1. 도움이 되는 정보 감사합니다.\n",
+    "metadata": {
+      "question": "에러가 발생했는데 도움을 주실 수 있나요?",
+      "question_author": "판다스전문가",
+      "question_team": "dev_user_314",
+      "question_timestamp": "2024-01-19 04:48:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "마이크로서비스"
+      ],
+      "answer_teams": [
+        "dev_user_315"
+      ]
+    }
+  },
+  {
+    "content": "질문: HTTPS 설정 시 주의사항이 뭔가요?\n\n답변:\n1. 사용자가 의도하지 않은 요청을 강제로 실행시키는 공격이에요.\n2. 추가 정보를 드리면요.\n",
+    "metadata": {
+      "question": "HTTPS 설정 시 주의사항이 뭔가요?",
+      "question_author": "빅데이터엔지니어",
+      "question_team": "dev_user_316",
+      "question_timestamp": "2024-01-18 11:00:00",
+      "num_answers": 2,
+      "answer_authors": [
+        "정프론트",
+        "최웹개발"
+      ],
+      "answer_teams": [
+        "dev_user_317",
+        "dev_user_318"
+      ]
+    }
+  },
+  {
+    "content": "질문: 간단한 예제로 설명해주실 수 있나요?\n\n답변:\n1. 추가로 궁금한 점이 있어요.\n",
+    "metadata": {
+      "question": "간단한 예제로 설명해주실 수 있나요?",
+      "question_author": "빅데이터엔지니어",
+      "question_team": "dev_user_316",
+      "question_timestamp": "2024-01-18 12:24:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "프리랜서"
+      ],
+      "answer_teams": [
+        "dev_user_320"
+      ]
+    }
+  },
+  {
+    "content": "질문: 보안상 주의할 점이 있나요?\n\n답변:\n1. 로드 밸런싱 전략을 알려주세요.\n2. 라운드 로빈, 가중치 기반, 지리적 분산 등의 전략이 있어요.\n3. 모범 사례를 말씀드리면요.\n4. 이해했습니다. 실제 코드로 보여주시면 더 좋을 것 같아요.\n5. 실제로 적용해봐야겠어요.\n6. 저도 궁금했던 내용이에요.\n7. 추가로 궁금한 점이 있어요.\n8. 저도 궁금했던 내용이에요.\n",
+    "metadata": {
+      "question": "보안상 주의할 점이 있나요?",
+      "question_author": "프리랜서",
+      "question_team": "dev_user_323",
+      "question_timestamp": "2024-01-21 18:40:00",
+      "num_answers": 8,
+      "answer_authors": [
+        "자동화전문가",
+        "판다스전문가",
+        "멘토",
+        "자동화전문가",
+        "배포전문가",
+        "데이터베이스관리자",
+        "쿠버네티스",
+        "테스트엔지니어"
+      ],
+      "answer_teams": [
+        "dev_user_324",
+        "dev_user_325",
+        "dev_user_326",
+        "dev_user_324",
+        "dev_user_328",
+        "dev_user_329",
+        "dev_user_330",
+        "dev_user_331"
+      ]
+    }
+  },
+  {
+    "content": "질문: 보안 헤더 설정 방법을 알려주세요.\n\n답변:\n1. OAuth 2.0은 인증 프로토콜이고, JWT는 토큰 형식이에요.\n",
+    "metadata": {
+      "question": "보안 헤더 설정 방법을 알려주세요.",
+      "question_author": "이프로그래머",
+      "question_team": "dev_user_332",
+      "question_timestamp": "2024-01-18 15:00:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "정프론트"
+      ],
+      "answer_teams": [
+        "dev_user_333"
+      ]
+    }
+  },
+  {
+    "content": "질문: 대안으로 이런 방법도 있습니다.\n\n답변:\n1. 보완 설명을 드리면요.\n2. 이런 접근 방식도 좋을 것 같아요.\n",
+    "metadata": {
+      "question": "대안으로 이런 방법도 있습니다.",
+      "question_author": "대기업개발자",
+      "question_team": "dev_user_334",
+      "question_timestamp": "2024-01-18 15:48:00",
+      "num_answers": 2,
+      "answer_authors": [
+        "대기업개발자",
+        "컨퍼런스스피커"
+      ],
+      "answer_teams": [
+        "dev_user_335",
+        "dev_user_336"
+      ]
+    }
+  },
+  {
+    "content": "질문: 성능 최적화 방법이 궁금해요.\n\n답변:\n1. 저도 궁금했던 내용이에요.\n",
+    "metadata": {
+      "question": "성능 최적화 방법이 궁금해요.",
+      "question_author": "배포전문가",
+      "question_team": "dev_user_337",
+      "question_timestamp": "2024-01-21 20:24:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "인증전문가"
+      ],
+      "answer_teams": [
+        "dev_user_338"
+      ]
+    }
+  },
+  {
+    "content": "질문: 보안상 주의할 점이 있나요?\n\n답변:\n1. 실제로 적용해봐야겠어요.\n",
+    "metadata": {
+      "question": "보안상 주의할 점이 있나요?",
+      "question_author": "웹보안",
+      "question_team": "dev_user_339",
+      "question_timestamp": "2024-01-19 01:39:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "도커마스터"
+      ],
+      "answer_teams": [
+        "dev_user_340"
+      ]
+    }
+  },
+  {
+    "content": "질문: 파이썬에서 예외 처리는 어떻게 하는 게 좋을까요?\n\n답변:\n1. Django는 풀스택 프레임워크로 대규모 프로젝트에 적합하고, Flask는 가볍고 유연해서 작은 프로젝트나 API 개발에 좋아요.\n2. 이런 접근 방식도 좋을 것 같아요.\n3. 참고로 이런 정보도 도움이 될 거예요.\n",
+    "metadata": {
+      "question": "파이썬에서 예외 처리는 어떻게 하는 게 좋을까요?",
+      "question_author": "외국계개발자",
+      "question_team": "dev_user_341",
+      "question_timestamp": "2024-01-18 16:00:00",
+      "num_answers": 3,
+      "answer_authors": [
+        "인프라엔지니어",
+        "한리액트",
+        "컨퍼런스스피커"
+      ],
+      "answer_teams": [
+        "dev_user_342",
+        "dev_user_343",
+        "dev_user_344"
+      ]
+    }
+  },
+  {
+    "content": "질문: 좋은 정보네요! 혹시 관련 자료나 문서가 있나요?\n\n답변:\n1. 실제로 적용해봐야겠어요.\n",
+    "metadata": {
+      "question": "좋은 정보네요! 혹시 관련 자료나 문서가 있나요?",
+      "question_author": "외국계개발자",
+      "question_team": "dev_user_341",
+      "question_timestamp": "2024-01-18 16:36:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "인프라엔지니어"
+      ],
+      "answer_teams": [
+        "dev_user_346"
+      ]
+    }
+  },
+  {
+    "content": "질문: 예제 코드를 보여주실 수 있나요?\n\n답변:\n1. 도움이 되는 정보 감사합니다.\n2. 실제로 적용해봐야겠어요.\n",
+    "metadata": {
+      "question": "예제 코드를 보여주실 수 있나요?",
+      "question_author": "멘토",
+      "question_team": "dev_user_347",
+      "question_timestamp": "2024-01-20 03:50:00",
+      "num_answers": 2,
+      "answer_authors": [
+        "기술블로거",
+        "모니터링전문가"
+      ],
+      "answer_teams": [
+        "dev_user_348",
+        "dev_user_349"
+      ]
+    }
+  },
+  {
+    "content": "질문: 다른 방법도 시도해보세요.\n\n답변:\n1. 보완 설명을 드리면요.\n2. 모범 사례를 말씀드리면요.\n",
+    "metadata": {
+      "question": "다른 방법도 시도해보세요.",
+      "question_author": "서버개발자",
+      "question_team": "dev_user_352",
+      "question_timestamp": "2024-01-18 19:18:00",
+      "num_answers": 2,
+      "answer_authors": [
+        "스타트업개발자",
+        "신입개발자"
+      ],
+      "answer_teams": [
+        "dev_user_353",
+        "dev_user_354"
+      ]
+    }
+  },
+  {
+    "content": "질문: 보안상 주의할 점이 있나요?\n\n답변:\n1. 도움이 되는 정보 감사합니다.\n",
+    "metadata": {
+      "question": "보안상 주의할 점이 있나요?",
+      "question_author": "프리랜서",
+      "question_team": "dev_user_355",
+      "question_timestamp": "2024-01-20 23:15:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "스타트업개발자"
+      ],
+      "answer_teams": [
+        "dev_user_356"
+      ]
+    }
+  },
+  {
+    "content": "질문: 이런 방법도 있군요!\n\n답변:\n1. 좋은 질문이네요!\n",
+    "metadata": {
+      "question": "이런 방법도 있군요!",
+      "question_author": "테스트엔지니어",
+      "question_team": "dev_user_357",
+      "question_timestamp": "2024-01-20 03:27:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "백엔드신입"
+      ],
+      "answer_teams": [
+        "dev_user_358"
+      ]
+    }
+  },
+  {
+    "content": "질문: 데이터베이스 성능 튜닝 방법이 궁금해요.\n\n답변:\n1. SQL은 관계형이고 구조화된 쿼리, NoSQL은 비관계형이고 유연한 스키마예요.\n2. 참고로 이런 정보도 도움이 될 거예요.\n",
+    "metadata": {
+      "question": "데이터베이스 성능 튜닝 방법이 궁금해요.",
+      "question_author": "자동화전문가",
+      "question_team": "dev_user_359",
+      "question_timestamp": "2024-01-18 21:00:00",
+      "num_answers": 2,
+      "answer_authors": [
+        "쿠버네티스",
+        "서버개발자"
+      ],
+      "answer_teams": [
+        "dev_user_360",
+        "dev_user_361"
+      ]
+    }
+  },
+  {
+    "content": "질문: 이런 방법도 있군요!\n\n답변:\n1. 추가로 궁금한 점이 있어요.\n2. 좋은 질문이네요!\n",
+    "metadata": {
+      "question": "이런 방법도 있군요!",
+      "question_author": "스타트업개발자",
+      "question_team": "dev_user_362",
+      "question_timestamp": "2024-01-21 00:04:00",
+      "num_answers": 2,
+      "answer_authors": [
+        "로그분석가",
+        "스터디리더"
+      ],
+      "answer_teams": [
+        "dev_user_363",
+        "dev_user_364"
+      ]
+    }
+  },
+  {
+    "content": "질문: 이런 방법도 있군요!\n\n답변:\n1. JavaScript에서 this 바인딩이 헷갈려요.\n2. asyncawait가 더 읽기 쉽고 에러 처리가 간단해요. Promise 체이닝보다 선호됩니다.\n3. 좋은 습관으로는 이런 게 있어요.\n",
+    "metadata": {
+      "question": "이런 방법도 있군요!",
+      "question_author": "클라우드아키텍트",
+      "question_team": "dev_user_365",
+      "question_timestamp": "2024-01-20 00:23:00",
+      "num_answers": 3,
+      "answer_authors": [
+        "보안개발자",
+        "김개발",
+        "웹보안"
+      ],
+      "answer_teams": [
+        "dev_user_366",
+        "dev_user_367",
+        "dev_user_368"
+      ]
+    }
+  },
+  {
+    "content": "질문: 에러가 발생했는데 도움을 주실 수 있나요?\n\n답변:\n1. 추가로 궁금한 점이 있어요.\n",
+    "metadata": {
+      "question": "에러가 발생했는데 도움을 주실 수 있나요?",
+      "question_author": "데이터분석가",
+      "question_team": "dev_user_370",
+      "question_timestamp": "2024-01-21 09:32:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "한리액트"
+      ],
+      "answer_teams": [
+        "dev_user_371"
+      ]
+    }
+  },
+  {
+    "content": "질문: 데이터베이스 복제는 어떻게 하나요?\n\n답변:\n1. 인덱스 최적화, 쿼리 튜닝, 하드웨어 업그레이드 등을 고려해보세요.\n2. 또 다른 접근법을 제안드려요.\n",
+    "metadata": {
+      "question": "데이터베이스 복제는 어떻게 하나요?",
+      "question_author": "판다스전문가",
+      "question_team": "dev_user_373",
+      "question_timestamp": "2024-01-19 01:00:00",
+      "num_answers": 2,
+      "answer_authors": [
+        "외국계개발자",
+        "데브옵스"
+      ],
+      "answer_teams": [
+        "dev_user_374",
+        "dev_user_375"
+      ]
+    }
+  },
+  {
+    "content": "질문: 에러가 발생했는데 도움을 주실 수 있나요?\n\n답변:\n1. 저도 궁금했던 내용이에요.\n2. 좋은 질문이네요!\n3. 데코레이터가 뭔지 설명해주세요.\n4. try-except 블록을 사용해서 예외를 처리하고, finally 블록으로 정리 작업을 할 수 있어요.\n",
+    "metadata": {
+      "question": "에러가 발생했는데 도움을 주실 수 있나요?",
+      "question_author": "보안개발자",
+      "question_team": "dev_user_380",
+      "question_timestamp": "2024-01-20 17:47:00",
+      "num_answers": 4,
+      "answer_authors": [
+        "오픈소스기여자",
+        "SQL최적화",
+        "클라우드아키텍트",
+        "풀스택개발자"
+      ],
+      "answer_teams": [
+        "dev_user_381",
+        "dev_user_382",
+        "dev_user_383",
+        "dev_user_384"
+      ]
+    }
+  },
+  {
+    "content": "질문: 보안상 주의할 점이 있나요?\n\n답변:\n1. 추가로 궁금한 점이 있어요.\n2. 추가로 궁금한 점이 있어요.\n3. MySQL에서 인덱스가 제대로 사용되지 않는 경우가 있어요.\n4. 원자성, 일관성, 격리성, 지속성을 의미해요.\n",
+    "metadata": {
+      "question": "보안상 주의할 점이 있나요?",
+      "question_author": "박코딩",
+      "question_team": "dev_user_388",
+      "question_timestamp": "2024-01-22 01:18:00",
+      "num_answers": 4,
+      "answer_authors": [
+        "기술블로거",
+        "컨퍼런스스피커",
+        "쿠버네티스",
+        "컨퍼런스스피커"
+      ],
+      "answer_teams": [
+        "dev_user_389",
+        "dev_user_390",
+        "dev_user_391",
+        "dev_user_392"
+      ]
+    }
+  },
+  {
+    "content": "질문: 일반적으로 권장하는 방법은요.\n\n답변:\n1. 좋은 습관으로는 이런 게 있어요.\n2. 모범 사례를 말씀드리면요.\n",
+    "metadata": {
+      "question": "일반적으로 권장하는 방법은요.",
+      "question_author": "판다스전문가",
+      "question_team": "dev_user_393",
+      "question_timestamp": "2024-01-19 03:44:00",
+      "num_answers": 2,
+      "answer_authors": [
+        "신입개발자",
+        "웹보안"
+      ],
+      "answer_teams": [
+        "dev_user_394",
+        "dev_user_395"
+      ]
+    }
+  },
+  {
+    "content": "질문: 보안상 주의할 점이 있나요?\n\n답변:\n1. 추가로 궁금한 점이 있어요.\n2. 저도 궁금했던 내용이에요.\n3. 추가로 궁금한 점이 있어요.\n",
+    "metadata": {
+      "question": "보안상 주의할 점이 있나요?",
+      "question_author": "배포전문가",
+      "question_team": "dev_user_396",
+      "question_timestamp": "2024-01-23 03:10:00",
+      "num_answers": 3,
+      "answer_authors": [
+        "서버개발자",
+        "외국계개발자",
+        "이프로그래머"
+      ],
+      "answer_teams": [
+        "dev_user_397",
+        "dev_user_398",
+        "dev_user_399"
+      ]
+    }
+  },
+  {
+    "content": "질문: 패스워드 해싱은 어떻게 해야 하나요?\n\n답변:\n1. Prepared Statement 사용, 입력값 검증, 에스케이프 처리 등을 해야 해요.\n2. 또 다른 접근법을 제안드려요.\n3. 다른 관점에서 보면요.\n4. 좋은 질문이네요!\n",
+    "metadata": {
+      "question": "패스워드 해싱은 어떻게 해야 하나요?",
+      "question_author": "보안개발자",
+      "question_team": "dev_user_400",
+      "question_timestamp": "2024-01-19 05:00:00",
+      "num_answers": 4,
+      "answer_authors": [
+        "멘토",
+        "API설계자",
+        "품질관리자",
+        "외국계개발자"
+      ],
+      "answer_teams": [
+        "dev_user_401",
+        "dev_user_402",
+        "dev_user_403",
+        "dev_user_404"
+      ]
+    }
+  },
+  {
+    "content": "질문: 성능 최적화 방법이 궁금해요.\n\n답변:\n1. 추가로 궁금한 점이 있어요.\n2. 저도 궁금했던 내용이에요.\n",
+    "metadata": {
+      "question": "성능 최적화 방법이 궁금해요.",
+      "question_author": "SQL최적화",
+      "question_team": "dev_user_405",
+      "question_timestamp": "2024-01-20 02:20:00",
+      "num_answers": 2,
+      "answer_authors": [
+        "인증전문가",
+        "기술리더"
+      ],
+      "answer_teams": [
+        "dev_user_406",
+        "dev_user_407"
+      ]
+    }
+  },
+  {
+    "content": "질문: 블루-그린 배포와 카나리 배포의 차이점을 알려주세요.\n\n답변:\n1. 인프라를 코드로 정의하고 버전 관리하는 방식이에요. Terraform, CloudFormation 등이 있어요.\n2. 보완 설명을 드리면요.\n3. 추가 정보를 드리면요.\n",
+    "metadata": {
+      "question": "블루-그린 배포와 카나리 배포의 차이점을 알려주세요.",
+      "question_author": "박코딩",
+      "question_team": "dev_user_408",
+      "question_timestamp": "2024-01-19 07:00:00",
+      "num_answers": 3,
+      "answer_authors": [
+        "한리액트",
+        "성능튜닝",
+        "신입개발자"
+      ],
+      "answer_teams": [
+        "dev_user_409",
+        "dev_user_410",
+        "dev_user_411"
+      ]
+    }
+  },
+  {
+    "content": "질문: 에러 메시지가 나오는데 어떻게 해결해야 할까요?\n\n답변:\n1. 실제로 적용해봐야겠어요.\n",
+    "metadata": {
+      "question": "에러 메시지가 나오는데 어떻게 해결해야 할까요?",
+      "question_author": "박코딩",
+      "question_team": "dev_user_408",
+      "question_timestamp": "2024-01-19 08:52:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "대기업개발자"
+      ],
+      "answer_teams": [
+        "dev_user_413"
+      ]
+    }
+  },
+  {
+    "content": "질문: 보안상 주의할 점이 있나요?\n\n답변:\n1. 실제로 적용해봐야겠어요.\n",
+    "metadata": {
+      "question": "보안상 주의할 점이 있나요?",
+      "question_author": "인증전문가",
+      "question_team": "dev_user_414",
+      "question_timestamp": "2024-01-24 07:30:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "빅데이터엔지니어"
+      ],
+      "answer_teams": [
+        "dev_user_415"
+      ]
+    }
+  },
+  {
+    "content": "질문: React Hooks의 규칙이 뭔가요?\n\n답변:\n1. useState는 간단한 상태에 적합하고, useReducer는 복잡한 상태 로직에 적합해요.\n2. 좋은 습관으로는 이런 게 있어요.\n3. 추가로 고려해볼 점이 있어요.\n",
+    "metadata": {
+      "question": "React Hooks의 규칙이 뭔가요?",
+      "question_author": "데이터베이스관리자",
+      "question_team": "dev_user_417",
+      "question_timestamp": "2024-01-19 09:00:00",
+      "num_answers": 3,
+      "answer_authors": [
+        "데브옵스",
+        "스타트업개발자",
+        "보안개발자"
+      ],
+      "answer_teams": [
+        "dev_user_418",
+        "dev_user_419",
+        "dev_user_420"
+      ]
+    }
+  },
+  {
+    "content": "질문: 다른 방법도 시도해보세요.\n\n답변:\n1. 실제 구현 코드를 보고 싶어요.\n",
+    "metadata": {
+      "question": "다른 방법도 시도해보세요.",
+      "question_author": "클라우드아키텍트",
+      "question_team": "dev_user_421",
+      "question_timestamp": "2024-01-19 10:08:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "데이터베이스관리자"
+      ],
+      "answer_teams": [
+        "dev_user_417"
+      ]
+    }
+  },
+  {
+    "content": "질문: 성능 최적화 방법이 궁금해요.\n\n답변:\n1. 도움이 되는 정보 감사합니다.\n2. 데이터베이스 백업 전략을 알려주세요.\n3. 원자성, 일관성, 격리성, 지속성을 의미해요.\n4. 업계 표준 관행은 이런 거예요.\n5. 좋은 습관으로는 이런 게 있어요.\n6. 실제 구현 코드를 보고 싶어요.\n7. 도움이 되는 정보 감사합니다.\n",
+    "metadata": {
+      "question": "성능 최적화 방법이 궁금해요.",
+      "question_author": "한리액트",
+      "question_team": "dev_user_425",
+      "question_timestamp": "2024-01-20 04:12:00",
+      "num_answers": 7,
+      "answer_authors": [
+        "박코딩",
+        "보안개발자",
+        "이프로그래머",
+        "데이터베이스관리자",
+        "클라우드아키텍트",
+        "보안개발자",
+        "도커마스터"
+      ],
+      "answer_teams": [
+        "dev_user_426",
+        "dev_user_427",
+        "dev_user_428",
+        "dev_user_429",
+        "dev_user_430",
+        "dev_user_427",
+        "dev_user_432"
+      ]
+    }
+  },
+  {
+    "content": "질문: 성능 최적화 방법이 궁금해요.\n\n답변:\n1. 좋은 질문이네요!\n2. 클로저가 뭔지 설명해주세요.\n3. asyncawait가 더 읽기 쉽고 에러 처리가 간단해요. Promise 체이닝보다 선호됩니다.\n4. 좋은 습관으로는 이런 게 있어요.\n",
+    "metadata": {
+      "question": "성능 최적화 방법이 궁금해요.",
+      "question_author": "보안개발자",
+      "question_team": "dev_user_434",
+      "question_timestamp": "2024-01-21 03:12:00",
+      "num_answers": 4,
+      "answer_authors": [
+        "배포전문가",
+        "인증전문가",
+        "스타트업개발자",
+        "오픈소스기여자"
+      ],
+      "answer_teams": [
+        "dev_user_435",
+        "dev_user_436",
+        "dev_user_437",
+        "dev_user_438"
+      ]
+    }
+  },
+  {
+    "content": "질문: 성능 최적화 방법이 궁금해요.\n\n답변:\n1. 도움이 되는 정보 감사합니다.\n",
+    "metadata": {
+      "question": "성능 최적화 방법이 궁금해요.",
+      "question_author": "스터디리더",
+      "question_team": "dev_user_440",
+      "question_timestamp": "2024-01-20 18:12:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "데브옵스"
+      ],
+      "answer_teams": [
+        "dev_user_441"
+      ]
+    }
+  },
+  {
+    "content": "질문: 호이스팅이 뭔가요?\n\n답변:\n1. asyncawait가 더 읽기 쉽고 에러 처리가 간단해요. Promise 체이닝보다 선호됩니다.\n",
+    "metadata": {
+      "question": "호이스팅이 뭔가요?",
+      "question_author": "백엔드신입",
+      "question_team": "dev_user_443",
+      "question_timestamp": "2024-01-19 17:00:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "데이터베이스관리자"
+      ],
+      "answer_teams": [
+        "dev_user_444"
+      ]
+    }
+  },
+  {
+    "content": "질문: 다른 방법도 시도해보세요.\n\n답변:\n1. 추가로 궁금한 점이 있어요.\n2. 좋은 질문이네요!\n3. 좋은 질문이네요!\n4. 추가로 궁금한 점이 있어요.\n",
+    "metadata": {
+      "question": "다른 방법도 시도해보세요.",
+      "question_author": "컨퍼런스스피커",
+      "question_team": "dev_user_445",
+      "question_timestamp": "2024-01-19 17:06:00",
+      "num_answers": 4,
+      "answer_authors": [
+        "API설계자",
+        "김개발",
+        "데이터베이스관리자",
+        "API설계자"
+      ],
+      "answer_teams": [
+        "dev_user_446",
+        "dev_user_447",
+        "dev_user_448",
+        "dev_user_449"
+      ]
+    }
+  },
+  {
+    "content": "질문: JavaScript에서 var, let, const의 차이점을 알려주세요.\n\n답변:\n1. 변수와 함수 선언이 스코프의 최상단으로 끌어올려지는 현상이에요.\n",
+    "metadata": {
+      "question": "JavaScript에서 var, let, const의 차이점을 알려주세요.",
+      "question_author": "배포전문가",
+      "question_team": "dev_user_450",
+      "question_timestamp": "2024-01-19 19:00:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "정프론트"
+      ],
+      "answer_teams": [
+        "dev_user_451"
+      ]
+    }
+  },
+  {
+    "content": "질문: 일반적으로 권장하는 방법은요.\n\n답변:\n1. 실제로 적용해봐야겠어요.\n2. 좋은 질문이네요!\n",
+    "metadata": {
+      "question": "일반적으로 권장하는 방법은요.",
+      "question_author": "성능튜닝",
+      "question_team": "dev_user_452",
+      "question_timestamp": "2024-01-19 19:12:00",
+      "num_answers": 2,
+      "answer_authors": [
+        "쿠버네티스",
+        "배포전문가"
+      ],
+      "answer_teams": [
+        "dev_user_453",
+        "dev_user_454"
+      ]
+    }
+  },
+  {
+    "content": "질문: 보안상 주의할 점이 있나요?\n\n답변:\n1. 저도 궁금했던 내용이에요.\n",
+    "metadata": {
+      "question": "보안상 주의할 점이 있나요?",
+      "question_author": "배포전문가",
+      "question_team": "dev_user_455",
+      "question_timestamp": "2024-01-22 11:22:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "스터디리더"
+      ],
+      "answer_teams": [
+        "dev_user_456"
+      ]
+    }
+  },
+  {
+    "content": "질문: 컴포넌트 간 데이터 전달 방법을 알려주세요.\n\n답변:\n1. useState는 간단한 상태에 적합하고, useReducer는 복잡한 상태 로직에 적합해요.\n",
+    "metadata": {
+      "question": "컴포넌트 간 데이터 전달 방법을 알려주세요.",
+      "question_author": "빅데이터엔지니어",
+      "question_team": "dev_user_457",
+      "question_timestamp": "2024-01-19 22:00:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "외국계개발자"
+      ],
+      "answer_teams": [
+        "dev_user_458"
+      ]
+    }
+  },
+  {
+    "content": "질문: 다른 방법도 시도해보세요.\n\n답변:\n1. 좋은 습관으로는 이런 게 있어요.\n2. 다른 관점에서 보면요.\n",
+    "metadata": {
+      "question": "다른 방법도 시도해보세요.",
+      "question_author": "최웹개발",
+      "question_team": "dev_user_459",
+      "question_timestamp": "2024-01-19 22:28:00",
+      "num_answers": 2,
+      "answer_authors": [
+        "주니어개발자",
+        "품질관리자"
+      ],
+      "answer_teams": [
+        "dev_user_460",
+        "dev_user_461"
+      ]
+    }
+  },
+  {
+    "content": "질문: 이런 방법도 있군요!\n\n답변:\n1. 추가로 궁금한 점이 있어요.\n",
+    "metadata": {
+      "question": "이런 방법도 있군요!",
+      "question_author": "웹보안",
+      "question_team": "dev_user_464",
+      "question_timestamp": "2024-01-23 16:00:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "배포전문가"
+      ],
+      "answer_teams": [
+        "dev_user_465"
+      ]
+    }
+  },
+  {
+    "content": "질문: chunksize 파라미터로 청크 단위로 읽거나, 필요한 컬럼만 선택해서 읽는 방법이 있어요.\n\n답변:\n1. 추가 정보를 드리면요.\n2. 추가로 고려해볼 점이 있어요.\n3. 한 가지 더 말씀드리면요.\n4. 이해했습니다. 실제 코드로 보여주시면 더 좋을 것 같아요.\n5. 저도 궁금했던 내용이에요.\n6. 실제로 적용해봐야겠어요.\n",
+    "metadata": {
+      "question": "chunksize 파라미터로 청크 단위로 읽거나, 필요한 컬럼만 선택해서 읽는 방법이 있어요.",
+      "question_author": "품질관리자",
+      "question_team": "dev_user_468",
+      "question_timestamp": "2024-01-19 23:19:00",
+      "num_answers": 6,
+      "answer_authors": [
+        "데이터분석가",
+        "자동화전문가",
+        "배포전문가",
+        "백엔드신입",
+        "마이크로서비스",
+        "테스트엔지니어"
+      ],
+      "answer_teams": [
+        "dev_user_469",
+        "dev_user_470",
+        "dev_user_471",
+        "dev_user_467",
+        "dev_user_473",
+        "dev_user_474"
+      ]
+    }
+  },
+  {
+    "content": "질문: 성능 최적화 방법이 궁금해요.\n\n답변:\n1. 실제로 적용해봐야겠어요.\n",
+    "metadata": {
+      "question": "성능 최적화 방법이 궁금해요.",
+      "question_author": "컨퍼런스스피커",
+      "question_team": "dev_user_475",
+      "question_timestamp": "2024-01-21 04:18:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "도커마스터"
+      ],
+      "answer_teams": [
+        "dev_user_476"
+      ]
+    }
+  },
+  {
+    "content": "질문: pandas로 대용량 CSV 파일을 읽을 때 메모리 사용량을 줄이는 방법이 있나요?\n\n답변:\n1. numpy는 수치 계산에 특화되어 있고, pandas는 데이터 분석과 조작에 특화되어 있어요.\n2. 또 다른 접근법을 제안드려요.\n",
+    "metadata": {
+      "question": "pandas로 대용량 CSV 파일을 읽을 때 메모리 사용량을 줄이는 방법이 있나요?",
+      "question_author": "모니터링전문가",
+      "question_team": "dev_user_477",
+      "question_timestamp": "2024-01-20 01:00:00",
+      "num_answers": 2,
+      "answer_authors": [
+        "이프로그래머",
+        "로그분석가"
+      ],
+      "answer_teams": [
+        "dev_user_478",
+        "dev_user_479"
+      ]
+    }
+  },
+  {
+    "content": "질문: 일반적으로 권장하는 방법은요.\n\n답변:\n1. 그런데 이런 에러가 발생했어요.\n2. 실제로 적용해봐야겠어요.\n",
+    "metadata": {
+      "question": "일반적으로 권장하는 방법은요.",
+      "question_author": "모니터링전문가",
+      "question_team": "dev_user_481",
+      "question_timestamp": "2024-01-20 02:40:00",
+      "num_answers": 2,
+      "answer_authors": [
+        "모니터링전문가",
+        "쿠버네티스"
+      ],
+      "answer_teams": [
+        "dev_user_477",
+        "dev_user_483"
+      ]
+    }
+  },
+  {
+    "content": "질문: 이런 방법도 있군요!\n\n답변:\n1. CSRF 공격이 뭔지 설명해주세요.\n2. bcrypt, scrypt, Argon2 같은 안전한 해싱 알고리즘을 사용하세요.\n3. 다른 관점에서 보면요.\n4. 이런 접근 방식도 좋을 것 같아요.\n",
+    "metadata": {
+      "question": "이런 방법도 있군요!",
+      "question_author": "코딩부트캠프강사",
+      "question_team": "dev_user_486",
+      "question_timestamp": "2024-01-22 14:27:00",
+      "num_answers": 4,
+      "answer_authors": [
+        "백엔드신입",
+        "배포전문가",
+        "품질관리자",
+        "품질관리자"
+      ],
+      "answer_teams": [
+        "dev_user_487",
+        "dev_user_488",
+        "dev_user_489",
+        "dev_user_490"
+      ]
+    }
+  },
+  {
+    "content": "질문: 보안상 주의할 점이 있나요?\n\n답변:\n1. 실제로 적용해봐야겠어요.\n",
+    "metadata": {
+      "question": "보안상 주의할 점이 있나요?",
+      "question_author": "인프라엔지니어",
+      "question_team": "dev_user_494",
+      "question_timestamp": "2024-01-23 11:11:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "한리액트"
+      ],
+      "answer_teams": [
+        "dev_user_495"
+      ]
+    }
+  },
+  {
+    "content": "질문: 파이썬에서 리스트와 튜플의 차이점은 뭔가요?\n\n답변:\n1. numpy는 수치 계산에 특화되어 있고, pandas는 데이터 분석과 조작에 특화되어 있어요.\n",
+    "metadata": {
+      "question": "파이썬에서 리스트와 튜플의 차이점은 뭔가요?",
+      "question_author": "백엔드신입",
+      "question_team": "dev_user_496",
+      "question_timestamp": "2024-01-20 03:00:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "SQL최적화"
+      ],
+      "answer_teams": [
+        "dev_user_497"
+      ]
+    }
+  },
+  {
+    "content": "질문: 일반적으로 권장하는 방법은요.\n\n답변:\n1. 참고로 이런 정보도 도움이 될 거예요.\n",
+    "metadata": {
+      "question": "일반적으로 권장하는 방법은요.",
+      "question_author": "박코딩",
+      "question_team": "dev_user_498",
+      "question_timestamp": "2024-01-20 03:58:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "마이크로서비스"
+      ],
+      "answer_teams": [
+        "dev_user_499"
+      ]
+    }
+  },
+  {
+    "content": "질문: 성능 최적화 방법이 궁금해요.\n\n답변:\n1. 도움이 되는 정보 감사합니다.\n",
+    "metadata": {
+      "question": "성능 최적화 방법이 궁금해요.",
+      "question_author": "이프로그래머",
+      "question_team": "dev_user_500",
+      "question_timestamp": "2024-01-24 18:38:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "풀스택개발자"
+      ],
+      "answer_teams": [
+        "dev_user_501"
+      ]
+    }
+  },
+  {
+    "content": "질문: 이런 방법도 있군요!\n\n답변:\n1. 실제로 적용해봐야겠어요.\n",
+    "metadata": {
+      "question": "이런 방법도 있군요!",
+      "question_author": "컨퍼런스스피커",
+      "question_team": "dev_user_502",
+      "question_timestamp": "2024-01-26 00:12:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "서버개발자"
+      ],
+      "answer_teams": [
+        "dev_user_503"
+      ]
+    }
+  },
+  {
+    "content": "질문: 서버리스 아키텍처의 장단점은 뭔가요?\n\n답변:\n1. ELK 스택, Fluentd, 로그 수집 에이전트 등을 사용해서 중앙화하세요.\n2. 참고로 이런 정보도 도움이 될 거예요.\n3. 좋은 질문이네요!\n4. 좋은 질문이네요!\n",
+    "metadata": {
+      "question": "서버리스 아키텍처의 장단점은 뭔가요?",
+      "question_author": "빅데이터엔지니어",
+      "question_team": "dev_user_504",
+      "question_timestamp": "2024-01-20 05:00:00",
+      "num_answers": 4,
+      "answer_authors": [
+        "테스트엔지니어",
+        "최웹개발",
+        "박코딩",
+        "멘토"
+      ],
+      "answer_teams": [
+        "dev_user_505",
+        "dev_user_506",
+        "dev_user_507",
+        "dev_user_508"
+      ]
+    }
+  },
+  {
+    "content": "질문: 프로토타입 체인이 뭔가요?\n\n답변:\n1. 객체가 프로퍼티를 찾을 때 상위 프로토타입을 거슬러 올라가며 찾는 체계예요.\n2. 보완 설명을 드리면요.\n",
+    "metadata": {
+      "question": "프로토타입 체인이 뭔가요?",
+      "question_author": "도커마스터",
+      "question_team": "dev_user_511",
+      "question_timestamp": "2024-01-20 08:00:00",
+      "num_answers": 2,
+      "answer_authors": [
+        "배포전문가",
+        "정프론트"
+      ],
+      "answer_teams": [
+        "dev_user_512",
+        "dev_user_513"
+      ]
+    }
+  },
+  {
+    "content": "질문: 문제가 생겼는데 도움을 주실 수 있나요?\n\n답변:\n1. 좋은 질문이네요!\n",
+    "metadata": {
+      "question": "문제가 생겼는데 도움을 주실 수 있나요?",
+      "question_author": "도커마스터",
+      "question_team": "dev_user_511",
+      "question_timestamp": "2024-01-20 09:00:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "도커마스터"
+      ],
+      "answer_teams": [
+        "dev_user_515"
+      ]
+    }
+  },
+  {
+    "content": "질문: Docker Compose로 여러 서비스를 어떻게 관리하나요?\n\n답변:\n1. 멀티스테이지 빌드, .dockerignore 사용, 레이어 캐싱 최적화 등을 고려하세요.\n2. 참고로 이런 정보도 도움이 될 거예요.\n3. 좋은 습관으로는 이런 게 있어요.\n4. 또 다른 접근법을 제안드려요.\n",
+    "metadata": {
+      "question": "Docker Compose로 여러 서비스를 어떻게 관리하나요?",
+      "question_author": "배포전문가",
+      "question_team": "dev_user_519",
+      "question_timestamp": "2024-01-20 11:00:00",
+      "num_answers": 4,
+      "answer_authors": [
+        "최웹개발",
+        "서버개발자",
+        "데브옵스",
+        "한리액트"
+      ],
+      "answer_teams": [
+        "dev_user_520",
+        "dev_user_521",
+        "dev_user_522",
+        "dev_user_523"
+      ]
+    }
+  },
+  {
+    "content": "질문: 보안상 주의할 점이 있나요?\n\n답변:\n1. 저도 궁금했던 내용이에요.\n2. 실제로 적용해봐야겠어요.\n",
+    "metadata": {
+      "question": "보안상 주의할 점이 있나요?",
+      "question_author": "최웹개발",
+      "question_team": "dev_user_524",
+      "question_timestamp": "2024-01-21 04:03:00",
+      "num_answers": 2,
+      "answer_authors": [
+        "박코딩",
+        "성능최적화"
+      ],
+      "answer_teams": [
+        "dev_user_525",
+        "dev_user_526"
+      ]
+    }
+  },
+  {
+    "content": "질문: 예제 코드를 보여주실 수 있나요?\n\n답변:\n1. MySQL에서 인덱스가 제대로 사용되지 않는 경우가 있어요.\n2. WHERE 절에서 함수 사용, LIKE 패턴 문제, 데이터 타입 불일치 등을 확인해보세요.\n3. 또 다른 접근법을 제안드려요.\n",
+    "metadata": {
+      "question": "예제 코드를 보여주실 수 있나요?",
+      "question_author": "한리액트",
+      "question_team": "dev_user_527",
+      "question_timestamp": "2024-01-26 21:00:00",
+      "num_answers": 3,
+      "answer_authors": [
+        "최웹개발",
+        "마이크로서비스",
+        "백엔드신입"
+      ],
+      "answer_teams": [
+        "dev_user_528",
+        "dev_user_529",
+        "dev_user_530"
+      ]
+    }
+  },
+  {
+    "content": "질문: 이런 방법도 있군요!\n\n답변:\n1. 추가로 궁금한 점이 있어요.\n",
+    "metadata": {
+      "question": "이런 방법도 있군요!",
+      "question_author": "웹보안",
+      "question_team": "dev_user_531",
+      "question_timestamp": "2024-01-22 18:00:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "오픈소스기여자"
+      ],
+      "answer_teams": [
+        "dev_user_532"
+      ]
+    }
+  },
+  {
+    "content": "질문: 에러가 발생했는데 도움을 주실 수 있나요?\n\n답변:\n1. 추가로 궁금한 점이 있어요.\n",
+    "metadata": {
+      "question": "에러가 발생했는데 도움을 주실 수 있나요?",
+      "question_author": "김개발",
+      "question_team": "dev_user_533",
+      "question_timestamp": "2024-01-22 08:04:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "정프론트"
+      ],
+      "answer_teams": [
+        "dev_user_534"
+      ]
+    }
+  },
+  {
+    "content": "질문: 컨테이너 오케스트레이션이 뭔가요?\n\n답변:\n1. 컨테이너 배포, 관리, 스케일링을 자동화하는 기술이에요. Kubernetes가 대표적이에요.\n2. 또 다른 접근법을 제안드려요.\n3. 보완 설명을 드리면요.\n",
+    "metadata": {
+      "question": "컨테이너 오케스트레이션이 뭔가요?",
+      "question_author": "시니어개발자",
+      "question_team": "dev_user_535",
+      "question_timestamp": "2024-01-20 15:00:00",
+      "num_answers": 3,
+      "answer_authors": [
+        "김개발",
+        "데브옵스",
+        "김개발"
+      ],
+      "answer_teams": [
+        "dev_user_536",
+        "dev_user_537",
+        "dev_user_538"
+      ]
+    }
+  },
+  {
+    "content": "질문: 일반적으로 권장하는 방법은요.\n\n답변:\n1. 이해했습니다. 실제 코드로 보여주시면 더 좋을 것 같아요.\n2. 저도 궁금했던 내용이에요.\n",
+    "metadata": {
+      "question": "일반적으로 권장하는 방법은요.",
+      "question_author": "도커마스터",
+      "question_team": "dev_user_539",
+      "question_timestamp": "2024-01-20 16:00:00",
+      "num_answers": 2,
+      "answer_authors": [
+        "시니어개발자",
+        "마이크로서비스"
+      ],
+      "answer_teams": [
+        "dev_user_535",
+        "dev_user_541"
+      ]
+    }
+  },
+  {
+    "content": "질문: React에서 성능 최적화는 어떻게 하나요?\n\n답변:\n1. React.memo, useMemo, useCallback을 사용하거나 컴포넌트 분할을 통해 최적화할 수 있어요.\n",
+    "metadata": {
+      "question": "React에서 성능 최적화는 어떻게 하나요?",
+      "question_author": "기술블로거",
+      "question_team": "dev_user_545",
+      "question_timestamp": "2024-01-20 16:00:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "데브옵스"
+      ],
+      "answer_teams": [
+        "dev_user_546"
+      ]
+    }
+  },
+  {
+    "content": "질문: 대안으로 이런 방법도 있습니다.\n\n답변:\n1. 이런 접근 방식도 좋을 것 같아요.\n2. 저도 궁금했던 내용이에요.\n",
+    "metadata": {
+      "question": "대안으로 이런 방법도 있습니다.",
+      "question_author": "SQL최적화",
+      "question_team": "dev_user_548",
+      "question_timestamp": "2024-01-20 16:39:00",
+      "num_answers": 2,
+      "answer_authors": [
+        "최웹개발",
+        "API설계자"
+      ],
+      "answer_teams": [
+        "dev_user_549",
+        "dev_user_550"
+      ]
+    }
+  },
+  {
+    "content": "질문: 성능 최적화 방법이 궁금해요.\n\n답변:\n1. 저도 궁금했던 내용이에요.\n",
+    "metadata": {
+      "question": "성능 최적화 방법이 궁금해요.",
+      "question_author": "최웹개발",
+      "question_team": "dev_user_551",
+      "question_timestamp": "2024-01-23 09:24:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "최웹개발"
+      ],
+      "answer_teams": [
+        "dev_user_552"
+      ]
+    }
+  },
+  {
+    "content": "질문: HTTPS 설정 시 주의사항이 뭔가요?\n\n답변:\n1. OAuth 2.0은 인증 프로토콜이고, JWT는 토큰 형식이에요.\n",
+    "metadata": {
+      "question": "HTTPS 설정 시 주의사항이 뭔가요?",
+      "question_author": "클라우드아키텍트",
+      "question_team": "dev_user_554",
+      "question_timestamp": "2024-01-20 18:00:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "서버개발자"
+      ],
+      "answer_teams": [
+        "dev_user_555"
+      ]
+    }
+  },
+  {
+    "content": "질문: 다른 해결 방법도 있어요.\n\n답변:\n1. 추가 정보를 드리면요.\n2. 실제 구현 코드를 보고 싶어요.\n3. 실제로 적용해봐야겠어요.\n4. 도움이 되는 정보 감사합니다.\n5. 실제로 적용해봐야겠어요.\n6. 실제로 적용해봐야겠어요.\n",
+    "metadata": {
+      "question": "다른 해결 방법도 있어요.",
+      "question_author": "데브옵스",
+      "question_team": "dev_user_556",
+      "question_timestamp": "2024-01-20 18:28:00",
+      "num_answers": 6,
+      "answer_authors": [
+        "로그분석가",
+        "클라우드아키텍트",
+        "SQL최적화",
+        "쿠버네티스",
+        "코드리뷰어",
+        "스타트업개발자"
+      ],
+      "answer_teams": [
+        "dev_user_557",
+        "dev_user_554",
+        "dev_user_559",
+        "dev_user_560",
+        "dev_user_561",
+        "dev_user_562"
+      ]
+    }
+  },
+  {
+    "content": "질문: 정규화와 비정규화의 차이점을 알려주세요.\n\n답변:\n1. 정규화는 중복을 줄이고 무결성을 보장하지만, 비정규화는 성능을 위해 중복을 허용해요.\n2. 또 다른 접근법을 제안드려요.\n3. 다른 관점에서 보면요.\n4. 추가로 고려해볼 점이 있어요.\n",
+    "metadata": {
+      "question": "정규화와 비정규화의 차이점을 알려주세요.",
+      "question_author": "컨퍼런스스피커",
+      "question_team": "dev_user_563",
+      "question_timestamp": "2024-01-20 19:00:00",
+      "num_answers": 4,
+      "answer_authors": [
+        "도커마스터",
+        "인프라엔지니어",
+        "인증전문가",
+        "인증전문가"
+      ],
+      "answer_teams": [
+        "dev_user_564",
+        "dev_user_565",
+        "dev_user_566",
+        "dev_user_567"
+      ]
+    }
+  },
+  {
+    "content": "질문: 감사합니다! 그럼 구체적인 예제를 보여주실 수 있나요?\n\n답변:\n1. 좋은 질문이네요!\n",
+    "metadata": {
+      "question": "감사합니다! 그럼 구체적인 예제를 보여주실 수 있나요?",
+      "question_author": "컨퍼런스스피커",
+      "question_team": "dev_user_563",
+      "question_timestamp": "2024-01-20 20:10:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "데브옵스"
+      ],
+      "answer_teams": [
+        "dev_user_569"
+      ]
+    }
+  },
+  {
+    "content": "질문: 보안상 주의할 점이 있나요?\n\n답변:\n1. 도움이 되는 정보 감사합니다.\n",
+    "metadata": {
+      "question": "보안상 주의할 점이 있나요?",
+      "question_author": "김개발",
+      "question_team": "dev_user_570",
+      "question_timestamp": "2024-01-22 05:42:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "코딩부트캠프강사"
+      ],
+      "answer_teams": [
+        "dev_user_571"
+      ]
+    }
+  },
+  {
+    "content": "질문: React에서 상태 관리를 할 때 useState와 useReducer 중에 어떤 걸 선택해야 할까요?\n\n답변:\n1. useState는 간단한 상태에 적합하고, useReducer는 복잡한 상태 로직에 적합해요.\n2. 또 다른 접근법을 제안드려요.\n3. 다른 관점에서 보면요.\n",
+    "metadata": {
+      "question": "React에서 상태 관리를 할 때 useState와 useReducer 중에 어떤 걸 선택해야 할까요?",
+      "question_author": "배포전문가",
+      "question_team": "dev_user_573",
+      "question_timestamp": "2024-01-20 21:00:00",
+      "num_answers": 3,
+      "answer_authors": [
+        "빅데이터엔지니어",
+        "품질관리자",
+        "웹보안"
+      ],
+      "answer_teams": [
+        "dev_user_574",
+        "dev_user_575",
+        "dev_user_576"
+      ]
+    }
+  },
+  {
+    "content": "질문: numpy와 pandas의 차이점을 알려주세요.\n\n답변:\n1. requests는 HTTP 요청을 보내는 라이브러리이고, BeautifulSoup은 HTML을 파싱하는 라이브러리예요. 둘 다 필요해요!\n2. 보완 설명을 드리면요.\n",
+    "metadata": {
+      "question": "numpy와 pandas의 차이점을 알려주세요.",
+      "question_author": "자동화전문가",
+      "question_team": "dev_user_582",
+      "question_timestamp": "2024-01-21 00:00:00",
+      "num_answers": 2,
+      "answer_authors": [
+        "성능튜닝",
+        "오픈소스기여자"
+      ],
+      "answer_teams": [
+        "dev_user_583",
+        "dev_user_584"
+      ]
+    }
+  },
+  {
+    "content": "질문: 컴포넌트 간 데이터 전달 방법을 알려주세요.\n\n답변:\n1. React Router를 사용해서 라우팅을 구현할 수 있어요.\n",
+    "metadata": {
+      "question": "컴포넌트 간 데이터 전달 방법을 알려주세요.",
+      "question_author": "오픈소스기여자",
+      "question_team": "dev_user_589",
+      "question_timestamp": "2024-01-21 01:00:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "한리액트"
+      ],
+      "answer_teams": [
+        "dev_user_590"
+      ]
+    }
+  },
+  {
+    "content": "질문: 다른 방법도 시도해보세요.\n\n답변:\n1. 참고로 이런 정보도 도움이 될 거예요.\n",
+    "metadata": {
+      "question": "다른 방법도 시도해보세요.",
+      "question_author": "모니터링전문가",
+      "question_team": "dev_user_591",
+      "question_timestamp": "2024-01-21 01:16:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "쿠버네티스"
+      ],
+      "answer_teams": [
+        "dev_user_592"
+      ]
+    }
+  },
+  {
+    "content": "질문: 에러가 발생했는데 도움을 주실 수 있나요?\n\n답변:\n1. 좋은 질문이네요!\n2. 좋은 질문이네요!\n",
+    "metadata": {
+      "question": "에러가 발생했는데 도움을 주실 수 있나요?",
+      "question_author": "컨퍼런스스피커",
+      "question_team": "dev_user_594",
+      "question_timestamp": "2024-01-28 04:30:00",
+      "num_answers": 2,
+      "answer_authors": [
+        "이프로그래머",
+        "쿠버네티스"
+      ],
+      "answer_teams": [
+        "dev_user_595",
+        "dev_user_596"
+      ]
+    }
+  },
+  {
+    "content": "질문: 정규화와 비정규화의 차이점을 알려주세요.\n\n답변:\n1. WHERE 절에서 함수 사용, LIKE 패턴 문제, 데이터 타입 불일치 등을 확인해보세요.\n",
+    "metadata": {
+      "question": "정규화와 비정규화의 차이점을 알려주세요.",
+      "question_author": "오픈소스기여자",
+      "question_team": "dev_user_598",
+      "question_timestamp": "2024-01-21 02:00:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "코드리뷰어"
+      ],
+      "answer_teams": [
+        "dev_user_599"
+      ]
+    }
+  },
+  {
+    "content": "질문: 다른 방법도 시도해보세요.\n\n답변:\n1. 추가 정보를 드리면요.\n",
+    "metadata": {
+      "question": "다른 방법도 시도해보세요.",
+      "question_author": "쿠버네티스",
+      "question_team": "dev_user_600",
+      "question_timestamp": "2024-01-21 03:00:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "로그분석가"
+      ],
+      "answer_teams": [
+        "dev_user_601"
+      ]
+    }
+  },
+  {
+    "content": "질문: 예제 코드를 보여주실 수 있나요?\n\n답변:\n1. 저도 궁금했던 내용이에요.\n",
+    "metadata": {
+      "question": "예제 코드를 보여주실 수 있나요?",
+      "question_author": "코딩부트캠프강사",
+      "question_team": "dev_user_603",
+      "question_timestamp": "2024-01-23 12:40:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "로그분석가"
+      ],
+      "answer_teams": [
+        "dev_user_604"
+      ]
+    }
+  },
+  {
+    "content": "질문: 이런 방법도 있군요!\n\n답변:\n1. 실제로 적용해봐야겠어요.\n",
+    "metadata": {
+      "question": "이런 방법도 있군요!",
+      "question_author": "성능최적화",
+      "question_team": "dev_user_605",
+      "question_timestamp": "2024-01-26 16:24:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "시니어개발자"
+      ],
+      "answer_teams": [
+        "dev_user_606"
+      ]
+    }
+  },
+  {
+    "content": "질문: XSS 공격을 방지하는 방법이 궁금해요.\n\n답변:\n1. 안전한 세션 ID 생성, 세션 타임아웃 설정, 세션 고정 공격 방지 등을 해야 해요.\n2. 모범 사례를 말씀드리면요.\n3. 업계 표준 관행은 이런 거예요.\n4. 이런 접근 방식도 좋을 것 같아요.\n5. 실제로 적용해봐야겠어요.\n",
+    "metadata": {
+      "question": "XSS 공격을 방지하는 방법이 궁금해요.",
+      "question_author": "클라우드아키텍트",
+      "question_team": "dev_user_607",
+      "question_timestamp": "2024-01-21 03:00:00",
+      "num_answers": 5,
+      "answer_authors": [
+        "테스트엔지니어",
+        "스타트업개발자",
+        "데이터베이스관리자",
+        "성능튜닝",
+        "스타트업개발자"
+      ],
+      "answer_teams": [
+        "dev_user_608",
+        "dev_user_609",
+        "dev_user_610",
+        "dev_user_611",
+        "dev_user_612"
+      ]
+    }
+  },
+  {
+    "content": "질문: 에러가 발생했는데 도움을 주실 수 있나요?\n\n답변:\n1. 저도 궁금했던 내용이에요.\n",
+    "metadata": {
+      "question": "에러가 발생했는데 도움을 주실 수 있나요?",
+      "question_author": "인증전문가",
+      "question_team": "dev_user_613",
+      "question_timestamp": "2024-01-25 01:52:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "웹보안"
+      ],
+      "answer_teams": [
+        "dev_user_614"
+      ]
+    }
+  },
+  {
+    "content": "질문: HTTPS 설정 시 주의사항이 뭔가요?\n\n답변:\n1. 사용자가 의도하지 않은 요청을 강제로 실행시키는 공격이에요.\n2. 이런 접근 방식도 좋을 것 같아요.\n3. 실제 구현 코드를 보고 싶어요.\n4. 실제로 적용해봐야겠어요.\n",
+    "metadata": {
+      "question": "HTTPS 설정 시 주의사항이 뭔가요?",
+      "question_author": "코딩부트캠프강사",
+      "question_team": "dev_user_616",
+      "question_timestamp": "2024-01-21 04:00:00",
+      "num_answers": 4,
+      "answer_authors": [
+        "빅데이터엔지니어",
+        "외국계개발자",
+        "코딩부트캠프강사",
+        "프리랜서"
+      ],
+      "answer_teams": [
+        "dev_user_617",
+        "dev_user_618",
+        "dev_user_616",
+        "dev_user_620"
+      ]
+    }
+  },
+  {
+    "content": "질문: 성능 최적화 방법이 궁금해요.\n\n답변:\n1. 저도 궁금했던 내용이에요.\n2. 추가로 궁금한 점이 있어요.\n",
+    "metadata": {
+      "question": "성능 최적화 방법이 궁금해요.",
+      "question_author": "판다스전문가",
+      "question_team": "dev_user_621",
+      "question_timestamp": "2024-01-26 22:51:00",
+      "num_answers": 2,
+      "answer_authors": [
+        "한리액트",
+        "배포전문가"
+      ],
+      "answer_teams": [
+        "dev_user_622",
+        "dev_user_623"
+      ]
+    }
+  },
+  {
+    "content": "질문: Docker 볼륨과 바인드 마운트의 차이점은 뭔가요?\n\n답변:\n1. 로그 드라이버 설정, 중앙화된 로그 수집 시스템 구축 등을 고려하세요.\n2. 모범 사례를 말씀드리면요.\n",
+    "metadata": {
+      "question": "Docker 볼륨과 바인드 마운트의 차이점은 뭔가요?",
+      "question_author": "멘토",
+      "question_team": "dev_user_624",
+      "question_timestamp": "2024-01-21 06:00:00",
+      "num_answers": 2,
+      "answer_authors": [
+        "한리액트",
+        "인프라엔지니어"
+      ],
+      "answer_teams": [
+        "dev_user_625",
+        "dev_user_626"
+      ]
+    }
+  },
+  {
+    "content": "질문: 에러 메시지가 나오는데 어떻게 해결해야 할까요?\n\n답변:\n1. 추가로 궁금한 점이 있어요.\n2. 실제로 적용해봐야겠어요.\n3. 저도 궁금했던 내용이에요.\n",
+    "metadata": {
+      "question": "에러 메시지가 나오는데 어떻게 해결해야 할까요?",
+      "question_author": "멘토",
+      "question_team": "dev_user_624",
+      "question_timestamp": "2024-01-21 06:27:00",
+      "num_answers": 3,
+      "answer_authors": [
+        "빅데이터엔지니어",
+        "주니어개발자",
+        "멘토"
+      ],
+      "answer_teams": [
+        "dev_user_628",
+        "dev_user_629",
+        "dev_user_630"
+      ]
+    }
+  },
+  {
+    "content": "질문: 인프라를 코드로 관리하는 IaC가 뭔가요?\n\n답변:\n1. 오토 스케일링, 스팟 인스턴스, 리소스 최적화 등을 고려하세요.\n2. 추가 정보를 드리면요.\n3. 추가 정보를 드리면요.\n",
+    "metadata": {
+      "question": "인프라를 코드로 관리하는 IaC가 뭔가요?",
+      "question_author": "김개발",
+      "question_team": "dev_user_632",
+      "question_timestamp": "2024-01-21 08:00:00",
+      "num_answers": 3,
+      "answer_authors": [
+        "코드리뷰어",
+        "모니터링전문가",
+        "SQL최적화"
+      ],
+      "answer_teams": [
+        "dev_user_633",
+        "dev_user_634",
+        "dev_user_635"
+      ]
+    }
+  },
+  {
+    "content": "질문: 예제 코드를 보여주실 수 있나요?\n\n답변:\n1. 추가로 궁금한 점이 있어요.\n2. 실제로 적용해봐야겠어요.\n",
+    "metadata": {
+      "question": "예제 코드를 보여주실 수 있나요?",
+      "question_author": "스터디리더",
+      "question_team": "dev_user_636",
+      "question_timestamp": "2024-01-27 01:12:00",
+      "num_answers": 2,
+      "answer_authors": [
+        "인프라엔지니어",
+        "신입개발자"
+      ],
+      "answer_teams": [
+        "dev_user_637",
+        "dev_user_638"
+      ]
+    }
+  },
+  {
+    "content": "질문: JavaScript에서 var, let, const의 차이점을 알려주세요.\n\n답변:\n1. 화살표 함수는 this 바인딩이 없고, arguments 객체가 없어요.\n2. 보완 설명을 드리면요.\n3. 모범 사례를 말씀드리면요.\n4. 참고로 이런 정보도 도움이 될 거예요.\n5. 이해했습니다. 실제 코드로 보여주시면 더 좋을 것 같아요.\n",
+    "metadata": {
+      "question": "JavaScript에서 var, let, const의 차이점을 알려주세요.",
+      "question_author": "프리랜서",
+      "question_team": "dev_user_640",
+      "question_timestamp": "2024-01-21 11:00:00",
+      "num_answers": 5,
+      "answer_authors": [
+        "자동화전문가",
+        "도커마스터",
+        "이프로그래머",
+        "자동화전문가",
+        "프리랜서"
+      ],
+      "answer_teams": [
+        "dev_user_641",
+        "dev_user_642",
+        "dev_user_643",
+        "dev_user_644",
+        "dev_user_640"
+      ]
+    }
+  },
+  {
+    "content": "질문: 예제 코드를 보여주실 수 있나요?\n\n답변:\n1. 저도 궁금했던 내용이에요.\n",
+    "metadata": {
+      "question": "예제 코드를 보여주실 수 있나요?",
+      "question_author": "모니터링전문가",
+      "question_team": "dev_user_646",
+      "question_timestamp": "2024-01-23 02:06:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "코딩부트캠프강사"
+      ],
+      "answer_teams": [
+        "dev_user_647"
+      ]
+    }
+  },
+  {
+    "content": "질문: 성능 최적화 방법이 궁금해요.\n\n답변:\n1. 도움이 되는 정보 감사합니다.\n",
+    "metadata": {
+      "question": "성능 최적화 방법이 궁금해요.",
+      "question_author": "프리랜서",
+      "question_team": "dev_user_648",
+      "question_timestamp": "2024-01-25 22:41:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "대기업개발자"
+      ],
+      "answer_teams": [
+        "dev_user_649"
+      ]
+    }
+  },
+  {
+    "content": "질문: 데이터베이스 복제는 어떻게 하나요?\n\n답변:\n1. 마스터-슬레이브 구조나 마스터-마스터 구조로 복제를 설정할 수 있어요.\n2. 업계 표준 관행은 이런 거예요.\n3. 추가로 고려해볼 점이 있어요.\n4. 추가 정보를 드리면요.\n",
+    "metadata": {
+      "question": "데이터베이스 복제는 어떻게 하나요?",
+      "question_author": "김개발",
+      "question_team": "dev_user_650",
+      "question_timestamp": "2024-01-21 13:00:00",
+      "num_answers": 4,
+      "answer_authors": [
+        "대기업개발자",
+        "성능튜닝",
+        "코드리뷰어",
+        "웹보안"
+      ],
+      "answer_teams": [
+        "dev_user_651",
+        "dev_user_652",
+        "dev_user_653",
+        "dev_user_654"
+      ]
+    }
+  },
+  {
+    "content": "질문: 성능 최적화 방법이 궁금해요.\n\n답변:\n1. 저도 궁금했던 내용이에요.\n2. 좋은 질문이네요!\n",
+    "metadata": {
+      "question": "성능 최적화 방법이 궁금해요.",
+      "question_author": "도커마스터",
+      "question_team": "dev_user_656",
+      "question_timestamp": "2024-01-28 10:22:00",
+      "num_answers": 2,
+      "answer_authors": [
+        "외국계개발자",
+        "오픈소스기여자"
+      ],
+      "answer_teams": [
+        "dev_user_657",
+        "dev_user_658"
+      ]
+    }
+  },
+  {
+    "content": "질문: 파이썬에서 예외 처리는 어떻게 하는 게 좋을까요?\n\n답변:\n1. asyncio와 asyncawait 키워드를 사용하면 비동기 프로그래밍이 가능해요.\n",
+    "metadata": {
+      "question": "파이썬에서 예외 처리는 어떻게 하는 게 좋을까요?",
+      "question_author": "쿠버네티스",
+      "question_team": "dev_user_659",
+      "question_timestamp": "2024-01-21 15:00:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "멘토"
+      ],
+      "answer_teams": [
+        "dev_user_660"
+      ]
+    }
+  },
+  {
+    "content": "질문: 일반적으로 권장하는 방법은요.\n\n답변:\n1. 실제로 적용해보니 문제가 있네요.\n2. 도움이 되는 정보 감사합니다.\n",
+    "metadata": {
+      "question": "일반적으로 권장하는 방법은요.",
+      "question_author": "기술블로거",
+      "question_team": "dev_user_661",
+      "question_timestamp": "2024-01-21 15:42:00",
+      "num_answers": 2,
+      "answer_authors": [
+        "쿠버네티스",
+        "API설계자"
+      ],
+      "answer_teams": [
+        "dev_user_659",
+        "dev_user_663"
+      ]
+    }
+  },
+  {
+    "content": "질문: 보안상 주의할 점이 있나요?\n\n답변:\n1. 도움이 되는 정보 감사합니다.\n",
+    "metadata": {
+      "question": "보안상 주의할 점이 있나요?",
+      "question_author": "빅데이터엔지니어",
+      "question_team": "dev_user_665",
+      "question_timestamp": "2024-01-24 22:36:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "코딩부트캠프강사"
+      ],
+      "answer_teams": [
+        "dev_user_666"
+      ]
+    }
+  },
+  {
+    "content": "질문: Docker Compose로 여러 서비스를 어떻게 관리하나요?\n\n답변:\n1. Kubernetes는 컨테이너 오케스트레이션 플랫폼이고, Docker는 컨테이너 런타임이에요.\n2. 다른 관점에서 보면요.\n3. 모범 사례를 말씀드리면요.\n",
+    "metadata": {
+      "question": "Docker Compose로 여러 서비스를 어떻게 관리하나요?",
+      "question_author": "클라우드아키텍트",
+      "question_team": "dev_user_667",
+      "question_timestamp": "2024-01-21 18:00:00",
+      "num_answers": 3,
+      "answer_authors": [
+        "오픈소스기여자",
+        "코딩부트캠프강사",
+        "품질관리자"
+      ],
+      "answer_teams": [
+        "dev_user_668",
+        "dev_user_669",
+        "dev_user_670"
+      ]
+    }
+  },
+  {
+    "content": "질문: 문제가 생겼는데 도움을 주실 수 있나요?\n\n답변:\n1. 좋은 질문이네요!\n2. 도움이 되는 정보 감사합니다.\n3. 추가로 궁금한 점이 있어요.\n4. 저도 궁금했던 내용이에요.\n",
+    "metadata": {
+      "question": "문제가 생겼는데 도움을 주실 수 있나요?",
+      "question_author": "클라우드아키텍트",
+      "question_team": "dev_user_667",
+      "question_timestamp": "2024-01-21 18:04:00",
+      "num_answers": 4,
+      "answer_authors": [
+        "자동화전문가",
+        "성능튜닝",
+        "주니어개발자",
+        "테스트엔지니어"
+      ],
+      "answer_teams": [
+        "dev_user_672",
+        "dev_user_673",
+        "dev_user_674",
+        "dev_user_675"
+      ]
+    }
+  },
+  {
+    "content": "질문: JavaScript에서 var, let, const의 차이점을 알려주세요.\n\n답변:\n1. 변수와 함수 선언이 스코프의 최상단으로 끌어올려지는 현상이에요.\n2. 다른 관점에서 보면요.\n",
+    "metadata": {
+      "question": "JavaScript에서 var, let, const의 차이점을 알려주세요.",
+      "question_author": "주니어개발자",
+      "question_team": "dev_user_676",
+      "question_timestamp": "2024-01-21 20:00:00",
+      "num_answers": 2,
+      "answer_authors": [
+        "판다스전문가",
+        "도커마스터"
+      ],
+      "answer_teams": [
+        "dev_user_677",
+        "dev_user_678"
+      ]
+    }
+  },
+  {
+    "content": "질문: 에러가 발생했는데 도움을 주실 수 있나요?\n\n답변:\n1. 실제로 적용해봐야겠어요.\n",
+    "metadata": {
+      "question": "에러가 발생했는데 도움을 주실 수 있나요?",
+      "question_author": "자동화전문가",
+      "question_team": "dev_user_680",
+      "question_timestamp": "2024-01-24 21:52:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "이프로그래머"
+      ],
+      "answer_teams": [
+        "dev_user_681"
+      ]
+    }
+  },
+  {
+    "content": "질문: 성능 최적화 방법이 궁금해요.\n\n답변:\n1. 마이크로서비스 아키텍처의 장단점을 알려주세요.\n2. 라운드 로빈, 가중치 기반, 지리적 분산 등의 전략이 있어요.\n3. 이런 접근 방식도 좋을 것 같아요.\n4. 도움이 되는 정보 감사합니다.\n5. 도움이 되는 정보 감사합니다.\n6. 실제로 적용해봐야겠어요.\n7. 도움이 되는 정보 감사합니다.\n8. CSRF 공격이 뭔지 설명해주세요.\n9. 사용자가 의도하지 않은 요청을 강제로 실행시키는 공격이에요.\n10. 이런 접근 방식도 좋을 것 같아요.\n",
+    "metadata": {
+      "question": "성능 최적화 방법이 궁금해요.",
+      "question_author": "인증전문가",
+      "question_team": "dev_user_682",
+      "question_timestamp": "2024-01-28 11:36:00",
+      "num_answers": 10,
+      "answer_authors": [
+        "도커마스터",
+        "프리랜서",
+        "클라우드아키텍트",
+        "데이터베이스관리자",
+        "API설계자",
+        "성능최적화",
+        "기술리더",
+        "코드리뷰어",
+        "데이터베이스관리자",
+        "정프론트"
+      ],
+      "answer_teams": [
+        "dev_user_683",
+        "dev_user_684",
+        "dev_user_685",
+        "dev_user_686",
+        "dev_user_687",
+        "dev_user_688",
+        "dev_user_689",
+        "dev_user_690",
+        "dev_user_691",
+        "dev_user_692"
+      ]
+    }
+  },
+  {
+    "content": "질문: 에러가 발생했는데 도움을 주실 수 있나요?\n\n답변:\n1. 도움이 되는 정보 감사합니다.\n2. 좋은 질문이네요!\n",
+    "metadata": {
+      "question": "에러가 발생했는데 도움을 주실 수 있나요?",
+      "question_author": "박코딩",
+      "question_team": "dev_user_693",
+      "question_timestamp": "2024-01-26 17:37:00",
+      "num_answers": 2,
+      "answer_authors": [
+        "프리랜서",
+        "시니어개발자"
+      ],
+      "answer_teams": [
+        "dev_user_694",
+        "dev_user_695"
+      ]
+    }
+  },
+  {
+    "content": "질문: Docker Compose로 여러 서비스를 어떻게 관리하나요?\n\n답변:\n1. 멀티스테이지 빌드, Alpine 이미지 사용, 불필요한 파일 제거 등을 하세요.\n2. 또 다른 접근법을 제안드려요.\n",
+    "metadata": {
+      "question": "Docker Compose로 여러 서비스를 어떻게 관리하나요?",
+      "question_author": "서버개발자",
+      "question_team": "dev_user_697",
+      "question_timestamp": "2024-01-22 00:00:00",
+      "num_answers": 2,
+      "answer_authors": [
+        "품질관리자",
+        "성능튜닝"
+      ],
+      "answer_teams": [
+        "dev_user_698",
+        "dev_user_699"
+      ]
+    }
+  },
+  {
+    "content": "질문: 예제 코드를 보여주실 수 있나요?\n\n답변:\n1. 좋은 질문이네요!\n",
+    "metadata": {
+      "question": "예제 코드를 보여주실 수 있나요?",
+      "question_author": "박코딩",
+      "question_team": "dev_user_700",
+      "question_timestamp": "2024-01-26 07:30:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "코드리뷰어"
+      ],
+      "answer_teams": [
+        "dev_user_701"
+      ]
+    }
+  },
+  {
+    "content": "질문: 성능 최적화 방법이 궁금해요.\n\n답변:\n1. 저도 궁금했던 내용이에요.\n",
+    "metadata": {
+      "question": "성능 최적화 방법이 궁금해요.",
+      "question_author": "빅데이터엔지니어",
+      "question_team": "dev_user_702",
+      "question_timestamp": "2024-01-25 04:48:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "프리랜서"
+      ],
+      "answer_teams": [
+        "dev_user_703"
+      ]
+    }
+  },
+  {
+    "content": "질문: 컴포넌트 간 데이터 전달 방법을 알려주세요.\n\n답변:\n1. 의존성 배열에 있는 값이 변경될 때만 useEffect가 실행되어요. 빈 배열이면 마운트 시에만 실행돼요.\n2. 모범 사례를 말씀드리면요.\n3. 실제로 적용해봐야겠어요.\n4. 도움이 되는 정보 감사합니다.\n",
+    "metadata": {
+      "question": "컴포넌트 간 데이터 전달 방법을 알려주세요.",
+      "question_author": "코드리뷰어",
+      "question_team": "dev_user_704",
+      "question_timestamp": "2024-01-22 02:00:00",
+      "num_answers": 4,
+      "answer_authors": [
+        "보안개발자",
+        "컨퍼런스스피커",
+        "보안개발자",
+        "판다스전문가"
+      ],
+      "answer_teams": [
+        "dev_user_705",
+        "dev_user_706",
+        "dev_user_707",
+        "dev_user_708"
+      ]
+    }
+  },
+  {
+    "content": "질문: 보안상 주의할 점이 있나요?\n\n답변:\n1. 클래스와 객체의 개념을 쉽게 설명해주세요.\n2. 클래스는 객체를 만들기 위한 설계도이고, 객체는 그 설계도로 만든 실제 인스턴스예요.\n3. 모범 사례를 말씀드리면요.\n4. 또 다른 접근법을 제안드려요.\n",
+    "metadata": {
+      "question": "보안상 주의할 점이 있나요?",
+      "question_author": "품질관리자",
+      "question_team": "dev_user_710",
+      "question_timestamp": "2024-01-28 04:54:00",
+      "num_answers": 4,
+      "answer_authors": [
+        "박코딩",
+        "박코딩",
+        "오픈소스기여자",
+        "코딩부트캠프강사"
+      ],
+      "answer_teams": [
+        "dev_user_711",
+        "dev_user_712",
+        "dev_user_713",
+        "dev_user_714"
+      ]
+    }
+  },
+  {
+    "content": "질문: 에러가 발생했는데 도움을 주실 수 있나요?\n\n답변:\n1. 도움이 되는 정보 감사합니다.\n2. 저도 궁금했던 내용이에요.\n3. 실제로 적용해봐야겠어요.\n4. 데이터베이스 백업 전략을 알려주세요.\n5. 데이터를 여러 서버에 분산 저장하는 기술이에요.\n6. 한 가지 더 말씀드리면요.\n",
+    "metadata": {
+      "question": "에러가 발생했는데 도움을 주실 수 있나요?",
+      "question_author": "기술블로거",
+      "question_team": "dev_user_715",
+      "question_timestamp": "2024-01-30 00:12:00",
+      "num_answers": 6,
+      "answer_authors": [
+        "쿠버네티스",
+        "김개발",
+        "모니터링전문가",
+        "외국계개발자",
+        "성능튜닝",
+        "쿠버네티스"
+      ],
+      "answer_teams": [
+        "dev_user_716",
+        "dev_user_717",
+        "dev_user_718",
+        "dev_user_719",
+        "dev_user_720",
+        "dev_user_721"
+      ]
+    }
+  },
+  {
+    "content": "질문: 이런 방법도 있군요!\n\n답변:\n1. 도움이 되는 정보 감사합니다.\n",
+    "metadata": {
+      "question": "이런 방법도 있군요!",
+      "question_author": "성능최적화",
+      "question_team": "dev_user_724",
+      "question_timestamp": "2024-01-30 18:58:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "주니어개발자"
+      ],
+      "answer_teams": [
+        "dev_user_725"
+      ]
+    }
+  },
+  {
+    "content": "질문: 인프라를 코드로 관리하는 IaC가 뭔가요?\n\n답변:\n1. 장점은 서버 관리 불필요, 자동 스케일링이고, 단점은 콜드 스타트, 벤더 락인이에요.\n2. 다른 관점에서 보면요.\n",
+    "metadata": {
+      "question": "인프라를 코드로 관리하는 IaC가 뭔가요?",
+      "question_author": "스터디리더",
+      "question_team": "dev_user_727",
+      "question_timestamp": "2024-01-22 07:00:00",
+      "num_answers": 2,
+      "answer_authors": [
+        "기술리더",
+        "SQL최적화"
+      ],
+      "answer_teams": [
+        "dev_user_728",
+        "dev_user_729"
+      ]
+    }
+  },
+  {
+    "content": "질문: 제 경험상 이런 방법이 효과적이었어요.\n\n답변:\n1. 추가 정보를 드리면요.\n2. 좋은 질문이네요!\n3. 좋은 질문이네요!\n4. 저도 궁금했던 내용이에요.\n",
+    "metadata": {
+      "question": "제 경험상 이런 방법이 효과적이었어요.",
+      "question_author": "배포전문가",
+      "question_team": "dev_user_730",
+      "question_timestamp": "2024-01-22 08:12:00",
+      "num_answers": 4,
+      "answer_authors": [
+        "기술리더",
+        "스터디리더",
+        "보안개발자",
+        "시니어개발자"
+      ],
+      "answer_teams": [
+        "dev_user_731",
+        "dev_user_732",
+        "dev_user_733",
+        "dev_user_734"
+      ]
+    }
+  },
+  {
+    "content": "질문: 예제 코드를 보여주실 수 있나요?\n\n답변:\n1. MySQL에서 인덱스가 제대로 사용되지 않는 경우가 있어요.\n2. 원자성, 일관성, 격리성, 지속성을 의미해요.\n3. 참고로 이런 정보도 도움이 될 거예요.\n",
+    "metadata": {
+      "question": "예제 코드를 보여주실 수 있나요?",
+      "question_author": "김개발",
+      "question_team": "dev_user_735",
+      "question_timestamp": "2024-01-29 12:36:00",
+      "num_answers": 3,
+      "answer_authors": [
+        "멘토",
+        "품질관리자",
+        "API설계자"
+      ],
+      "answer_teams": [
+        "dev_user_736",
+        "dev_user_737",
+        "dev_user_738"
+      ]
+    }
+  },
+  {
+    "content": "질문: 좋은 정보네요! 혹시 관련 자료나 문서가 있나요?\n\n답변:\n1. 좋은 질문이네요!\n2. 좋은 질문이네요!\n3. 도움이 되는 정보 감사합니다.\n",
+    "metadata": {
+      "question": "좋은 정보네요! 혹시 관련 자료나 문서가 있나요?",
+      "question_author": "멘토",
+      "question_team": "dev_user_736",
+      "question_timestamp": "2024-01-22 09:45:00",
+      "num_answers": 3,
+      "answer_authors": [
+        "주니어개발자",
+        "보안개발자",
+        "마이크로서비스"
+      ],
+      "answer_teams": [
+        "dev_user_740",
+        "dev_user_741",
+        "dev_user_742"
+      ]
+    }
+  },
+  {
+    "content": "질문: 데이터베이스 복제는 어떻게 하나요?\n\n답변:\n1. 두 개 이상의 트랜잭션이 서로의 리소스를 기다리며 무한 대기하는 상황이에요.\n2. 참고로 이런 정보도 도움이 될 거예요.\n3. 실제 구현 코드를 보고 싶어요.\n",
+    "metadata": {
+      "question": "데이터베이스 복제는 어떻게 하나요?",
+      "question_author": "도커마스터",
+      "question_team": "dev_user_744",
+      "question_timestamp": "2024-01-22 12:00:00",
+      "num_answers": 3,
+      "answer_authors": [
+        "쿠버네티스",
+        "박코딩",
+        "도커마스터"
+      ],
+      "answer_teams": [
+        "dev_user_745",
+        "dev_user_746",
+        "dev_user_744"
+      ]
+    }
+  },
+  {
+    "content": "질문: 에러가 발생했는데 도움을 주실 수 있나요?\n\n답변:\n1. 좋은 질문이네요!\n",
+    "metadata": {
+      "question": "에러가 발생했는데 도움을 주실 수 있나요?",
+      "question_author": "자동화전문가",
+      "question_team": "dev_user_748",
+      "question_timestamp": "2024-01-31 01:28:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "API설계자"
+      ],
+      "answer_teams": [
+        "dev_user_749"
+      ]
+    }
+  },
+  {
+    "content": "질문: 컨테이너 오케스트레이션이 뭔가요?\n\n답변:\n1. 컨테이너 배포, 관리, 스케일링을 자동화하는 기술이에요. Kubernetes가 대표적이에요.\n2. 좋은 습관으로는 이런 게 있어요.\n3. 좋은 습관으로는 이런 게 있어요.\n4. 실제로 적용해봐야겠어요.\n",
+    "metadata": {
+      "question": "컨테이너 오케스트레이션이 뭔가요?",
+      "question_author": "스터디리더",
+      "question_team": "dev_user_752",
+      "question_timestamp": "2024-01-22 14:00:00",
+      "num_answers": 4,
+      "answer_authors": [
+        "보안개발자",
+        "인프라엔지니어",
+        "보안개발자",
+        "스터디리더"
+      ],
+      "answer_teams": [
+        "dev_user_753",
+        "dev_user_754",
+        "dev_user_755",
+        "dev_user_756"
+      ]
+    }
+  },
+  {
+    "content": "질문: 이런 방법도 있군요!\n\n답변:\n1. 도움이 되는 정보 감사합니다.\n2. 추가로 궁금한 점이 있어요.\n",
+    "metadata": {
+      "question": "이런 방법도 있군요!",
+      "question_author": "풀스택개발자",
+      "question_team": "dev_user_757",
+      "question_timestamp": "2024-01-22 22:22:00",
+      "num_answers": 2,
+      "answer_authors": [
+        "대기업개발자",
+        "클라우드아키텍트"
+      ],
+      "answer_teams": [
+        "dev_user_758",
+        "dev_user_759"
+      ]
+    }
+  },
+  {
+    "content": "질문: 컨테이너 오케스트레이션이 뭔가요?\n\n답변:\n1. 컨테이너 배포, 관리, 스케일링을 자동화하는 기술이에요. Kubernetes가 대표적이에요.\n",
+    "metadata": {
+      "question": "컨테이너 오케스트레이션이 뭔가요?",
+      "question_author": "김개발",
+      "question_team": "dev_user_760",
+      "question_timestamp": "2024-01-22 15:00:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "마이크로서비스"
+      ],
+      "answer_teams": [
+        "dev_user_761"
+      ]
+    }
+  },
+  {
+    "content": "질문: 제 경험상 이런 방법이 효과적이었어요.\n\n답변:\n1. 업계 표준 관행은 이런 거예요.\n2. 추가로 궁금한 점이 있어요.\n",
+    "metadata": {
+      "question": "제 경험상 이런 방법이 효과적이었어요.",
+      "question_author": "데이터베이스관리자",
+      "question_team": "dev_user_762",
+      "question_timestamp": "2024-01-22 15:04:00",
+      "num_answers": 2,
+      "answer_authors": [
+        "성능최적화",
+        "백엔드신입"
+      ],
+      "answer_teams": [
+        "dev_user_763",
+        "dev_user_764"
+      ]
+    }
+  },
+  {
+    "content": "질문: 컴포넌트 간 데이터 전달 방법을 알려주세요.\n\n답변:\n1. 최상위 레벨에서만 호출하고, 조건문이나 반복문 안에서는 호출하면 안 돼요.\n2. 또 다른 접근법을 제안드려요.\n3. 또 다른 접근법을 제안드려요.\n",
+    "metadata": {
+      "question": "컴포넌트 간 데이터 전달 방법을 알려주세요.",
+      "question_author": "주니어개발자",
+      "question_team": "dev_user_768",
+      "question_timestamp": "2024-01-22 18:00:00",
+      "num_answers": 3,
+      "answer_authors": [
+        "인증전문가",
+        "기술블로거",
+        "배포전문가"
+      ],
+      "answer_teams": [
+        "dev_user_769",
+        "dev_user_770",
+        "dev_user_771"
+      ]
+    }
+  },
+  {
+    "content": "질문: SQL 인젝션 공격을 어떻게 방지하나요?\n\n답변:\n1. 안전한 세션 ID 생성, 세션 타임아웃 설정, 세션 고정 공격 방지 등을 해야 해요.\n2. 보완 설명을 드리면요.\n3. 이런 접근 방식도 좋을 것 같아요.\n4. 추가로 고려해볼 점이 있어요.\n5. 코드로 직접 보여주시면 이해하기 쉬울 것 같아요.\n6. 추가로 궁금한 점이 있어요.\n",
+    "metadata": {
+      "question": "SQL 인젝션 공격을 어떻게 방지하나요?",
+      "question_author": "성능튜닝",
+      "question_team": "dev_user_777",
+      "question_timestamp": "2024-01-22 21:00:00",
+      "num_answers": 6,
+      "answer_authors": [
+        "서버개발자",
+        "빅데이터엔지니어",
+        "데이터베이스관리자",
+        "배포전문가",
+        "성능튜닝",
+        "보안개발자"
+      ],
+      "answer_teams": [
+        "dev_user_778",
+        "dev_user_779",
+        "dev_user_780",
+        "dev_user_781",
+        "dev_user_777",
+        "dev_user_783"
+      ]
+    }
+  },
+  {
+    "content": "질문: 보안상 주의할 점이 있나요?\n\n답변:\n1. 저도 궁금했던 내용이에요.\n",
+    "metadata": {
+      "question": "보안상 주의할 점이 있나요?",
+      "question_author": "이프로그래머",
+      "question_team": "dev_user_784",
+      "question_timestamp": "2024-01-29 13:57:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "데이터베이스관리자"
+      ],
+      "answer_teams": [
+        "dev_user_785"
+      ]
+    }
+  },
+  {
+    "content": "질문: 인프라를 코드로 관리하는 IaC가 뭔가요?\n\n답변:\n1. 장점은 독립적 배포, 기술 스택 다양성이고, 단점은 복잡성 증가, 네트워크 지연이에요.\n2. 보완 설명을 드리면요.\n",
+    "metadata": {
+      "question": "인프라를 코드로 관리하는 IaC가 뭔가요?",
+      "question_author": "도커마스터",
+      "question_team": "dev_user_787",
+      "question_timestamp": "2024-01-22 22:00:00",
+      "num_answers": 2,
+      "answer_authors": [
+        "테스트엔지니어",
+        "빅데이터엔지니어"
+      ],
+      "answer_teams": [
+        "dev_user_788",
+        "dev_user_789"
+      ]
+    }
+  },
+  {
+    "content": "질문: 이런 방법도 있군요!\n\n답변:\n1. 추가로 궁금한 점이 있어요.\n",
+    "metadata": {
+      "question": "이런 방법도 있군요!",
+      "question_author": "기술리더",
+      "question_team": "dev_user_793",
+      "question_timestamp": "2024-02-01 07:47:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "정프론트"
+      ],
+      "answer_teams": [
+        "dev_user_794"
+      ]
+    }
+  },
+  {
+    "content": "질문: 파이썬으로 웹 크롤링을 하려고 하는데, requests와 BeautifulSoup 중에 어떤 걸 사용하는 게 좋을까요?\n\n답변:\n1. Django는 풀스택 프레임워크로 대규모 프로젝트에 적합하고, Flask는 가볍고 유연해서 작은 프로젝트나 API 개발에 좋아요.\n2. 한 가지 더 말씀드리면요.\n3. 다른 관점에서 보면요.\n4. 좋은 습관으로는 이런 게 있어요.\n5. 코드로 직접 보여주시면 이해하기 쉬울 것 같아요.\n",
+    "metadata": {
+      "question": "파이썬으로 웹 크롤링을 하려고 하는데, requests와 BeautifulSoup 중에 어떤 걸 사용하는 게 좋을까요?",
+      "question_author": "대기업개발자",
+      "question_team": "dev_user_795",
+      "question_timestamp": "2024-01-23 00:00:00",
+      "num_answers": 5,
+      "answer_authors": [
+        "외국계개발자",
+        "보안개발자",
+        "대기업개발자",
+        "웹보안",
+        "대기업개발자"
+      ],
+      "answer_teams": [
+        "dev_user_796",
+        "dev_user_797",
+        "dev_user_798",
+        "dev_user_799",
+        "dev_user_795"
+      ]
+    }
+  },
+  {
+    "content": "질문: 성능 최적화 방법이 궁금해요.\n\n답변:\n1. 도움이 되는 정보 감사합니다.\n",
+    "metadata": {
+      "question": "성능 최적화 방법이 궁금해요.",
+      "question_author": "코딩부트캠프강사",
+      "question_team": "dev_user_802",
+      "question_timestamp": "2024-01-24 23:42:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "데이터분석가"
+      ],
+      "answer_teams": [
+        "dev_user_803"
+      ]
+    }
+  },
+  {
+    "content": "질문: 보안상 주의할 점이 있나요?\n\n답변:\n1. 클래스와 객체의 개념을 쉽게 설명해주세요.\n2. numpy는 수치 계산에 특화되어 있고, pandas는 데이터 분석과 조작에 특화되어 있어요.\n",
+    "metadata": {
+      "question": "보안상 주의할 점이 있나요?",
+      "question_author": "서버개발자",
+      "question_team": "dev_user_804",
+      "question_timestamp": "2024-01-28 13:53:00",
+      "num_answers": 2,
+      "answer_authors": [
+        "정프론트",
+        "최웹개발"
+      ],
+      "answer_teams": [
+        "dev_user_805",
+        "dev_user_806"
+      ]
+    }
+  },
+  {
+    "content": "질문: 일반적으로 권장하는 방법은요.\n\n답변:\n1. 좋은 습관으로는 이런 게 있어요.\n",
+    "metadata": {
+      "question": "일반적으로 권장하는 방법은요.",
+      "question_author": "최웹개발",
+      "question_team": "dev_user_807",
+      "question_timestamp": "2024-01-23 01:52:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "멘토"
+      ],
+      "answer_teams": [
+        "dev_user_808"
+      ]
+    }
+  },
+  {
+    "content": "질문: 대안으로 이런 방법도 있습니다.\n\n답변:\n1. 저도 궁금했던 내용이에요.\n",
+    "metadata": {
+      "question": "대안으로 이런 방법도 있습니다.",
+      "question_author": "클라우드아키텍트",
+      "question_team": "dev_user_809",
+      "question_timestamp": "2024-01-23 02:08:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "컨퍼런스스피커"
+      ],
+      "answer_teams": [
+        "dev_user_810"
+      ]
+    }
+  },
+  {
+    "content": "질문: 에러가 발생했는데 도움을 주실 수 있나요?\n\n답변:\n1. 저도 궁금했던 내용이에요.\n",
+    "metadata": {
+      "question": "에러가 발생했는데 도움을 주실 수 있나요?",
+      "question_author": "컨퍼런스스피커",
+      "question_team": "dev_user_811",
+      "question_timestamp": "2024-01-27 17:08:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "백엔드신입"
+      ],
+      "answer_teams": [
+        "dev_user_812"
+      ]
+    }
+  },
+  {
+    "content": "질문: 컴포넌트 간 데이터 전달 방법을 알려주세요.\n\n답변:\n1. 작은 앱은 Context API, 큰 앱은 Redux가 적합해요.\n",
+    "metadata": {
+      "question": "컴포넌트 간 데이터 전달 방법을 알려주세요.",
+      "question_author": "풀스택개발자",
+      "question_team": "dev_user_814",
+      "question_timestamp": "2024-01-23 03:00:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "웹보안"
+      ],
+      "answer_teams": [
+        "dev_user_815"
+      ]
+    }
+  },
+  {
+    "content": "질문: 좋은 정보네요! 혹시 관련 자료나 문서가 있나요?\n\n답변:\n1. 저도 궁금했던 내용이에요.\n",
+    "metadata": {
+      "question": "좋은 정보네요! 혹시 관련 자료나 문서가 있나요?",
+      "question_author": "풀스택개발자",
+      "question_team": "dev_user_814",
+      "question_timestamp": "2024-01-23 04:03:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "주니어개발자"
+      ],
+      "answer_teams": [
+        "dev_user_818"
+      ]
+    }
+  },
+  {
+    "content": "질문: 예제 코드를 보여주실 수 있나요?\n\n답변:\n1. 실제로 적용해봐야겠어요.\n",
+    "metadata": {
+      "question": "예제 코드를 보여주실 수 있나요?",
+      "question_author": "기술리더",
+      "question_team": "dev_user_819",
+      "question_timestamp": "2024-01-30 20:51:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "마이크로서비스"
+      ],
+      "answer_teams": [
+        "dev_user_820"
+      ]
+    }
+  },
+  {
+    "content": "질문: 보안상 주의할 점이 있나요?\n\n답변:\n1. JavaScript에서 this 바인딩이 헷갈려요.\n2. 클로저는 함수가 선언된 환경의 변수에 접근할 수 있는 현상이에요.\n3. 추가 정보를 드리면요.\n",
+    "metadata": {
+      "question": "보안상 주의할 점이 있나요?",
+      "question_author": "SQL최적화",
+      "question_team": "dev_user_821",
+      "question_timestamp": "2024-01-23 21:58:00",
+      "num_answers": 3,
+      "answer_authors": [
+        "배포전문가",
+        "보안개발자",
+        "대기업개발자"
+      ],
+      "answer_teams": [
+        "dev_user_822",
+        "dev_user_823",
+        "dev_user_824"
+      ]
+    }
+  },
+  {
+    "content": "질문: 대안으로 이런 방법도 있습니다.\n\n답변:\n1. 실제로 적용해봐야겠어요.\n",
+    "metadata": {
+      "question": "대안으로 이런 방법도 있습니다.",
+      "question_author": "스타트업개발자",
+      "question_team": "dev_user_826",
+      "question_timestamp": "2024-01-23 06:12:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "김개발"
+      ],
+      "answer_teams": [
+        "dev_user_827"
+      ]
+    }
+  },
+  {
+    "content": "질문: 에러가 발생했는데 도움을 주실 수 있나요?\n\n답변:\n1. 추가로 궁금한 점이 있어요.\n2. 실제로 적용해봐야겠어요.\n",
+    "metadata": {
+      "question": "에러가 발생했는데 도움을 주실 수 있나요?",
+      "question_author": "코딩부트캠프강사",
+      "question_team": "dev_user_828",
+      "question_timestamp": "2024-01-27 08:24:00",
+      "num_answers": 2,
+      "answer_authors": [
+        "멘토",
+        "배포전문가"
+      ],
+      "answer_teams": [
+        "dev_user_829",
+        "dev_user_830"
+      ]
+    }
+  },
+  {
+    "content": "질문: Docker에서 로그 관리는 어떻게 하나요?\n\n답변:\n1. 멀티스테이지 빌드, .dockerignore 사용, 레이어 캐싱 최적화 등을 고려하세요.\n2. 추가로 고려해볼 점이 있어요.\n3. 보완 설명을 드리면요.\n",
+    "metadata": {
+      "question": "Docker에서 로그 관리는 어떻게 하나요?",
+      "question_author": "코드리뷰어",
+      "question_team": "dev_user_831",
+      "question_timestamp": "2024-01-23 08:00:00",
+      "num_answers": 3,
+      "answer_authors": [
+        "API설계자",
+        "스터디리더",
+        "마이크로서비스"
+      ],
+      "answer_teams": [
+        "dev_user_832",
+        "dev_user_833",
+        "dev_user_834"
+      ]
+    }
+  },
+  {
+    "content": "질문: 제 경험상 이런 방법이 효과적이었어요.\n\n답변:\n1. 좋은 질문이네요!\n",
+    "metadata": {
+      "question": "제 경험상 이런 방법이 효과적이었어요.",
+      "question_author": "기술리더",
+      "question_team": "dev_user_835",
+      "question_timestamp": "2024-01-23 09:16:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "서버개발자"
+      ],
+      "answer_teams": [
+        "dev_user_836"
+      ]
+    }
+  },
+  {
+    "content": "질문: 성능 최적화 방법이 궁금해요.\n\n답변:\n1. 실제로 적용해봐야겠어요.\n2. Kubernetes와 Docker의 관계를 설명해주세요.\n3. Docker는 OS 레벨 가상화로 더 가볍고 빠르지만, 가상머신은 하드웨어 레벨 가상화예요.\n4. 좋은 습관으로는 이런 게 있어요.\n",
+    "metadata": {
+      "question": "성능 최적화 방법이 궁금해요.",
+      "question_author": "최웹개발",
+      "question_team": "dev_user_838",
+      "question_timestamp": "2024-02-01 13:36:00",
+      "num_answers": 4,
+      "answer_authors": [
+        "데이터분석가",
+        "성능튜닝",
+        "판다스전문가",
+        "API설계자"
+      ],
+      "answer_teams": [
+        "dev_user_839",
+        "dev_user_840",
+        "dev_user_841",
+        "dev_user_842"
+      ]
+    }
+  },
+  {
+    "content": "질문: 예제 코드를 보여주실 수 있나요?\n\n답변:\n1. 추가로 궁금한 점이 있어요.\n",
+    "metadata": {
+      "question": "예제 코드를 보여주실 수 있나요?",
+      "question_author": "컨퍼런스스피커",
+      "question_team": "dev_user_844",
+      "question_timestamp": "2024-01-29 16:18:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "인증전문가"
+      ],
+      "answer_teams": [
+        "dev_user_845"
+      ]
+    }
+  },
+  {
+    "content": "질문: React에서 상태 관리를 할 때 useState와 useReducer 중에 어떤 걸 선택해야 할까요?\n\n답변:\n1. React.memo, useMemo, useCallback을 사용하거나 컴포넌트 분할을 통해 최적화할 수 있어요.\n",
+    "metadata": {
+      "question": "React에서 상태 관리를 할 때 useState와 useReducer 중에 어떤 걸 선택해야 할까요?",
+      "question_author": "스타트업개발자",
+      "question_team": "dev_user_848",
+      "question_timestamp": "2024-01-23 13:00:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "데이터분석가"
+      ],
+      "answer_teams": [
+        "dev_user_849"
+      ]
+    }
+  },
+  {
+    "content": "질문: 다른 방법도 시도해보세요.\n\n답변:\n1. 좋은 습관으로는 이런 게 있어요.\n2. 다른 관점에서 보면요.\n",
+    "metadata": {
+      "question": "다른 방법도 시도해보세요.",
+      "question_author": "스타트업개발자",
+      "question_team": "dev_user_850",
+      "question_timestamp": "2024-01-23 13:38:00",
+      "num_answers": 2,
+      "answer_authors": [
+        "인프라엔지니어",
+        "판다스전문가"
+      ],
+      "answer_teams": [
+        "dev_user_851",
+        "dev_user_852"
+      ]
+    }
+  },
+  {
+    "content": "질문: 감사합니다! 그럼 구체적인 예제를 보여주실 수 있나요?\n\n답변:\n1. 도움이 되는 정보 감사합니다.\n2. 저도 궁금했던 내용이에요.\n3. 추가로 궁금한 점이 있어요.\n",
+    "metadata": {
+      "question": "감사합니다! 그럼 구체적인 예제를 보여주실 수 있나요?",
+      "question_author": "스타트업개발자",
+      "question_team": "dev_user_848",
+      "question_timestamp": "2024-01-23 14:25:00",
+      "num_answers": 3,
+      "answer_authors": [
+        "인프라엔지니어",
+        "신입개발자",
+        "시니어개발자"
+      ],
+      "answer_teams": [
+        "dev_user_854",
+        "dev_user_855",
+        "dev_user_856"
+      ]
+    }
+  },
+  {
+    "content": "질문: Docker와 가상머신의 차이점을 알려주세요.\n\n답변:\n1. 볼륨은 Docker가 관리하고, 바인드 마운트는 호스트 경로를 직접 연결해요.\n2. 이런 접근 방식도 좋을 것 같아요.\n3. 좋은 습관으로는 이런 게 있어요.\n",
+    "metadata": {
+      "question": "Docker와 가상머신의 차이점을 알려주세요.",
+      "question_author": "데이터분석가",
+      "question_team": "dev_user_858",
+      "question_timestamp": "2024-01-23 15:00:00",
+      "num_answers": 3,
+      "answer_authors": [
+        "빅데이터엔지니어",
+        "주니어개발자",
+        "성능최적화"
+      ],
+      "answer_teams": [
+        "dev_user_859",
+        "dev_user_860",
+        "dev_user_861"
+      ]
+    }
+  },
+  {
+    "content": "질문: 예제 코드를 보여주실 수 있나요?\n\n답변:\n1. 저도 궁금했던 내용이에요.\n",
+    "metadata": {
+      "question": "예제 코드를 보여주실 수 있나요?",
+      "question_author": "데이터베이스관리자",
+      "question_team": "dev_user_865",
+      "question_timestamp": "2024-02-01 01:12:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "테스트엔지니어"
+      ],
+      "answer_teams": [
+        "dev_user_866"
+      ]
+    }
+  },
+  {
+    "content": "질문: OAuth 2.0과 JWT의 차이점을 알려주세요.\n\n답변:\n1. bcrypt, scrypt, Argon2 같은 안전한 해싱 알고리즘을 사용하세요.\n",
+    "metadata": {
+      "question": "OAuth 2.0과 JWT의 차이점을 알려주세요.",
+      "question_author": "코드리뷰어",
+      "question_team": "dev_user_867",
+      "question_timestamp": "2024-01-23 16:00:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "대기업개발자"
+      ],
+      "answer_teams": [
+        "dev_user_868"
+      ]
+    }
+  },
+  {
+    "content": "질문: 제 경험상 이런 방법이 효과적이었어요.\n\n답변:\n1. 좋은 습관으로는 이런 게 있어요.\n",
+    "metadata": {
+      "question": "제 경험상 이런 방법이 효과적이었어요.",
+      "question_author": "보안개발자",
+      "question_team": "dev_user_869",
+      "question_timestamp": "2024-01-23 16:38:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "판다스전문가"
+      ],
+      "answer_teams": [
+        "dev_user_870"
+      ]
+    }
+  },
+  {
+    "content": "질문: 일반적으로 권장하는 방법은요.\n\n답변:\n1. 코드 예제를 보여주세요!\n2. 실제로 적용해봐야겠어요.\n3. 추가로 궁금한 점이 있어요.\n",
+    "metadata": {
+      "question": "일반적으로 권장하는 방법은요.",
+      "question_author": "박코딩",
+      "question_team": "dev_user_871",
+      "question_timestamp": "2024-01-23 16:40:00",
+      "num_answers": 3,
+      "answer_authors": [
+        "코드리뷰어",
+        "기술리더",
+        "외국계개발자"
+      ],
+      "answer_teams": [
+        "dev_user_867",
+        "dev_user_873",
+        "dev_user_874"
+      ]
+    }
+  },
+  {
+    "content": "질문: Docker 이미지 크기를 줄이는 방법이 있나요?\n\n답변:\n1. Docker는 OS 레벨 가상화로 더 가볍고 빠르지만, 가상머신은 하드웨어 레벨 가상화예요.\n2. 한 가지 더 말씀드리면요.\n3. 추가로 고려해볼 점이 있어요.\n4. 또 다른 접근법을 제안드려요.\n5. 추가로 궁금한 점이 있어요.\n",
+    "metadata": {
+      "question": "Docker 이미지 크기를 줄이는 방법이 있나요?",
+      "question_author": "성능튜닝",
+      "question_team": "dev_user_877",
+      "question_timestamp": "2024-01-23 17:00:00",
+      "num_answers": 5,
+      "answer_authors": [
+        "판다스전문가",
+        "판다스전문가",
+        "김개발",
+        "데이터베이스관리자",
+        "멘토"
+      ],
+      "answer_teams": [
+        "dev_user_878",
+        "dev_user_879",
+        "dev_user_880",
+        "dev_user_881",
+        "dev_user_882"
+      ]
+    }
+  },
+  {
+    "content": "질문: 성능 최적화 방법이 궁금해요.\n\n답변:\n1. 도움이 되는 정보 감사합니다.\n",
+    "metadata": {
+      "question": "성능 최적화 방법이 궁금해요.",
+      "question_author": "성능튜닝",
+      "question_team": "dev_user_883",
+      "question_timestamp": "2024-01-29 10:32:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "스터디리더"
+      ],
+      "answer_teams": [
+        "dev_user_884"
+      ]
+    }
+  },
+  {
+    "content": "질문: 이런 방법도 있군요!\n\n답변:\n1. 클래스와 객체의 개념을 쉽게 설명해주세요.\n",
+    "metadata": {
+      "question": "이런 방법도 있군요!",
+      "question_author": "서버개발자",
+      "question_team": "dev_user_885",
+      "question_timestamp": "2024-02-01 16:10:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "신입개발자"
+      ],
+      "answer_teams": [
+        "dev_user_886"
+      ]
+    }
+  },
+  {
+    "content": "질문: chunksize 파라미터로 청크 단위로 읽거나, 필요한 컬럼만 선택해서 읽는 방법이 있어요.\n\n답변:\n1. 추가 정보를 드리면요.\n2. 또 다른 접근법을 제안드려요.\n3. 좋은 습관으로는 이런 게 있어요.\n",
+    "metadata": {
+      "question": "chunksize 파라미터로 청크 단위로 읽거나, 필요한 컬럼만 선택해서 읽는 방법이 있어요.",
+      "question_author": "클라우드아키텍트",
+      "question_team": "dev_user_887",
+      "question_timestamp": "2024-01-23 18:10:00",
+      "num_answers": 3,
+      "answer_authors": [
+        "데이터베이스관리자",
+        "한리액트",
+        "API설계자"
+      ],
+      "answer_teams": [
+        "dev_user_888",
+        "dev_user_889",
+        "dev_user_890"
+      ]
+    }
+  },
+  {
+    "content": "질문: 아 그렇군요! 더 자세히 설명해주실 수 있나요?\n\n답변:\n1. 좋은 질문이네요!\n",
+    "metadata": {
+      "question": "아 그렇군요! 더 자세히 설명해주실 수 있나요?",
+      "question_author": "신입개발자",
+      "question_team": "dev_user_886",
+      "question_timestamp": "2024-01-23 20:15:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "인프라엔지니어"
+      ],
+      "answer_teams": [
+        "dev_user_892"
+      ]
+    }
+  },
+  {
+    "content": "질문: 예제 코드를 보여주실 수 있나요?\n\n답변:\n1. 로드 밸런싱 전략을 알려주세요.\n2. 장점은 독립적 배포, 기술 스택 다양성이고, 단점은 복잡성 증가, 네트워크 지연이에요.\n3. 또 다른 접근법을 제안드려요.\n4. 그런데 이런 에러가 발생했어요.\n",
+    "metadata": {
+      "question": "예제 코드를 보여주실 수 있나요?",
+      "question_author": "정프론트",
+      "question_team": "dev_user_895",
+      "question_timestamp": "2024-01-26 00:54:00",
+      "num_answers": 4,
+      "answer_authors": [
+        "김개발",
+        "스터디리더",
+        "웹보안",
+        "김개발"
+      ],
+      "answer_teams": [
+        "dev_user_896",
+        "dev_user_897",
+        "dev_user_898",
+        "dev_user_896"
+      ]
+    }
+  },
+  {
+    "content": "질문: 보안상 주의할 점이 있나요?\n\n답변:\n1. 저도 궁금했던 내용이에요.\n",
+    "metadata": {
+      "question": "보안상 주의할 점이 있나요?",
+      "question_author": "기술블로거",
+      "question_team": "dev_user_900",
+      "question_timestamp": "2024-01-30 20:59:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "API설계자"
+      ],
+      "answer_teams": [
+        "dev_user_901"
+      ]
+    }
+  },
+  {
+    "content": "질문: 예제 코드를 보여주실 수 있나요?\n\n답변:\n1. 도움이 되는 정보 감사합니다.\n",
+    "metadata": {
+      "question": "예제 코드를 보여주실 수 있나요?",
+      "question_author": "인프라엔지니어",
+      "question_team": "dev_user_902",
+      "question_timestamp": "2024-01-31 23:46:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "기술리더"
+      ],
+      "answer_teams": [
+        "dev_user_903"
+      ]
+    }
+  },
+  {
+    "content": "질문: pandas로 대용량 CSV 파일을 읽을 때 메모리 사용량을 줄이는 방법이 있나요?\n\n답변:\n1. try-except 블록을 사용해서 예외를 처리하고, finally 블록으로 정리 작업을 할 수 있어요.\n",
+    "metadata": {
+      "question": "pandas로 대용량 CSV 파일을 읽을 때 메모리 사용량을 줄이는 방법이 있나요?",
+      "question_author": "마이크로서비스",
+      "question_team": "dev_user_904",
+      "question_timestamp": "2024-01-24 00:00:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "대기업개발자"
+      ],
+      "answer_teams": [
+        "dev_user_905"
+      ]
+    }
+  },
+  {
+    "content": "질문: 이런 방법도 있군요!\n\n답변:\n1. 추가로 궁금한 점이 있어요.\n",
+    "metadata": {
+      "question": "이런 방법도 있군요!",
+      "question_author": "데이터분석가",
+      "question_team": "dev_user_910",
+      "question_timestamp": "2024-01-28 19:24:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "코드리뷰어"
+      ],
+      "answer_teams": [
+        "dev_user_911"
+      ]
+    }
+  },
+  {
+    "content": "질문: Docker에서 로그 관리는 어떻게 하나요?\n\n답변:\n1. 멀티스테이지 빌드, Alpine 이미지 사용, 불필요한 파일 제거 등을 하세요.\n",
+    "metadata": {
+      "question": "Docker에서 로그 관리는 어떻게 하나요?",
+      "question_author": "쿠버네티스",
+      "question_team": "dev_user_912",
+      "question_timestamp": "2024-01-24 01:00:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "기술블로거"
+      ],
+      "answer_teams": [
+        "dev_user_913"
+      ]
+    }
+  },
+  {
+    "content": "질문: 제 경험상 이런 방법이 효과적이었어요.\n\n답변:\n1. 좋은 습관으로는 이런 게 있어요.\n2. 모범 사례를 말씀드리면요.\n",
+    "metadata": {
+      "question": "제 경험상 이런 방법이 효과적이었어요.",
+      "question_author": "기술리더",
+      "question_team": "dev_user_914",
+      "question_timestamp": "2024-01-24 01:24:00",
+      "num_answers": 2,
+      "answer_authors": [
+        "이프로그래머",
+        "컨퍼런스스피커"
+      ],
+      "answer_teams": [
+        "dev_user_915",
+        "dev_user_916"
+      ]
+    }
+  },
+  {
+    "content": "질문: 에러가 발생했는데 도움을 주실 수 있나요?\n\n답변:\n1. 도움이 되는 정보 감사합니다.\n",
+    "metadata": {
+      "question": "에러가 발생했는데 도움을 주실 수 있나요?",
+      "question_author": "테스트엔지니어",
+      "question_team": "dev_user_919",
+      "question_timestamp": "2024-01-30 09:01:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "박코딩"
+      ],
+      "answer_teams": [
+        "dev_user_920"
+      ]
+    }
+  },
+  {
+    "content": "질문: React에서 상태 관리를 할 때 useState와 useReducer 중에 어떤 걸 선택해야 할까요?\n\n답변:\n1. React는 단방향 데이터 플로우, Vue는 양방향 데이터 바인딩이 특징이에요.\n2. 모범 사례를 말씀드리면요.\n3. 도움이 되는 정보 감사합니다.\n",
+    "metadata": {
+      "question": "React에서 상태 관리를 할 때 useState와 useReducer 중에 어떤 걸 선택해야 할까요?",
+      "question_author": "풀스택개발자",
+      "question_team": "dev_user_921",
+      "question_timestamp": "2024-01-24 02:00:00",
+      "num_answers": 3,
+      "answer_authors": [
+        "SQL최적화",
+        "SQL최적화",
+        "자동화전문가"
+      ],
+      "answer_teams": [
+        "dev_user_922",
+        "dev_user_923",
+        "dev_user_924"
+      ]
+    }
+  },
+  {
+    "content": "질문: 이런 방법도 있군요!\n\n답변:\n1. 도움이 되는 정보 감사합니다.\n2. 저도 궁금했던 내용이에요.\n3. Kubernetes와 Docker의 관계를 설명해주세요.\n4. 멀티스테이지 빌드, .dockerignore 사용, 레이어 캐싱 최적화 등을 고려하세요.\n",
+    "metadata": {
+      "question": "이런 방법도 있군요!",
+      "question_author": "기술블로거",
+      "question_team": "dev_user_925",
+      "question_timestamp": "2024-02-01 08:54:00",
+      "num_answers": 4,
+      "answer_authors": [
+        "웹보안",
+        "최웹개발",
+        "주니어개발자",
+        "클라우드아키텍트"
+      ],
+      "answer_teams": [
+        "dev_user_926",
+        "dev_user_927",
+        "dev_user_928",
+        "dev_user_929"
+      ]
+    }
+  },
+  {
+    "content": "질문: 다른 해결 방법도 있어요.\n\n답변:\n1. 이해했습니다. 실제 코드로 보여주시면 더 좋을 것 같아요.\n2. 도움이 되는 정보 감사합니다.\n3. 도움이 되는 정보 감사합니다.\n4. 저도 궁금했던 내용이에요.\n",
+    "metadata": {
+      "question": "다른 해결 방법도 있어요.",
+      "question_author": "기술리더",
+      "question_team": "dev_user_931",
+      "question_timestamp": "2024-01-24 05:00:00",
+      "num_answers": 4,
+      "answer_authors": [
+        "주니어개발자",
+        "데이터베이스관리자",
+        "풀스택개발자",
+        "프리랜서"
+      ],
+      "answer_teams": [
+        "dev_user_928",
+        "dev_user_933",
+        "dev_user_934",
+        "dev_user_935"
+      ]
+    }
+  },
+  {
+    "content": "질문: 이런 방법도 있군요!\n\n답변:\n1. 로드 밸런싱 전략을 알려주세요.\n2. 블루-그린은 전체 교체, 카나리는 점진적 교체 방식이에요.\n3. 한 가지 더 말씀드리면요.\n4. 한 가지 더 말씀드리면요.\n5. 코드 예제를 보여주세요!\n",
+    "metadata": {
+      "question": "이런 방법도 있군요!",
+      "question_author": "테스트엔지니어",
+      "question_team": "dev_user_936",
+      "question_timestamp": "2024-01-26 21:28:00",
+      "num_answers": 5,
+      "answer_authors": [
+        "데이터분석가",
+        "최웹개발",
+        "프리랜서",
+        "인증전문가",
+        "데이터분석가"
+      ],
+      "answer_teams": [
+        "dev_user_937",
+        "dev_user_938",
+        "dev_user_939",
+        "dev_user_940",
+        "dev_user_937"
+      ]
+    }
+  },
+  {
+    "content": "질문: 에러가 발생했는데 도움을 주실 수 있나요?\n\n답변:\n1. 도움이 되는 정보 감사합니다.\n2. 추가로 궁금한 점이 있어요.\n",
+    "metadata": {
+      "question": "에러가 발생했는데 도움을 주실 수 있나요?",
+      "question_author": "성능튜닝",
+      "question_team": "dev_user_943",
+      "question_timestamp": "2024-02-03 06:02:00",
+      "num_answers": 2,
+      "answer_authors": [
+        "인증전문가",
+        "대기업개발자"
+      ],
+      "answer_teams": [
+        "dev_user_944",
+        "dev_user_945"
+      ]
+    }
+  },
+  {
+    "content": "질문: JavaScript에서 var, let, const의 차이점을 알려주세요.\n\n답변:\n1. 이벤트 리스너 제거, 타이머 정리, 순환 참조 방지 등을 해야 해요.\n",
+    "metadata": {
+      "question": "JavaScript에서 var, let, const의 차이점을 알려주세요.",
+      "question_author": "주니어개발자",
+      "question_team": "dev_user_946",
+      "question_timestamp": "2024-01-24 09:00:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "주니어개발자"
+      ],
+      "answer_teams": [
+        "dev_user_947"
+      ]
+    }
+  },
+  {
+    "content": "질문: 제 경험상 이런 방법이 효과적이었어요.\n\n답변:\n1. 저도 궁금했던 내용이에요.\n",
+    "metadata": {
+      "question": "제 경험상 이런 방법이 효과적이었어요.",
+      "question_author": "판다스전문가",
+      "question_team": "dev_user_949",
+      "question_timestamp": "2024-01-24 09:54:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "인프라엔지니어"
+      ],
+      "answer_teams": [
+        "dev_user_950"
+      ]
+    }
+  },
+  {
+    "content": "질문: 이런 방법도 있군요!\n\n답변:\n1. 도움이 되는 정보 감사합니다.\n",
+    "metadata": {
+      "question": "이런 방법도 있군요!",
+      "question_author": "한리액트",
+      "question_team": "dev_user_951",
+      "question_timestamp": "2024-01-26 17:12:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "프리랜서"
+      ],
+      "answer_teams": [
+        "dev_user_952"
+      ]
+    }
+  },
+  {
+    "content": "질문: 파이썬에서 가상환경을 만드는 방법이 궁금해요.\n\n답변:\n1. numpy는 수치 계산에 특화되어 있고, pandas는 데이터 분석과 조작에 특화되어 있어요.\n2. 한 가지 더 말씀드리면요.\n3. 실제로 적용해봐야겠어요.\n4. 저도 궁금했던 내용이에요.\n5. 실제로 적용해봐야겠어요.\n",
+    "metadata": {
+      "question": "파이썬에서 가상환경을 만드는 방법이 궁금해요.",
+      "question_author": "데이터분석가",
+      "question_team": "dev_user_954",
+      "question_timestamp": "2024-01-24 10:00:00",
+      "num_answers": 5,
+      "answer_authors": [
+        "모니터링전문가",
+        "주니어개발자",
+        "이프로그래머",
+        "백엔드신입",
+        "인프라엔지니어"
+      ],
+      "answer_teams": [
+        "dev_user_955",
+        "dev_user_956",
+        "dev_user_957",
+        "dev_user_958",
+        "dev_user_959"
+      ]
+    }
+  },
+  {
+    "content": "질문: 이런 방법도 있군요!\n\n답변:\n1. useEffect의 의존성 배열이 헷갈려요.\n2. 제어 컴포넌트나 비제어 컴포넌트 방식으로 폼을 처리할 수 있어요.\n3. 추가로 고려해볼 점이 있어요.\n",
+    "metadata": {
+      "question": "이런 방법도 있군요!",
+      "question_author": "주니어개발자",
+      "question_team": "dev_user_960",
+      "question_timestamp": "2024-02-02 19:36:00",
+      "num_answers": 3,
+      "answer_authors": [
+        "API설계자",
+        "백엔드신입",
+        "쿠버네티스"
+      ],
+      "answer_teams": [
+        "dev_user_961",
+        "dev_user_962",
+        "dev_user_963"
+      ]
+    }
+  },
+  {
+    "content": "질문: 일반적으로 권장하는 방법은요.\n\n답변:\n1. 도움이 되는 정보 감사합니다.\n2. 도움이 되는 정보 감사합니다.\n",
+    "metadata": {
+      "question": "일반적으로 권장하는 방법은요.",
+      "question_author": "한리액트",
+      "question_team": "dev_user_964",
+      "question_timestamp": "2024-01-24 12:57:00",
+      "num_answers": 2,
+      "answer_authors": [
+        "코드리뷰어",
+        "최웹개발"
+      ],
+      "answer_teams": [
+        "dev_user_965",
+        "dev_user_966"
+      ]
+    }
+  },
+  {
+    "content": "질문: React에서 성능 최적화는 어떻게 하나요?\n\n답변:\n1. 함수형 컴포넌트에서는 useEffect로 생명주기를 관리해요.\n2. 업계 표준 관행은 이런 거예요.\n3. 추가 정보를 드리면요.\n",
+    "metadata": {
+      "question": "React에서 성능 최적화는 어떻게 하나요?",
+      "question_author": "김개발",
+      "question_team": "dev_user_969",
+      "question_timestamp": "2024-01-24 14:00:00",
+      "num_answers": 3,
+      "answer_authors": [
+        "신입개발자",
+        "풀스택개발자",
+        "컨퍼런스스피커"
+      ],
+      "answer_teams": [
+        "dev_user_970",
+        "dev_user_971",
+        "dev_user_972"
+      ]
+    }
+  },
+  {
+    "content": "질문: 대안으로 이런 방법도 있습니다.\n\n답변:\n1. 도움이 되는 정보 감사합니다.\n",
+    "metadata": {
+      "question": "대안으로 이런 방법도 있습니다.",
+      "question_author": "보안개발자",
+      "question_team": "dev_user_973",
+      "question_timestamp": "2024-01-24 14:48:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "스타트업개발자"
+      ],
+      "answer_teams": [
+        "dev_user_974"
+      ]
+    }
+  },
+  {
+    "content": "질문: 예제 코드를 보여주실 수 있나요?\n\n답변:\n1. 추가로 궁금한 점이 있어요.\n",
+    "metadata": {
+      "question": "예제 코드를 보여주실 수 있나요?",
+      "question_author": "이프로그래머",
+      "question_team": "dev_user_976",
+      "question_timestamp": "2024-01-29 09:36:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "인프라엔지니어"
+      ],
+      "answer_teams": [
+        "dev_user_977"
+      ]
+    }
+  },
+  {
+    "content": "질문: 정규화와 비정규화의 차이점을 알려주세요.\n\n답변:\n1. 정규화는 중복을 줄이고 무결성을 보장하지만, 비정규화는 성능을 위해 중복을 허용해요.\n",
+    "metadata": {
+      "question": "정규화와 비정규화의 차이점을 알려주세요.",
+      "question_author": "테스트엔지니어",
+      "question_team": "dev_user_978",
+      "question_timestamp": "2024-01-24 16:00:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "코드리뷰어"
+      ],
+      "answer_teams": [
+        "dev_user_979"
+      ]
+    }
+  },
+  {
+    "content": "질문: 일반적으로 권장하는 방법은요.\n\n답변:\n1. 추가로 궁금한 점이 있어요.\n",
+    "metadata": {
+      "question": "일반적으로 권장하는 방법은요.",
+      "question_author": "데브옵스",
+      "question_team": "dev_user_980",
+      "question_timestamp": "2024-01-24 16:40:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "마이크로서비스"
+      ],
+      "answer_teams": [
+        "dev_user_981"
+      ]
+    }
+  },
+  {
+    "content": "질문: 예제 코드를 보여주실 수 있나요?\n\n답변:\n1. 실제로 적용해봐야겠어요.\n",
+    "metadata": {
+      "question": "예제 코드를 보여주실 수 있나요?",
+      "question_author": "코딩부트캠프강사",
+      "question_team": "dev_user_989",
+      "question_timestamp": "2024-02-01 21:20:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "마이크로서비스"
+      ],
+      "answer_teams": [
+        "dev_user_990"
+      ]
+    }
+  },
+  {
+    "content": "질문: 다른 해결 방법도 있어요.\n\n답변:\n1. 좋은 습관으로는 이런 게 있어요.\n2. 다른 관점에서 보면요.\n3. 실제 구현 코드를 보고 싶어요.\n4. 도움이 되는 정보 감사합니다.\n",
+    "metadata": {
+      "question": "다른 해결 방법도 있어요.",
+      "question_author": "빅데이터엔지니어",
+      "question_team": "dev_user_994",
+      "question_timestamp": "2024-01-24 21:06:00",
+      "num_answers": 4,
+      "answer_authors": [
+        "보안개발자",
+        "판다스전문가",
+        "쿠버네티스",
+        "스타트업개발자"
+      ],
+      "answer_teams": [
+        "dev_user_995",
+        "dev_user_996",
+        "dev_user_992",
+        "dev_user_998"
+      ]
+    }
+  },
+  {
+    "content": "질문: 보안상 주의할 점이 있나요?\n\n답변:\n1. 저도 궁금했던 내용이에요.\n",
+    "metadata": {
+      "question": "보안상 주의할 점이 있나요?",
+      "question_author": "도커마스터",
+      "question_team": "dev_user_999",
+      "question_timestamp": "2024-02-06 01:00:00",
+      "num_answers": 1,
+      "answer_authors": [
+        "컨퍼런스스피커"
+      ],
+      "answer_teams": [
+        "dev_user_1000"
+      ]
+    }
+  }
+]
