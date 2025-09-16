@@ -1,0 +1,149 @@
+/* Base theme */
+:root {
+  --bg: #0b0d12;
+  --panel: #11131a;
+  --text: #e6e9ef;
+  --muted: #9aa3b2;
+  --accent: #6ea8fe;
+  --user-bubble: #2b5cff;
+  --assistant-bubble: #1b1f2a;
+  --border: #252a36;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #f7f8fa;
+    --panel: #ffffff;
+    --text: #0d1222;
+    --muted: #546076;
+    --accent: #2b5cff;
+    --user-bubble: #2b5cff;
+    --assistant-bubble: #f2f4f8;
+    --border: #e6e9ef;
+  }
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* Top bar */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 12px 16px;
+}
+
+.brand {
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+.container-narrow {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+/* Hero input */
+.hero {
+  min-height: 42vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-inner {
+  width: 100%;
+  max-width: 760px;
+  text-align: center;
+}
+
+.hero-input {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--text);
+  outline: none;
+}
+
+/* Chat area */
+.messages {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-bottom: 88px;
+}
+
+.row {
+  display: flex;
+}
+
+.row.user { justify-content: flex-end; }
+.row.assistant { justify-content: flex-start; }
+
+.bubble {
+  max-width: 78%;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--assistant-bubble);
+  white-space: pre-wrap;
+}
+
+.row.user .bubble {
+  background: var(--user-bubble);
+  color: #fff;
+  border-color: transparent;
+}
+
+.composer {
+  position: sticky;
+  bottom: 10px;
+  padding-top: 10px;
+  background: linear-gradient(180deg, transparent, var(--bg) 30%);
+}
+
+.composer-wrap {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  align-items: center;
+}
+
+.composer-input {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--text);
+}
+
+.btn {
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.btn.primary { background: var(--accent); color: #fff; border-color: transparent; }
+
+/* Markdown / code */
+.bubble pre, .bubble code { background: transparent; }
+.bubble pre { border: 1px solid var(--border); padding: 10px; border-radius: 10px; overflow: auto; }
+.bubble h1, .bubble h2, .bubble h3 { margin: 0.4rem 0; }
+.bubble ul { margin: 0.4rem 0 0.4rem 1rem; }
+
+/* Status */
+.status { color: var(--muted); font-size: 12px; margin-left: 8px; }
+
+

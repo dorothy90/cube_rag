@@ -2,7 +2,7 @@
 Context Handler Agent - 추가 맥락 처리 Agent
 추가 맥락이 필요한 질문을 처리하는 전략을 결정합니다.
 """
-
+#%%
 import os
 import json
 from typing import Dict, Optional, List, Any
@@ -85,6 +85,7 @@ class ContextHandlerAgent:
                               user_question: str, memory_context: Optional[Dict]) -> ContextDecision:
         """맥락 처리 액션을 결정합니다."""
         
+
         # 분석 프롬프트 생성
         prompt = f"""
 다음은 추가 맥락이 필요한 한국어 개발자 질문입니다. 
@@ -97,6 +98,7 @@ class ContextHandlerAgent:
 - 기술 스택: {', '.join(query_analysis.technical_stack)}
 - 키워드: {', '.join(query_analysis.keywords)}
 - 의도: {query_analysis.intent}
+- 추가 맥락 필요: {query_analysis.context_needed}
 
 메모리 검색 결과:
 - 관련 정보 발견: {memory_context['found'] if memory_context else False}
@@ -116,10 +118,11 @@ class ContextHandlerAgent:
 - search_memory: 더 많은 메모리 검색 필요
 
 판단 기준:
-1. 메모리에 관련 정보가 충분히 있으면 generate_answer
-2. 질문이 너무 모호하면 request_context
-3. 에러 메시지나 코드가 없으면 request_context
-4. 이전 대화와 연관되지만 정보가 부족하면 search_memory
+1. 질문이 개념 정의/설명이며 추가 맥락이 불필요하면 generate_answer
+2. 메모리에 관련 정보가 충분히 있으면 generate_answer
+3. 질문이 너무 모호하면 request_context
+4. 에러 메시지나 코드가 없으면 request_context
+5. 이전 대화와 연관되지만 정보가 부족하면 search_memory
 """
         
         try:
@@ -221,12 +224,16 @@ if __name__ == "__main__":
         "timestamp": "2024-01-01"
     })
     
+    msg = "파이썬에서 uv 라이브러리는 뭔가요"
     # Query Analyzer로 분석
     from query_analyzer_agent import QueryAnalyzerAgent
     query_analyzer = QueryAnalyzerAgent()
-    query_analysis = query_analyzer.analyze_query("Django에서 모델 필드에 기본값을 설정하는 방법이 궁금합니다.")
+    query_analysis = query_analyzer.analyze_query(msg)
     
     # Context Handler로 처리
-    context_decision = agent.handle_context_needed(query_analysis, "Django에서 모델 필드에 기본값을 설정하는 방법이 궁금합니다.")
+    context_decision = agent.handle_context_needed(query_analysis,msg)
     print(f"결정된 액션: {context_decision.action}")
     print(f"신뢰도: {context_decision.confidence:.2f}")
+
+
+# %%

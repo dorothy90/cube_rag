@@ -40,7 +40,7 @@ if not logger.handlers:
 def _read_config() -> Dict:
     defaults = get_default_paths()
     persist_dir = os.getenv("CHROMA_PERSIST_DIR", defaults["persist_dir"])
-    collection = os.getenv("CHROMA_COLLECTION", "qa_pairs")
+    collection = os.getenv("CHROMA_COLLECTION", "qa_chunks")
     top_k = int(os.getenv("RETRIEVER_TOP_K", "5"))
     threshold = float(os.getenv("RETRIEVER_SCORE_THRESHOLD", "0.2"))
     timeout_sec = float(os.getenv("RETRIEVER_TIMEOUT_SEC", "2.5"))

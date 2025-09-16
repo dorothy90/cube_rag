@@ -8,7 +8,7 @@ Env keys:
 """
 
 import os
-from typing import List, Dict
+from typing import List, Dict, Optional, Set
 
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
@@ -25,29 +25,50 @@ def _get_model_name() -> str:
 
 SYSTEM_PROMPT = """
 당신은 한국어 기술 Q&A 어시스턴트입니다.
-- 제공된 컨텍스트에 근거하여 간결하고 정확한 답변을 작성하세요.
-- 컨텍스트에 근거가 부족하면, 추측 대신 "주어진 컨텍스트만으로는 충분하지 않습니다"라고 명시하세요.
-- 단계/명령/예시가 필요하면 코드블록을 사용하세요.
+
+원칙:
+- 우선, 사용자의 질문에 대해 일반적/보편적 지식으로 최선의 답변을 제공합니다.
+- 제공된 컨텍스트가 있다면 그것을 우선 인용/참조합니다.
+- 컨텍스트가 불충분하더라도, 가능한 한 실용적인 가이드와 예시를 제시합니다.
+- 다만 확실하지 않은 부분은 추측임을 명확히 표시합니다(예: "추정", "권장").
+- 과도한 장황함을 피하고, 실용적인 단계/체크리스트/코드 예시를 우선합니다.
+- 코드 예시는 최소한으로, 실행 가능하고 핵심만 보여줍니다.
+
+출력 형식:
+1) 요약: 한두 문장으로 결론 요약
+2) 핵심 포인트: 최대 5개 불릿
+3) 단계별 가이드: 필요 시 번호 목록. 각 단계는 1~2문장으로 구체적으로
+4) 코드 예시: 필요 시 코드블록 사용 (언어 태그 명시)
+5) 근거/출처: Q&A/웹검색 근거를 간단 요약(있으면 URL/메타 포함)
+6) 주의사항/베스트 프랙티스: 2~4개 불릿
+7) 다음에 할 일(선택): 사용자가 바로 실행할 수 있는 간단 액션 1~2개
 """.strip()
 
 
 USER_PROMPT_TEMPLATE = """
 질문: {question}
 
-컨텍스트(최대 {ctx_count}개):
+컨텍스트({ctx_count}개 이하):
+"""
+
+# 컨텍스트 블록은 모델이 인용하기 쉽도록 구분선을 추가합니다.
+CONTEXTS_WRAPPER = """
+----- 컨텍스트 시작 -----
 {contexts}
+----- 컨텍스트 끝 -----
 
 지침:
-- 한국어로 답변하세요.
-- 과도한 추측을 피하고, 가능하면 컨텍스트의 표현을 인용하세요.
+- 반드시 위 컨텍스트 내 표현/사실에 근거해 작성하세요.
+- 형식을 그대로 따르세요(요약/핵심 포인트/단계/코드/주의사항/다음에 할 일).
+- 필요 시 컨텍스트의 핵심 문장을 짧게 인용("…")하세요.
 """.strip()
 
 
-def generate_answer(question: str, contexts: List[str]) -> Dict:
+def generate_answer(question: str, contexts: List[str], preface: Optional[str] = None, sources: Optional[List[Dict]] = None) -> Dict:
     model = ChatOpenAI(model=_get_model_name(), temperature=0.2)
     prompt = ChatPromptTemplate.from_messages([
         ("system", SYSTEM_PROMPT),
-        ("user", USER_PROMPT_TEMPLATE),
+        ("user", USER_PROMPT_TEMPLATE + "\n\n" + (preface + "\n\n" if preface else "") + CONTEXTS_WRAPPER),
     ])
 
     joined_contexts = "\n\n".join([c.strip() for c in contexts if c and c.strip()])
@@ -59,7 +80,71 @@ def generate_answer(question: str, contexts: List[str]) -> Dict:
 
     resp = model.invoke(formatted)
     answer = resp.content if hasattr(resp, "content") else str(resp)
-    return {"answer": answer}
+
+    if preface:
+        # 프리페이스를 본문 상단에 명시적으로 포함
+        answer = f"알림: {preface}\n\n" + answer
+
+    # 항상 출처 섹션을 하단에 추가
+    def _truncate(text: str, n: int = 160) -> str:
+        t = (text or "").strip()
+        return t if len(t) <= n else (t[: n - 1] + "…")
+
+    def _format_sources(srcs: Optional[List[Dict]]) -> str:
+        items: List[str] = []
+        if not srcs:
+            return ""
+
+        seen: Set[str] = set()
+        count = 0
+        for s in srcs:
+            if count >= 5:
+                break
+            # 웹 결과 우선 처리 (url 존재)
+            url = (s.get("url") if isinstance(s, dict) else None) or ""
+            title = (s.get("title") if isinstance(s, dict) else None) or ""
+            snippet = (s.get("snippet") if isinstance(s, dict) else None) or ""
+            if url:
+                key = f"web::{url}"
+                if key in seen:
+                    continue
+                seen.add(key)
+                label = "웹"
+                ti = title or url
+                items.append(f"- {label}: {ti} ({url})")
+                count += 1
+                continue
+
+            # Q&A 메타 처리
+            meta = s.get("metadata") if isinstance(s, dict) else None
+            if isinstance(meta, dict):
+                ts = (meta.get("timestamp") or "").strip()
+                q = _truncate((meta.get("question") or "").strip(), 80)
+                key = f"qa::{ts}::{q}"
+                if key in seen:
+                    continue
+                seen.add(key)
+                label = "Q&A"
+                if ts and q:
+                    items.append(f"- {label}: {ts} — Q: {q}")
+                elif ts:
+                    items.append(f"- {label}: {ts}")
+                elif q:
+                    items.append(f"- {label}: Q: {q}")
+                else:
+                    items.append(f"- {label}")
+                count += 1
+
+        if not items:
+            return ""
+
+        return "출처:\n" + "\n".join(items)
+
+    sources_section = _format_sources(sources)
+    if sources_section:
+        answer = f"{answer}\n\n{sources_section}"
+
+    return {"answer": answer, "sources": sources or []}
 
 
 __all__ = ["generate_answer"]

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cube RAG</title>
+  <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@2.0.6/css/pico.min.css" />
+  <link rel="stylesheet" href="/static/styles.css" />
+  <link rel="stylesheet" href="https://unpkg.com/prismjs@1.29.0/themes/prism-tomorrow.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">Cube RAG</div>
+    <nav><a href="/">홈</a></nav>
+  </header>
+
+  <main class="container">
+    <!-- Hero input centered like ChatGPT landing -->
+    <section id="hero" class="hero">
+      <div class="hero-inner">
+        <h2>무엇을 도와드릴까요?</h2>
+        <p style="color: var(--muted); margin-top: 6px;">내부 Q&A와 LLM, (옵션) 웹검색으로 답변해드립니다.</p>
+        <form id="hero-form" style="margin-top: 16px;">
+          <input id="hero-input" class="hero-input" type="text" placeholder="예: FastAPI에서 파일 업로드는 어떻게 하나요?" aria-label="질문" required />
+        </form>
+      </div>
+    </section>
+
+    <!-- Chat area -->
+    <section id="chat" style="display:none;">
+      <div id="messages" class="container-narrow messages"></div>
+
+      <!-- Composer fixed at bottom -->
+      <form id="composer" class="composer">
+        <div class="container-narrow composer-wrap">
+          <input id="composer-input" class="composer-input" type="text" placeholder="메시지를 입력하세요" required />
+          <button class="btn primary" type="submit">보내기</button>
+        </div>
+        <div class="container-narrow"><span id="status" class="status" style="display:none;">요청 중…</span></div>
+      </form>
+    </section>
+  </main>
+
+  <script>
+    const hero = document.getElementById('hero');
+    const heroForm = document.getElementById('hero-form');
+    const heroInput = document.getElementById('hero-input');
+    const chat = document.getElementById('chat');
+    const messages = document.getElementById('messages');
+    const composer = document.getElementById('composer');
+    const composerInput = document.getElementById('composer-input');
+    const statusEl = document.getElementById('status');
+
+    function addMessage(text, role) {
+      const wrap = document.createElement('div');
+      wrap.className = `row ${role}`;
+      const bubble = document.createElement('div');
+      bubble.className = 'bubble';
+      bubble.textContent = text;
+      wrap.appendChild(bubble);
+      messages.appendChild(wrap);
+      messages.scrollTop = messages.scrollHeight;
+      return bubble;
+    }
+
+    async function ask(question) {
+      statusEl.style.display = 'inline';
+      const bubble = addMessage('', 'assistant');
+
+      let es;
+      try {
+        es = new EventSource(`/ask/stream?q=${encodeURIComponent(question)}`);
+        es.addEventListener('token', (e) => {
+          bubble.textContent += e.data;
+          messages.scrollTop = messages.scrollHeight;
+        });
+        es.addEventListener('sources', (e) => {
+          // 필요하면 별도 출처 표시 영역 추가 가능
+          // TODO: render sources below assistant bubble if desired
+        });
+        es.addEventListener('error', (e) => {
+          bubble.textContent += `\n[오류] ${(e && e.data) || ''}`;
+        });
+        es.addEventListener('done', () => {
+          es.close();
+          statusEl.style.display = 'none';
+        });
+      } catch (err) {
+        bubble.textContent = `오류: ${err.message || err}`;
+        statusEl.style.display = 'none';
+      }
+    }
+
+    heroForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const q = heroInput.value.trim();
+      if (!q) return;
+      // switch to chat view
+      hero.style.display = 'none';
+      chat.style.display = 'block';
+      addMessage(q, 'user');
+      composerInput.value = '';
+      ask(q);
+    });
+
+    composer.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const q = composerInput.value.trim();
+      if (!q) return;
+      addMessage(q, 'user');
+      composerInput.value = '';
+      ask(q);
+    });
+  </script>
+</body>
+</html>
+
+
