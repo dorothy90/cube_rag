@@ -26,6 +26,7 @@
 body {
   background: var(--bg);
   color: var(--text);
+  font-size: 10px; /* 기준 글자 크기: 고정(px) */
 }
 
 /* Top bar */
@@ -39,12 +40,14 @@ body {
 }
 
 .brand {
+  font-size: 1rem;
   font-weight: 700;
   letter-spacing: 0.2px;
 }
 
 .container-narrow {
-  max-width: 860px;
+  font-size: 10px; /* 컨테이너에서 배율 제거 */
+  max-width: 800px;
   margin: 0 auto;
   padding: 0 16px;
 }
@@ -52,6 +55,7 @@ body {
 /* Hero input */
 .hero {
   min-height: 42vh;
+  font-size: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -59,6 +63,7 @@ body {
 
 .hero-inner {
   width: 100%;
+  font-size: 8px;
   max-width: 760px;
   text-align: center;
 }
@@ -78,6 +83,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 14px;
+  font-size: 1rem; /* 배율 제거 */
   padding-bottom: 88px;
 }
 
@@ -88,13 +94,20 @@ body {
 .row.user { justify-content: flex-end; }
 .row.assistant { justify-content: flex-start; }
 
-.bubble {
+.message-col {
+  display: flex;
+  flex-direction: column;
   max-width: 78%;
-  padding: 12px 14px;
+}
+
+.bubble {
+  max-width: 100%;
+  padding: 10px 12px; /* 패딩 축소로 밀도 개선 */
   border-radius: 14px;
   border: 1px solid var(--border);
   background: var(--assistant-bubble);
   white-space: pre-wrap;
+  font-size: 0.7rem; /* 기준 크기 */
 }
 
 .row.user .bubble {
@@ -119,7 +132,7 @@ body {
 
 .composer-input {
   width: 100%;
-  padding: 14px 16px;
+  padding: 12px 14px; /* 입력창 패딩 축소 */
   border-radius: 14px;
   border: 1px solid var(--border);
   background: var(--panel);
@@ -127,15 +140,24 @@ body {
 }
 
 .btn {
-  padding: 12px 16px;
+  padding: 10px 14px; /* 버튼 패딩 축소 */
+  font-size: 15px;
   border-radius: 12px;
   border: 1px solid var(--border);
   background: var(--panel);
   color: var(--text);
+  text-decoration: none; /* 앵커 밑줄 제거 */
+  display: inline-block;
   cursor: pointer;
 }
 
-.btn.primary { background: var(--accent); color: #fff; border-color: transparent; }
+.btn.primary { font-weight :bold; background: #bdbdbd29; color: #000000; border-color: transparent; }
+
+/* 링크 상태 전환에도 밑줄이 생기지 않도록 고정 */
+.btn:link,
+.btn:visited,
+.btn:hover,
+.btn:active { text-decoration: none; }
 
 /* Markdown / code */
 .bubble pre, .bubble code { background: transparent; }
@@ -144,6 +166,53 @@ body {
 .bubble ul { margin: 0.4rem 0 0.4rem 1rem; }
 
 /* Status */
-.status { color: var(--muted); font-size: 12px; margin-left: 8px; }
+.status { color: var(--muted); font-size: 0.85em; margin-left: 8px; }
 
+/* Sources */
+.sources {
+  margin-top: 6px;
+  font-size: 0.9rem; /* 약간 작게 */
+  color: var(--muted);
+}
+.sources details {
+  background: transparent;
+}
+.sources summary {
+  font-size: 12px;
+  margin-top: 30px;
+  cursor: pointer;
+  color: var(--accent);
+  list-style: none;
+}
+.bubble h1, .bubble h2, .bubble h3, .bubble h4 {
+  /* 어시스턴트 메시지 내 헤딩 크기 과도 확대 방지 */
+  font-size: 1em;
+}
+.sources summary::-webkit-details-marker { display: none; }
+.sources-content {
+  font-size: 12px;
+  margin-top: 6px;
+  white-space: pre-wrap;
+}
+
+
+/* Input size overrides (force override framework defaults) */
+section.hero .hero-input {
+  width: 100% !important;
+  max-width: 640px !important;
+  height: 44px !important;
+  font-size: 14px !important;
+  padding: 8px 12px !important;
+  border-radius: 10px !important;
+  box-sizing: border-box !important;
+}
+
+.composer .composer-input {
+  width: 100% !important;
+  height: 40px !important;
+  font-size: 14px !important;
+  padding: 8px 12px !important;
+  border-radius: 10px !important;
+  box-sizing: border-box !important;
+}
 

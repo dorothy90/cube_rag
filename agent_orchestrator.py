@@ -5,7 +5,7 @@ Agent Orchestrator
 """
 
 import os
-from typing import Optional
+from typing import Optional, List, Dict
 from dotenv import load_dotenv
 from query_analyzer_agent import QueryAnalyzerAgent
 from context_handler_agent import ContextHandlerAgent
@@ -26,7 +26,7 @@ class AgentOrchestrator:
         self.query_agent = QueryAnalyzerAgent(api_key=self.api_key)
         self.context_agent = ContextHandlerAgent(api_key=self.api_key)
 
-    def run(self, question: str):
+    def run(self, question: str, history: Optional[List[Dict[str, str]]] = None):
         # 1) 질문 분석
         analysis = self.query_agent.analyze_query(question)
         # 2) 추가 맥락 필요 여부에 따라 분기
@@ -40,25 +40,60 @@ class AgentOrchestrator:
         else:
             # 3) 리트리벌 실행
             hits = retrieve(question)
-            contexts = [h.get("content") for h in hits]
-            sources = [
-                {
-                    "metadata": h.get("metadata"),
-                    "score": h.get("score"),
-                }
-                for h in hits
-            ]
+            # 질문 전용 컬렉션을 사용하는 경우, 메타의 question/answer로 컨텍스트를 재구성
+            contexts = []
+            sources = []
+            for h in hits:
+                meta = h.get("metadata") or {}
+                q_meta = (meta.get("question") or "").strip()
+                a_meta = (meta.get("answer") or "").strip()
+                content = h.get("content")
+                if q_meta or a_meta:
+                    contexts.append(f"Q: {q_meta}\nA: {a_meta}".strip())
+                else:
+                    contexts.append(content)
+                sources.append({"metadata": meta, "score": h.get("score")})
 
-            # 간단한 매칭 휴리스틱: 컨텍스트 중 질문 키워드 포함되면 Q&A 포함으로 간주
-            normalized_q = question.strip().lower()
-            has_direct_match = any(
-                (c or "").lower().find(normalized_q[: min(len(normalized_q), 20)]) >= 0 for c in contexts
-            )
+            # 단일 리트리벌 기반 컨센서스 규칙
+            # has_direct_match = (top1 >= T_high) OR (상위 K 중 T_mid 이상 C개)
+            try:
+                t_high = float(os.getenv("DIRECT_MATCH_HIGH", "0.5"))
+            except Exception:
+                t_high = 0.5
+            try:
+                t_mid = float(os.getenv("DIRECT_MATCH_SCORE_THRESHOLD", "0.45"))
+            except Exception:
+                t_mid = 0.45
+            try:
+                top_k_cons = int(os.getenv("DIRECT_MATCH_TOPK", "3"))
+            except Exception:
+                top_k_cons = 3
+            try:
+                count_cons = int(os.getenv("DIRECT_MATCH_COUNT", "2"))
+            except Exception:
+                count_cons = 2
+
+            def _as_float(x):
+                try:
+                    return float(x)
+                except Exception:
+                    return None
+
+            raw_scores = [
+                _as_float(s.get("score")) if isinstance(s, dict) else None
+                for s in sources
+            ]
+            valid_scores = [v for v in raw_scores if v is not None]
+            valid_scores.sort(reverse=True)
+            top1 = valid_scores[0] if valid_scores else 0.0
+            topk_scores = valid_scores[: max(0, top_k_cons)] if valid_scores else []
+            consensus = sum(1 for v in topk_scores if v >= t_mid)
+            has_direct_match = (top1 >= t_high) or (consensus >= count_cons)
 
             if contexts and has_direct_match:
                 # Q&A에 있는 내용: 출처 표시 포함 답변
                 preface = "요청하신 질문은 내부 Q&A 데이터에서 근거를 찾았습니다. 아래 출처를 참고하세요."
-                gen = generate_answer(question, contexts, preface=preface, sources=sources)
+                gen = generate_answer(question, contexts, preface=preface, sources=sources, history=history)
             else:
                 # Q&A에 없음: 환경변수로 웹검색 사용 여부 제어
                 use_search = os.getenv("USE_WEB_SEARCH", "false").lower() in ("1", "true", "yes", "on")
@@ -79,13 +114,13 @@ class AgentOrchestrator:
                     combined_contexts = contexts + web_contexts
                     # 내부 Q&A 직접 매칭이 없을 때는 벡터 DB 출처는 표기하지 않고,
                     # 웹 검색 출처만 전달한다.
-                    gen = generate_answer(question, combined_contexts, preface=preface, sources=web_results)
+                    gen = generate_answer(question, combined_contexts, preface=preface, sources=web_results, history=history)
                 else:
                     preface = (
                         "내부 Q&A에 해당 내용이 없어, 웹 검색 없이 LLM 일반 지식만으로 답변합니다."
                     )
                     # 내부 Q&A 직접 매칭이 없는 경우 벡터 DB 출처는 표기하지 않는다.
-                    gen = generate_answer(question, contexts, preface=preface, sources=None)
+                    gen = generate_answer(question, contexts, preface=preface, sources=None, history=history)
             return {
                 "stage": "generation",
                 "analysis": analysis,

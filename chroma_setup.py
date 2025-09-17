@@ -42,6 +42,45 @@ def load_chunks_json(json_path: str) -> List[Dict]:
     return data
 
 
+# -----------------------------
+# Internal utilities
+# -----------------------------
+
+def _load_json_flexible(json_path: str) -> List[Dict]:
+    """Load JSON list regardless of schema (qa_pairs or chunked).
+
+    Tries chunked loader first (since it also covers generic list-of-dicts),
+    then falls back to qa loader.
+    """
+    try:
+        return load_chunks_json(json_path)
+    except Exception:
+        return load_qa_json(json_path)
+
+
+def _add_texts_batched(vectorstore: Chroma, texts: List[str], metadatas: List[Dict], batch: int) -> int:
+    total = len(texts)
+    if total == 0:
+        return 0
+    added = 0
+    for i in range(0, total, batch):
+        j = min(i + batch, total)
+        vectorstore.add_texts(texts=texts[i:j], metadatas=metadatas[i:j])
+        added += (j - i)
+        print(f"Indexed {j}/{total}")
+    return added
+
+
+def _compose_meta_from_qa_item(item: Dict) -> Dict:
+    return {
+        "question": item.get("question"),
+        "answer": item.get("answer"),
+        "question_author": item.get("question_author") or item.get("q_author"),
+        "answer_author": item.get("answer_author") or item.get("a_author"),
+        "timestamp": item.get("timestamp"),
+    }
+
+
 def build_text_and_metadata(qa_item: Dict) -> (str, Dict):
     question = str(qa_item.get("question", "")).strip()
     answer = str(qa_item.get("answer", "")).strip()
@@ -95,16 +134,8 @@ def index_qa(json_path: str, persist_dir: str, collection_name: str = "qa_pairs"
         print("⚠️ No QA pairs to index.")
         return 0
 
-    # Simple batching to avoid large single-call payloads
-    added = 0
-    for i in range(0, total, batch):
-        j = min(i + batch, total)
-        vectorstore.add_texts(texts=texts[i:j], metadatas=metadatas[i:j])
-        added += (j - i)
-        print(f"Indexed {j}/{total}")
-
-    # Persistence is handled automatically via persist_directory
-    return added
+    # Batched add (persistence handled by vectorstore)
+    return _add_texts_batched(vectorstore, texts, metadatas, batch)
 
 
 def index_chunks(json_path: str, persist_dir: str, collection_name: str = "qa_chunks", batch: int = 100, model: Optional[str] = None) -> int:
@@ -127,15 +158,54 @@ def index_chunks(json_path: str, persist_dir: str, collection_name: str = "qa_ch
         print("⚠️ No chunks to index.")
         return 0
 
-    added = 0
-    for i in range(0, total, batch):
-        j = min(i + batch, total)
-        vectorstore.add_texts(texts=texts[i:j], metadatas=metadatas[i:j])
-        added += (j - i)
-        print(f"Indexed {j}/{total}")
+    return _add_texts_batched(vectorstore, texts, metadatas, batch)
 
-    return added
 
+def index_questions(
+    json_path: str,
+    persist_dir: str,
+    collection_name: str = "qa_questions",
+    batch: int = 100,
+    model: Optional[str] = None,
+) -> int:
+    """질문 텍스트만을 벡터화하여 질문 전용 컬렉션에 인덱싱합니다.
+
+    - 입력은 `extracted_qa_pairs.json`(question/answer 필드) 또는
+      `chunked_qa_pairs.json`(metadata.question 보유) 모두 지원합니다.
+    """
+    # 데이터 로드: 포맷에 상관없이 리스트만 보장한 뒤, 아이템 구조를 보고 question을 선택
+    items: List[Dict] = _load_json_flexible(json_path)
+
+    embedding = get_embeddings(model=model)
+    vectorstore = get_vectorstore(persist_dir, embedding, collection_name=collection_name)
+
+    texts: List[str] = []
+    metadatas: List[Dict] = []
+
+    for item in items:
+        meta_obj = item.get("metadata") if isinstance(item, dict) else None
+        # 1) chunked 포맷: metadata.question 우선
+        if isinstance(meta_obj, dict) and str(meta_obj.get("question", "")).strip():
+            question = str(meta_obj.get("question", "")).strip()
+            text = question
+            meta = meta_obj
+        else:
+            # 2) qa_pairs 포맷: 상위 키 question/answer 사용
+            question = str((item or {}).get("question", "")).strip()
+            if not question:
+                continue
+            text = question
+            meta = _compose_meta_from_qa_item(item or {})
+
+        texts.append(text)
+        metadatas.append(meta)
+
+    total = len(texts)
+    if total == 0:
+        print("⚠️ No questions to index.")
+        return 0
+
+    return _add_texts_batched(vectorstore, texts, metadatas, batch)
 
 def query(persist_dir: str, q: str, k: int = 3, collection_name: str = "qa_pairs", model: Optional[str] = None) -> List[Dict]:
     embedding = get_embeddings(model=model)
@@ -169,7 +239,7 @@ def main():
     defaults = get_default_paths()
 
     parser = argparse.ArgumentParser(description="Chroma minimal setup")
-    parser.add_argument("--mode", choices=["index", "index_qa", "index_chunks", "query", "delete_collection"], default="index_qa")
+    parser.add_argument("--mode", choices=["index", "index_qa", "index_chunks", "index_questions", "query", "delete_collection"], default="index_qa")
     parser.add_argument("--json", default=defaults["data_path"], help="Path to input JSON (QA or chunks)")
     parser.add_argument("--persist", default=defaults["persist_dir"], help="Chroma persist dir")
     parser.add_argument("--collection", default="qa_pairs", help="Collection name in Chroma")
@@ -186,6 +256,8 @@ def main():
     collection_name = args.collection
     if mode == "index_chunks" and collection_name == "qa_pairs":
         collection_name = "qa_chunks"
+    if mode == "index_questions" and collection_name == "qa_pairs":
+        collection_name = "qa_questions"
 
     if mode == "index_qa":
         count = index_qa(args.json, args.persist, collection_name=collection_name, batch=100, model=args.model)
@@ -193,6 +265,9 @@ def main():
     elif mode == "index_chunks":
         count = index_chunks(args.json, args.persist, collection_name=collection_name, batch=100, model=args.model)
         print(f"\n✅ Indexed {count} chunks into Chroma at: {args.persist} (collection={collection_name})")
+    elif mode == "index_questions":
+        count = index_questions(args.json, args.persist, collection_name=collection_name, batch=100, model=args.model)
+        print(f"\n✅ Indexed {count} questions into Chroma at: {args.persist} (collection={collection_name})")
     elif mode == "delete_collection":
         delete_collection(args.persist, collection_name=collection_name)
     else:

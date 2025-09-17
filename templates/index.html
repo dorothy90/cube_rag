@@ -11,16 +11,16 @@
 <body>
   <header class="topbar">
     <div class="brand">Cube RAG</div>
-    <nav><a href="/">홈</a></nav>
+    <nav><a href="/" class="btn primary">새 채팅</a></nav>
   </header>
 
   <main class="container">
     <!-- Hero input centered like ChatGPT landing -->
     <section id="hero" class="hero">
       <div class="hero-inner">
-        <h2>무엇을 도와드릴까요?</h2>
-        <p style="color: var(--muted); margin-top: 6px;">내부 Q&A와 LLM, (옵션) 웹검색으로 답변해드립니다.</p>
-        <form id="hero-form" style="margin-top: 16px;">
+        <h2 style="font-size: 24px;">무엇을 도와드릴까요?</h2>
+        <p style="color: var(--muted); margin-top: 6px; font-size: 2em;">내부 Q&A와 LLM, (옵션) 웹검색으로 답변해드립니다.</p>
+        <form id="hero-form" style="margin-top: 16px; ">
           <input id="hero-input" class="hero-input" type="text" placeholder="예: FastAPI에서 파일 업로드는 어떻게 하나요?" aria-label="질문" required />
         </form>
       </div>
@@ -54,10 +54,16 @@
     function addMessage(text, role) {
       const wrap = document.createElement('div');
       wrap.className = `row ${role}`;
+      const col = document.createElement('div');
+      col.className = 'message-col';
+      wrap.appendChild(col);
+
       const bubble = document.createElement('div');
       bubble.className = 'bubble';
       bubble.textContent = text;
-      wrap.appendChild(bubble);
+      col.appendChild(bubble);
+
+      // 출처 UI는 스트리밍 sources 이벤트가 도착했을 때 동적으로 생성합니다.
       messages.appendChild(wrap);
       messages.scrollTop = messages.scrollHeight;
       return bubble;
@@ -66,17 +72,80 @@
     async function ask(question) {
       statusEl.style.display = 'inline';
       const bubble = addMessage('', 'assistant');
+      const col = bubble.parentElement; // .message-col
+      let sourcesEl = null;
+      let sourcesContent = null;
 
       let es;
       try {
-        es = new EventSource(`/ask/stream?q=${encodeURIComponent(question)}`);
+        const url = new URL('/ask/stream', window.location.origin);
+        url.searchParams.set('q', question);
+        const cid = sessionStorage.getItem('conversation_id');
+        if (cid) url.searchParams.set('cid', cid);
+        es = new EventSource(url.toString());
         es.addEventListener('token', (e) => {
           bubble.textContent += e.data;
           messages.scrollTop = messages.scrollHeight;
         });
+        es.addEventListener('cid', (e) => {
+          if (e && e.data) {
+            sessionStorage.setItem('conversation_id', e.data);
+          }
+        });
         es.addEventListener('sources', (e) => {
-          // 필요하면 별도 출처 표시 영역 추가 가능
-          // TODO: render sources below assistant bubble if desired
+          try {
+            const list = JSON.parse(e.data || '[]');
+            if (!Array.isArray(list) || list.length === 0) return;
+
+            // 최초 도착 시에만 출처 UI 생성
+            if (!sourcesEl) {
+              sourcesEl = document.createElement('div');
+              sourcesEl.className = 'sources';
+              const details = document.createElement('details');
+              const summary = document.createElement('summary');
+              summary.textContent = '출처 보기';
+              sourcesContent = document.createElement('div');
+              sourcesContent.className = 'sources-content';
+              details.appendChild(summary);
+              details.appendChild(sourcesContent);
+              sourcesEl.appendChild(details);
+              col.appendChild(sourcesEl);
+            }
+            const items = [];
+            const seen = new Set();
+            for (const s of list) {
+              const url = (s && s.url) || '';
+              const title = (s && s.title) || '';
+              if (url) {
+                const key = `web::${url}`;
+                if (seen.has(key)) continue;
+                seen.add(key);
+                items.push(`- 웹: ${title || url} (${url})`);
+                continue;
+              }
+              const meta = (s && s.metadata) || null;
+              if (meta && typeof meta === 'object') {
+                const ts = (meta.timestamp || '').trim();
+                const q = (meta.question || '').trim();
+                const qa = (meta.question_author || meta.q_author || '').toString().trim();
+                const a = (meta.answer || '').trim();
+                const aa = (meta.answer_author || meta.a_author || '').toString().trim();
+                const key = `qa::${ts}::${q}`;
+                if (seen.has(key)) continue;
+                seen.add(key);
+                const lines = [];
+                if (ts) lines.push(`[${ts}]`);
+                if (q) lines.push(`Question: ${q}`);
+                if (qa) lines.push(`질문자: ${qa}`);
+                if (a) lines.push(`Answer: ${a}`);
+                if (aa) lines.push(`답변자: ${aa}`);
+                if (lines.length) items.push(lines.join('\n'));
+              }
+            }
+            if (items.length && sourcesContent) {
+              sourcesContent.textContent = items.join('\n\n');
+            }
+          } catch (_) {}
         });
         es.addEventListener('error', (e) => {
           bubble.textContent += `\n[오류] ${(e && e.data) || ''}`;

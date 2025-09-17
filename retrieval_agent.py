@@ -40,7 +40,7 @@ if not logger.handlers:
 def _read_config() -> Dict:
     defaults = get_default_paths()
     persist_dir = os.getenv("CHROMA_PERSIST_DIR", defaults["persist_dir"])
-    collection = os.getenv("CHROMA_COLLECTION", "qa_chunks")
+    collection = os.getenv("CHROMA_COLLECTION", "qa_questions")
     top_k = int(os.getenv("RETRIEVER_TOP_K", "5"))
     threshold = float(os.getenv("RETRIEVER_SCORE_THRESHOLD", "0.2"))
     timeout_sec = float(os.getenv("RETRIEVER_TIMEOUT_SEC", "2.5"))
@@ -94,7 +94,9 @@ def retrieve(
 ) -> List[Dict]:
     """질의어로 유사 문서를 검색하여 [{content, metadata, score}] 리스트를 반환합니다.
 
-    - score는 0~1 범위를 선호하며, 백엔드 지원에 따라 근사값일 수 있습니다.
+    - score는 0..1 범위의 "코사인 유사도"를 우선 사용합니다.
+      1) 가능하면 vectorstore의 relevance score(API가 0..1 유사도)를 그대로 사용
+      2) 그렇지 않으면 distance에서 cos_sim = clamp01(1 - distance)로 변환
     - 빈 결과는 빈 리스트로 반환합니다.
     """
     if not isinstance(query, str) or not query.strip():
@@ -110,15 +112,16 @@ def retrieve(
     results: List[Dict] = []
 
     try:
-        # 1) 거리 기반 점수 우선: 안정적으로 수치가 제공됨
+        # 1) relevance score가 제공되면 그대로 사용 (0..1 유사도)
+        used_relevance = False
         try:
-            docs_with_scores = vs.similarity_search_with_score(query, k=effective_k)
-            for doc, distance in docs_with_scores:
+            docs_with_scores = vs.similarity_search_with_relevance_scores(query, k=effective_k)
+            for doc, rel in docs_with_scores:
                 score = None
                 try:
-                    d = float(distance)
-                    # 일반 거리값(>=0)에 대해 안정적인 유사도 근사: 1/(1+d) ∈ (0,1]
-                    score = 1.0 / (1.0 + max(0.0, d))
+                    s = float(rel)
+                    if 0.0 <= s <= 1.0:
+                        score = s
                 except Exception:
                     score = None
 
@@ -128,22 +131,32 @@ def retrieve(
                         "metadata": doc.metadata,
                         "score": score,
                     })
+            used_relevance = True
         except Exception:
-            # 2) 대체: relevance score API (버전에 따라 범위가 다를 수 있음)
+            used_relevance = False
+
+        # 2) fallback: distance → cosine similarity 변환 (cos_sim = clamp01(1 - distance))
+        if not used_relevance:
             try:
-                docs_with_scores = vs.similarity_search_with_relevance_scores(query, k=effective_k)
-                for doc, rel in docs_with_scores:
+                docs_with_scores = vs.similarity_search_with_score(query, k=effective_k)
+                for doc, distance in docs_with_scores:
                     score = None
                     try:
-                        s = float(rel)
-                        # 만약 0..1 범위가 아니면 휴리스틱 변환 없이 임계값 체크 생략
-                        if 0.0 <= s <= 1.0:
-                            score = s
+                        d = float(distance)
+                        if d < 0:
+                            d = 0.0
+                        # distance가 [0,1] 범위인 cosine distance라고 가정하고 1-d로 변환
+                        # (범위를 벗어나면 0..1로 클램프)
+                        cos_sim = 1.0 - d
+                        if cos_sim < 0.0:
+                            cos_sim = 0.0
+                        if cos_sim > 1.0:
+                            cos_sim = 1.0
+                        score = cos_sim
                     except Exception:
                         score = None
 
-                    # score가 None이면 임계값 체크를 생략하고 포함시켜 관측 가능하게 함
-                    if (score is None) or (threshold is None) or (score >= threshold):
+                    if (threshold is None) or (score is None) or (score >= threshold):
                         results.append({
                             "content": doc.page_content,
                             "metadata": doc.metadata,

@@ -48,34 +48,56 @@ SYSTEM_PROMPT = """
 USER_PROMPT_TEMPLATE = """
 질문: {question}
 
+최근 대화 이력({hist_count}개 이하):
+{history}
+
 컨텍스트({ctx_count}개 이하):
 """
 
-# 컨텍스트 블록은 모델이 인용하기 쉽도록 구분선을 추가합니다.
+# 컨텍스트/히스토리 블록은 모델이 인용하기 쉽도록 구분선을 추가합니다.
 CONTEXTS_WRAPPER = """
 ----- 컨텍스트 시작 -----
 {contexts}
 ----- 컨텍스트 끝 -----
 
 지침:
-- 반드시 위 컨텍스트 내 표현/사실에 근거해 작성하세요.
+- 반드시 위 컨텍스트와 최근 대화 이력 내 표현/사실에 근거해 작성하세요.
 - 형식을 그대로 따르세요(요약/핵심 포인트/단계/코드/주의사항/다음에 할 일).
 - 필요 시 컨텍스트의 핵심 문장을 짧게 인용("…")하세요.
 """.strip()
 
+HISTORY_WRAPPER = """
+----- 최근 대화 이력 시작 -----
+{history}
+----- 최근 대화 이력 끝 -----
+""".strip()
 
-def generate_answer(question: str, contexts: List[str], preface: Optional[str] = None, sources: Optional[List[Dict]] = None) -> Dict:
+
+def generate_answer(question: str, contexts: List[str], preface: Optional[str] = None, sources: Optional[List[Dict]] = None, history: Optional[List[Dict[str, str]]] = None) -> Dict:
     model = ChatOpenAI(model=_get_model_name(), temperature=0.2)
     prompt = ChatPromptTemplate.from_messages([
         ("system", SYSTEM_PROMPT),
-        ("user", USER_PROMPT_TEMPLATE + "\n\n" + (preface + "\n\n" if preface else "") + CONTEXTS_WRAPPER),
+        ("user", USER_PROMPT_TEMPLATE + "\n\n" + (preface + "\n\n" if preface else "") + HISTORY_WRAPPER + "\n\n" + CONTEXTS_WRAPPER),
     ])
 
     joined_contexts = "\n\n".join([c.strip() for c in contexts if c and c.strip()])
+    # role 기반 히스토리 문자열 생성 (최대 10개로 제한)
+    history = history or []
+    trimmed_history = history[-10:]
+    def _format_turn(turn: Dict[str, str]) -> str:
+        r = (turn.get("role") or "").lower()
+        c = (turn.get("content") or "").strip()
+        if not c:
+            return ""
+        label = "사용자" if r == "user" else ("시스템" if r == "system" else "어시스턴트")
+        return f"[{label}] {c}"
+    joined_history = "\n".join([s for s in map(_format_turn, trimmed_history) if s])
     formatted = prompt.format_messages(
         question=question.strip(),
         ctx_count=len(contexts),
         contexts=joined_contexts,
+        hist_count=len(trimmed_history),
+        history=joined_history,
     )
 
     resp = model.invoke(formatted)
@@ -120,19 +142,27 @@ def generate_answer(question: str, contexts: List[str], preface: Optional[str] =
             if isinstance(meta, dict):
                 ts = (meta.get("timestamp") or "").strip()
                 q = _truncate((meta.get("question") or "").strip(), 80)
+                qa = _truncate(((meta.get("question_author") or meta.get("q_author") or "").strip()), 60)
+                a = _truncate((meta.get("answer") or "").strip(), 80)
+                aa = _truncate(((meta.get("answer_author") or meta.get("a_author") or "").strip()), 60)
                 key = f"qa::{ts}::{q}"
                 if key in seen:
                     continue
                 seen.add(key)
                 label = "Q&A"
-                if ts and q:
-                    items.append(f"- {label}: {ts} — Q: {q}")
-                elif ts:
-                    items.append(f"- {label}: {ts}")
-                elif q:
-                    items.append(f"- {label}: Q: {q}")
-                else:
-                    items.append(f"- {label}")
+                lines: List[str] = []
+                if ts:
+                    lines.append(f"[{ts}]")
+                if q:
+                    lines.append(f"Q: {q}")
+                if qa:
+                    lines.append(f"Q_Author: {qa}")
+                if a:
+                    lines.append(f"A: {a}")
+                if aa:
+                    lines.append(f"A_Author: {aa}")
+                if lines:
+                    items.append("- " + label + ":\n" + "\n".join(lines))
                 count += 1
 
         if not items:
