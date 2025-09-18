@@ -26,9 +26,55 @@ class AgentOrchestrator:
         self.query_agent = QueryAnalyzerAgent(api_key=self.api_key)
         self.context_agent = ContextHandlerAgent(api_key=self.api_key)
 
-    def run(self, question: str, history: Optional[List[Dict[str, str]]] = None):
+    def run(self, question: str, history: Optional[List[Dict[str, str]]] = None, last_domain: Optional[str] = None):
         # 1) 질문 분석
         analysis = self.query_agent.analyze_query(question)
+        # 도메인 결정 로직
+        try:
+            dom_thr = float(os.getenv("DOMAIN_CONFIDENCE_THRESHOLD", "0.6"))
+        except Exception:
+            dom_thr = 0.6
+        domain = getattr(analysis, "domain", "unknown") or "unknown"
+        dom_conf = float(getattr(analysis, "domain_confidence", 0.0) or 0.0)
+
+        def _map_collection(d: str) -> Optional[str]:
+            mapping = {
+                "python": "qa_questions_python",
+                "sql": "qa_questions_sql",
+                "semiconductor": "qa_questions_semiconductor",
+            }
+            return mapping.get((d or "").lower())
+
+        # 새 채팅(히스토리 없음)에서 애매하면 도메인 확인 질문 반환
+        is_new_chat = not history or len(history) == 0
+        if is_new_chat:
+            if domain not in ("python", "sql", "semiconductor") or dom_conf < dom_thr:
+                clarify_msg = "이 질문은 Python, SQL, 반도체 중 어떤 도메인과 가장 관련이 있나요? (예: '파이썬' 또는 'SQL' 또는 '반도체')"
+                return {
+                    "stage": "clarify_domain",
+                    "analysis": analysis,
+                    "decision": None,
+                    "answer": clarify_msg,
+                    "selected_domain": None,
+                }
+            selected_domain = domain
+        else:
+            # 후속 질문: 애매하면 이전 도메인 사용, 없으면 확인 질문
+            if domain in ("python", "sql", "semiconductor") and dom_conf >= dom_thr:
+                selected_domain = domain
+            elif last_domain in ("python", "sql", "semiconductor"):
+                selected_domain = last_domain
+            else:
+                clarify_msg = "이 질문은 Python, SQL, 반도체 중 어떤 도메인과 가장 관련이 있나요?"
+                return {
+                    "stage": "clarify_domain",
+                    "analysis": analysis,
+                    "decision": None,
+                    "answer": clarify_msg,
+                    "selected_domain": None,
+                }
+
+        collection_name = _map_collection(selected_domain)
         # 2) 추가 맥락 필요 여부에 따라 분기
         if analysis.context_needed:
             decision = self.context_agent.handle_context_needed(analysis, question)
@@ -36,10 +82,11 @@ class AgentOrchestrator:
                 "stage": "context_handling",
                 "analysis": analysis,
                 "decision": decision,
+                "selected_domain": selected_domain,
             }
         else:
             # 3) 리트리벌 실행
-            hits = retrieve(question)
+            hits = retrieve(question, collection_name=collection_name)
             # 질문 전용 컬렉션을 사용하는 경우, 메타의 question/answer로 컨텍스트를 재구성
             contexts = []
             sources = []
@@ -90,9 +137,10 @@ class AgentOrchestrator:
             consensus = sum(1 for v in topk_scores if v >= t_mid)
             has_direct_match = (top1 >= t_high) or (consensus >= count_cons)
 
+            web_results = []
             if contexts and has_direct_match:
                 # Q&A에 있는 내용: 출처 표시 포함 답변
-                preface = "요청하신 질문은 내부 Q&A 데이터에서 근거를 찾았습니다. 아래 출처를 참고하세요."
+                preface = f"요청하신 질문은 내부 Q&A 데이터(도메인: {selected_domain})에서 근거를 찾았습니다. 아래 출처를 참고하세요."
                 gen = generate_answer(question, contexts, preface=preface, sources=sources, history=history)
             else:
                 # Q&A에 없음: 환경변수로 웹검색 사용 여부 제어
@@ -108,7 +156,7 @@ class AgentOrchestrator:
                         if title or snippet:
                             web_contexts.append(f"{title}\n{snippet}\n출처: {url}")
                     preface = (
-                        "내부 Q&A에 해당 내용이 없어, LLM 일반 지식과 웹 검색 결과를 근거로 답변합니다.\n"
+                        f"내부 Q&A(도메인: {selected_domain})에 직접 일치하는 근거가 없어, LLM 일반 지식과 웹 검색 결과를 근거로 답변합니다.\n"
                         "가능한 경우 출처(URL/메타)를 함께 표기합니다."
                     )
                     combined_contexts = contexts + web_contexts
@@ -116,9 +164,7 @@ class AgentOrchestrator:
                     # 웹 검색 출처만 전달한다.
                     gen = generate_answer(question, combined_contexts, preface=preface, sources=web_results, history=history)
                 else:
-                    preface = (
-                        "내부 Q&A에 해당 내용이 없어, 웹 검색 없이 LLM 일반 지식만으로 답변합니다."
-                    )
+                    preface = f"내부 Q&A(도메인: {selected_domain})에 해당 내용이 없어, 웹 검색 없이 LLM 일반 지식만으로 답변합니다."
                     # 내부 Q&A 직접 매칭이 없는 경우 벡터 DB 출처는 표기하지 않는다.
                     gen = generate_answer(question, contexts, preface=preface, sources=None, history=history)
             return {
@@ -130,6 +176,7 @@ class AgentOrchestrator:
                 "sources": sources if has_direct_match else [],
                 "answer": gen.get("answer"),
                 "web": web_results if (not has_direct_match and use_search) else [],
+                "selected_domain": selected_domain,
             }
 
 if __name__ == "__main__":

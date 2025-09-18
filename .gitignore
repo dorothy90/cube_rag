@@ -4,3 +4,39 @@ __pycache__/
 chroma_db/
 *.sqlite3
 .taskmaster/state.json
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+dev-debug.log
+# Dependency directories
+node_modules/
+# Environment variables
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+# OS specific
+.DS_Store
+
+# Task files
+# tasks.json
+# tasks/ 
+.env.example
+.cursor/mcp.json
+.gitignore
+.cursor/rules/self_improve.mdc
+.cursor/rules/taskmaster/dev_workflow.mdc
+.cursor/rules/cursor_rules.mdc
+.cursor/rules/taskmaster/taskmaster.mdc
+.taskmaster/config.json
+.taskmaster/templates/example_prd.txt
+.taskmaster/config.json
+.taskmaster/config.json

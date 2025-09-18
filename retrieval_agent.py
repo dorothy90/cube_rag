@@ -69,6 +69,7 @@ def get_retriever(
     top_k: Optional[int] = None,
     score_threshold: Optional[float] = None,
     search_type: Optional[str] = None,
+    collection_name: Optional[str] = None,
 ) -> Tuple[Chroma, Dict]:
     """Chroma VectorStore와 설정값을 반환합니다. as_retriever 사용은 선택 사항입니다.
 
@@ -81,6 +82,8 @@ def get_retriever(
         cfg["threshold"] = score_threshold
     if search_type is not None:
         cfg["search_type"] = search_type
+    if collection_name is not None and isinstance(collection_name, str) and collection_name.strip():
+        cfg["collection"] = collection_name.strip()
 
     vs = _get_vectorstore_by_config(cfg)
     return vs, cfg
@@ -91,6 +94,7 @@ def retrieve(
     top_k: Optional[int] = None,
     score_threshold: Optional[float] = None,
     search_type: Optional[str] = None,
+    collection_name: Optional[str] = None,
 ) -> List[Dict]:
     """질의어로 유사 문서를 검색하여 [{content, metadata, score}] 리스트를 반환합니다.
 
@@ -102,7 +106,12 @@ def retrieve(
     if not isinstance(query, str) or not query.strip():
         raise ValueError("query는 비어있지 않은 문자열이어야 합니다.")
 
-    vs, cfg = get_retriever(top_k=top_k, score_threshold=score_threshold, search_type=search_type)
+    vs, cfg = get_retriever(
+        top_k=top_k,
+        score_threshold=score_threshold,
+        search_type=search_type,
+        collection_name=collection_name,
+    )
 
     effective_k = cfg["top_k"]
     threshold = cfg["threshold"]

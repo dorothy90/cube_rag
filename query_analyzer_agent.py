@@ -23,6 +23,8 @@ class QueryAnalysis:
     intent: str                # 질문 의도 (학습, 문제해결, 토론 등)
     priority: str             # 우선순위 (높음, 보통, 낮음)
     context_needed: bool      # 추가 맥락 정보 필요 여부
+    domain: str               # 분류 도메인: python | sql | semiconductor | unknown
+    domain_confidence: float  # 0.0 ~ 1.0
 
 class QueryAnalyzerAgent:
     """질문 분석 Agent"""
@@ -61,7 +63,9 @@ class QueryAnalyzerAgent:
     "keywords": ["핵심 키워드 리스트"],
     "intent": "질문 의도 (학습/문제해결/토론/정보요청)",
     "priority": "우선순위 (높음/보통/낮음)",
-    "context_needed": true/false
+    "context_needed": true/false,
+    "domain": "python|sql|semiconductor|unknown",
+    "domain_confidence": 0.0
 }}
 
 분석 기준:
@@ -72,6 +76,8 @@ class QueryAnalyzerAgent:
 - intent: 질문자가 원하는 것
 - priority: 답변의 긴급도
 - context_needed: 추가 정보가 필요한지 여부
+- domain: 질문이 가장 관련 있는 도메인 분류
+- domain_confidence: 0.0~1.0 사이 신뢰도 (모호하면 낮게)
 """
         
         try:
@@ -98,6 +104,13 @@ class QueryAnalyzerAgent:
                     result = result.split("```")[1].split("```")[0].strip()
                 
                 analysis_data = json.loads(result)
+                dom = (analysis_data.get("domain") or "unknown").strip().lower()
+                if dom not in ("python", "sql", "semiconductor", "unknown"):
+                    dom = "unknown"
+                try:
+                    dom_conf = float(analysis_data.get("domain_confidence", 0.0))
+                except Exception:
+                    dom_conf = 0.0
                 
                 # QueryAnalysis 객체 생성
                 return QueryAnalysis(
@@ -107,7 +120,9 @@ class QueryAnalyzerAgent:
                     keywords=analysis_data.get("keywords", []),
                     intent=analysis_data.get("intent", "정보요청"),
                     priority=analysis_data.get("priority", "보통"),
-                    context_needed=analysis_data.get("context_needed", False)
+                    context_needed=analysis_data.get("context_needed", False),
+                    domain=dom,
+                    domain_confidence=dom_conf,
                 )
                 
             except json.JSONDecodeError:
@@ -120,7 +135,9 @@ class QueryAnalyzerAgent:
                     keywords=[],
                     intent="정보요청",
                     priority="보통",
-                    context_needed=False
+                    context_needed=False,
+                    domain="unknown",
+                    domain_confidence=0.0,
                 )
                 
         except Exception as e:
@@ -133,7 +150,9 @@ class QueryAnalyzerAgent:
                 keywords=[],
                 intent="정보요청",
                 priority="보통",
-                context_needed=False
+                context_needed=False,
+                domain="unknown",
+                domain_confidence=0.0,
             )
     
     def batch_analyze(self, questions: List[str]) -> List[QueryAnalysis]:

@@ -1,0 +1,32 @@
+[
+  {
+    "question": "중복을 제거하고 고유 값만 선택하는 SQL은?",
+    "answer": "SELECT DISTINCT 컬럼 FROM 테이블; 형식으로 지정 컬럼의 중복을 제거합니다.",
+    "question_author": "template",
+    "answer_author": "template",
+    "timestamp": "2025-01-01"
+  },
+  {
+    "question": "INNER JOIN과 LEFT JOIN 차이는?",
+    "answer": "INNER JOIN은 양쪽 테이블에서 매칭되는 행만, LEFT JOIN은 왼쪽 테이블의 모든 행과 매칭되는 오른쪽 행을 반환합니다.",
+    "question_author": "template",
+    "answer_author": "template",
+    "timestamp": "2025-01-01"
+  },
+  {
+    "question": "인덱스를 만드는 방법과 사용 시기는?",
+    "answer": "CREATE INDEX idx ON 테이블(컬럼); 자주 필터/조인되는 컬럼에 인덱스를 사용해 읽기 성능을 높이세요. 쓰기 부담은 고려해야 합니다.",
+    "question_author": "template",
+    "answer_author": "template",
+    "timestamp": "2025-01-01"
+  },
+  {
+    "question": "정규화와 비정규화의 차이점은?",
+    "answer": "정규화는 중복을 줄이고 이상현상(갱신/삭제/삽입 이상)을 방지하기 위해 테이블을 분해하는 과정이고, 비정규화는 조회 성능을 위해 의도적으로 중복을 허용하거나 테이블을 합치는 기법입니다. 시스템 성격에 따라 읽기 성능과 일관성 요구를 균형 있게 선택합니다.",
+    "question_author": "template",
+    "answer_author": "template",
+    "timestamp": "2025-01-01"
+  }
+]
+
+

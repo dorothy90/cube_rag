@@ -21,6 +21,7 @@ except Exception:  # pragma: no cover
 from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
 from answer_generator import SYSTEM_PROMPT, USER_PROMPT_TEMPLATE, CONTEXTS_WRAPPER
+from query_analyzer_agent import QueryAnalyzerAgent
 import json
 from urllib.parse import urlparse
 
@@ -36,6 +37,7 @@ class AskResponse(BaseModel):
     web: list
     analysis: Optional[Dict[str, Any]] = None
     conversation_id: Optional[str] = None
+    selected_domain: Optional[str] = None
 
 
 app = FastAPI(title="Cube RAG API", version="0.1.0")
@@ -158,11 +160,22 @@ def ask(req: AskRequest) -> AskResponse:
     try:
         orchestrator = AgentOrchestrator()
         history = _get_history(req.conversation_id)
-        result = orchestrator.run(req.question, history=history)
+        # 마지막 도메인 기억값 로드
+        last_domain: Optional[str] = None
+        if history:
+            # 직전 assistant 메타에 도메인 라벨을 저장했다면 활용 (간단 구현: 별도 맵)
+            # 여기서는 conversation_store에 별도 키로 저장
+            pass
+        # 대화별 마지막 도메인 저장소 (간단 구현)
+        domain_memory = conversation_store.setdefault("__domain_memory__", {})
+        last_domain = domain_memory.get(req.conversation_id or "")
+
+        result = orchestrator.run(req.question, history=history, last_domain=last_domain)
         answer = result.get("answer") or ""
         raw_internal = result.get("sources") or []
         raw_web = result.get("web") or []
         analysis_obj = result.get("analysis")
+        selected_domain = result.get("selected_domain")
 
         analysis_payload: Optional[Dict[str, Any]] = None
         if analysis_obj is not None:
@@ -185,11 +198,14 @@ def ask(req: AskRequest) -> AskResponse:
         # 히스토리 업데이트
         cid = _append_turn(req.conversation_id, "user", req.question)
         _append_turn(cid, "assistant", answer)
+        # 도메인 메모리 업데이트
+        if selected_domain in ("python", "sql", "semiconductor"):
+            domain_memory[cid] = selected_domain
 
         # Normalize sources: 내부가 있으면 내부만, 없으면 웹만 노출
         only = "internal" if raw_internal else ("web" if raw_web else "internal")
         normalized = normalize_sources(raw_internal, raw_web, only=only)
-        return AskResponse(answer=answer, sources=normalized, web=raw_web, analysis=analysis_payload, conversation_id=cid)
+        return AskResponse(answer=answer, sources=normalized, web=raw_web, analysis=analysis_payload, conversation_id=cid, selected_domain=selected_domain)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -203,8 +219,65 @@ def ask_stream(q: str, cid: Optional[str] = None):
     if not question:
         raise HTTPException(status_code=400, detail="q is required")
 
-    # Retrieval (vector DB)
-    hits = retrieve(question)
+    # Domain selection (same logic as orchestrator)
+    history = _get_history(cid)
+    analyzer = QueryAnalyzerAgent()
+    analysis = analyzer.analyze_query(question)
+    try:
+        dom_thr = float(os.getenv("DOMAIN_CONFIDENCE_THRESHOLD", "0.6"))
+    except Exception:
+        dom_thr = 0.6
+    domain = getattr(analysis, "domain", "unknown") or "unknown"
+    dom_conf = float(getattr(analysis, "domain_confidence", 0.0) or 0.0)
+
+    def _map_collection(d: str) -> Optional[str]:
+        mapping = {
+            "python": "qa_questions_python",
+            "sql": "qa_questions_sql",
+            "semiconductor": "qa_questions_semiconductor",
+        }
+        return mapping.get((d or "").lower())
+
+    # domain memory store (shared with /ask)
+    domain_memory = conversation_store.setdefault("__domain_memory__", {})
+    last_domain = domain_memory.get(cid or "")
+
+    is_new_chat = not history or len(history) == 0
+    if is_new_chat:
+        if domain not in ("python", "sql", "semiconductor") or dom_conf < dom_thr:
+            clarify_msg = "이 질문은 Python, SQL, 반도체 중 어떤 도메인과 가장 관련이 있나요? (예: '파이썬' 또는 'SQL' 또는 '반도체')"
+
+            def event_iterator_clarify():
+                yield {"event": "token", "data": clarify_msg}
+                # propagate cid if given or allocate new
+                saved_cid = _append_turn(cid, "user", question)
+                _append_turn(saved_cid, "assistant", clarify_msg)
+                yield {"event": "cid", "data": saved_cid}
+                yield {"event": "done", "data": "end"}
+
+            return EventSourceResponse(event_iterator_clarify(), media_type="text/event-stream")
+        selected_domain = domain
+    else:
+        if domain in ("python", "sql", "semiconductor") and dom_conf >= dom_thr:
+            selected_domain = domain
+        elif last_domain in ("python", "sql", "semiconductor"):
+            selected_domain = last_domain
+        else:
+            clarify_msg = "이 질문은 Python, SQL, 반도체 중 어떤 도메인과 가장 관련이 있나요?"
+
+            def event_iterator_clarify2():
+                yield {"event": "token", "data": clarify_msg}
+                saved_cid = _append_turn(cid, "user", question)
+                _append_turn(saved_cid, "assistant", clarify_msg)
+                yield {"event": "cid", "data": saved_cid}
+                yield {"event": "done", "data": "end"}
+
+            return EventSourceResponse(event_iterator_clarify2(), media_type="text/event-stream")
+
+    collection_name = _map_collection(selected_domain)
+
+    # Retrieval (vector DB) with selected collection
+    hits = retrieve(question, collection_name=collection_name)
     # 질문 전용 컬렉션 고려: 메타 question/answer로 컨텍스트 재구성
     contexts = []
     sources_vec = []
@@ -219,19 +292,19 @@ def ask_stream(q: str, cid: Optional[str] = None):
             contexts.append(content)
         sources_vec.append({"metadata": meta, "score": h.get("score")})
 
-    # 단일 리트리벌 기반 컨센서스 규칙(오케스트레이터와 동일)
+    # 단일 리트리벌 기반 컨센서스 규칙(오케스트레이터와 동일 기본값)
     try:
-        t_high = float(os.getenv("DIRECT_MATCH_HIGH", "0.65"))
+        t_high = float(os.getenv("DIRECT_MATCH_HIGH", "0.5"))
     except Exception:
-        t_high = 0.65
+        t_high = 0.5
     try:
-        t_mid = float(os.getenv("DIRECT_MATCH_SCORE_THRESHOLD", "0.55"))
+        t_mid = float(os.getenv("DIRECT_MATCH_SCORE_THRESHOLD", "0.45"))
     except Exception:
-        t_mid = 0.55
+        t_mid = 0.45
     try:
-        top_k_cons = int(os.getenv("DIRECT_MATCH_TOPK", "5"))
+        top_k_cons = int(os.getenv("DIRECT_MATCH_TOPK", "3"))
     except Exception:
-        top_k_cons = 5
+        top_k_cons = 3
     try:
         count_cons = int(os.getenv("DIRECT_MATCH_COUNT", "2"))
     except Exception:
@@ -268,20 +341,20 @@ def ask_stream(q: str, cid: Optional[str] = None):
                 web_contexts.append(f"{title}\n{snippet}\n출처: {url}")
 
     if has_direct_match:
-        preface = "요청하신 질문은 내부 Q&A 데이터에서 근거를 찾았습니다. 아래 출처를 참고하세요."
+        preface = f"요청하신 질문은 내부 Q&A 데이터(도메인: {selected_domain})에서 근거를 찾았습니다. 아래 출처를 참고하세요."
         effective_sources = normalize_sources(sources_vec, None, only="internal")
         combined_contexts = contexts
     else:
         if use_search:
             preface = (
-                "내부 Q&A에 해당 내용이 없어, LLM 일반 지식과 웹 검색 결과를 근거로 답변합니다.\n"
+                f"내부 Q&A(도메인: {selected_domain})에 직접 일치하는 근거가 없어, LLM 일반 지식과 웹 검색 결과를 근거로 답변합니다.\n"
                 "가능한 경우 출처(URL/메타)를 함께 표기합니다."
             )
             # 내부 미매칭인 경우 웹 출처만 표기
             effective_sources = normalize_sources(None, web_results, only="web")
             combined_contexts = contexts + web_contexts
         else:
-            preface = "내부 Q&A에 해당 내용이 없어, 웹 검색 없이 LLM 일반 지식만으로 답변합니다."
+            preface = f"내부 Q&A(도메인: {selected_domain})에 해당 내용이 없어, 웹 검색 없이 LLM 일반 지식만으로 답변합니다."
             # 출처는 비표기
             effective_sources = None
             combined_contexts = contexts
@@ -343,6 +416,9 @@ def ask_stream(q: str, cid: Optional[str] = None):
             saved_cid = _append_turn(cid, "user", question)
             # 스트리밍 시 전체 답변은 클라이언트가 조합하므로, 여기서는 간단 표기
             _append_turn(saved_cid, "assistant", "(streamed)")
+            # 도메인 메모리 업데이트
+            if selected_domain in ("python", "sql", "semiconductor"):
+                domain_memory[saved_cid] = selected_domain
             yield {"event": "cid", "data": saved_cid}
         except Exception:
             pass
