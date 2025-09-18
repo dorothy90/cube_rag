@@ -22,6 +22,7 @@ from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
 from answer_generator import SYSTEM_PROMPT, USER_PROMPT_TEMPLATE, CONTEXTS_WRAPPER
 import json
+from urllib.parse import urlparse
 
 
 class AskRequest(BaseModel):
@@ -66,6 +67,82 @@ def _append_turn(cid: Optional[str], role: str, content: str) -> Optional[str]:
     return cid
 
 
+# -----------------------------
+# Sources normalization helpers
+# -----------------------------
+def _env_int(name: str, default: int) -> int:
+    try:
+        return int(os.getenv(name, str(default)))
+    except Exception:
+        return default
+
+
+def _canonical_key_for_url(u: str) -> str:
+    try:
+        p = urlparse(u or "")
+        return f"{(p.hostname or '').lower()}{p.path or ''}"
+    except Exception:
+        return (u or "").strip().lower()
+
+
+def normalize_sources(
+    internal: Optional[list],
+    web: Optional[list],
+    only: str,
+) -> list:
+    """Return unified sources schema.
+
+    only: "internal" | "web" (우선 노출 대상을 선택)
+    """
+    max_internal = _env_int("SOURCES_MAX_INTERNAL", 3)
+    max_web = _env_int("SOURCES_MAX_WEB", 5)
+
+    result: list = []
+
+    if only == "internal" and internal:
+        # internal item shape: {metadata: {...}, score: float}
+        dedupe = set()
+        items = []
+        for it in internal:
+            meta = (it or {}).get("metadata") or {}
+            q = (meta.get("question") or "").strip()
+            ts = (meta.get("timestamp") or "").strip()
+            key = f"qa::{ts}::{q}"
+            if key in dedupe:
+                continue
+            dedupe.add(key)
+            items.append({
+                "type": "internal",
+                "score": (it or {}).get("score"),
+                "question": q,
+                "answer": (meta.get("answer") or "").strip(),
+                "timestamp": ts,
+            })
+        # sort by score desc then timestamp desc
+        items.sort(key=lambda x: (x.get("score") or 0.0, x.get("timestamp") or ""), reverse=True)
+        result.extend(items[:max_internal])
+
+    if only == "web" and web:
+        dedupe = set()
+        items = []
+        for w in web:
+            url = (w or {}).get("url") or ""
+            title = (w or {}).get("title") or ""
+            key = _canonical_key_for_url(url)
+            if not key or key in dedupe:
+                continue
+            dedupe.add(key)
+            items.append({
+                "type": "web",
+                "score": (w or {}).get("score"),
+                "title": title.strip(),
+                "url": url.strip(),
+            })
+        result.extend(items[:max_web])
+
+    return result
+
+
 @app.get("/", response_class=HTMLResponse)
 def index(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
@@ -83,8 +160,8 @@ def ask(req: AskRequest) -> AskResponse:
         history = _get_history(req.conversation_id)
         result = orchestrator.run(req.question, history=history)
         answer = result.get("answer") or ""
-        sources = result.get("sources") or []
-        web = result.get("web") or []
+        raw_internal = result.get("sources") or []
+        raw_web = result.get("web") or []
         analysis_obj = result.get("analysis")
 
         analysis_payload: Optional[Dict[str, Any]] = None
@@ -109,7 +186,10 @@ def ask(req: AskRequest) -> AskResponse:
         cid = _append_turn(req.conversation_id, "user", req.question)
         _append_turn(cid, "assistant", answer)
 
-        return AskResponse(answer=answer, sources=sources, web=web, analysis=analysis_payload, conversation_id=cid)
+        # Normalize sources: 내부가 있으면 내부만, 없으면 웹만 노출
+        only = "internal" if raw_internal else ("web" if raw_web else "internal")
+        normalized = normalize_sources(raw_internal, raw_web, only=only)
+        return AskResponse(answer=answer, sources=normalized, web=raw_web, analysis=analysis_payload, conversation_id=cid)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -189,7 +269,7 @@ def ask_stream(q: str, cid: Optional[str] = None):
 
     if has_direct_match:
         preface = "요청하신 질문은 내부 Q&A 데이터에서 근거를 찾았습니다. 아래 출처를 참고하세요."
-        effective_sources = sources_vec
+        effective_sources = normalize_sources(sources_vec, None, only="internal")
         combined_contexts = contexts
     else:
         if use_search:
@@ -197,8 +277,8 @@ def ask_stream(q: str, cid: Optional[str] = None):
                 "내부 Q&A에 해당 내용이 없어, LLM 일반 지식과 웹 검색 결과를 근거로 답변합니다.\n"
                 "가능한 경우 출처(URL/메타)를 함께 표기합니다."
             )
-            # 벡터 DB 출처는 숨기고 웹 출처만 표기
-            effective_sources = web_results
+            # 내부 미매칭인 경우 웹 출처만 표기
+            effective_sources = normalize_sources(None, web_results, only="web")
             combined_contexts = contexts + web_contexts
         else:
             preface = "내부 Q&A에 해당 내용이 없어, 웹 검색 없이 LLM 일반 지식만으로 답변합니다."
