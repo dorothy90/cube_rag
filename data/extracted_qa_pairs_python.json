@@ -1,23 +1,35 @@
 [
   {
     "question": "파이썬에서 가상환경을 생성하고 활성화하는 방법은?",
-    "answer": "가상환경 생성: python -m venv .venv\n활성화(Unix): source .venv/bin/activate\n활성화(Windows): .venv\\\\Scripts\\\\activate",
+    "answers": [
+      "python -m venv .venv 로 생성하고, Unix는 source .venv/bin/activate, Windows는 .venv\\\\Scripts\\\\activate로 활성화합니다.",
+      "가상환경은 프로젝트별 의존성을 격리해 패키지 충돌을 방지합니다.",
+      "deactivate로 비활성화하고, requirements.txt로 환경을 재현할 수 있습니다."
+    ],
     "question_author": "template",
-    "answer_author": "template",
+  "answer_author": ["template", "template", "template"],
     "timestamp": "2025-01-01"
   },
   {
     "question": "파이썬에서 리스트와 튜플의 차이는?",
-    "answer": "리스트는 변경 가능(mutable)하고 튜플은 변경 불가능(immutable)합니다. 변경이 필요 없으면 튜플을 사용하세요.",
+    "answers": [
+      "리스트는 변경 가능(mutable)하고 튜플은 변경 불가능(immutable)합니다.",
+      "불변 데이터, 딕셔너리 키, 해시가 필요한 경우 튜플이 적합합니다.",
+      "변경이 필요 없을 때는 의도와 성능 측면에서 튜플 사용을 권장합니다."
+    ],
     "question_author": "template",
-    "answer_author": "template",
+  "answer_author": ["template", "template", "template"],
     "timestamp": "2025-01-01"
   },
   {
     "question": "try/except로 예외를 처리하는 기본 방법은?",
-    "answer": "예외가 발생할 수 있는 코드를 try에 두고, 구체적 예외를 except에서 처리합니다. 정리 작업은 finally에서 수행합니다.",
+    "answers": [
+      "try에 위험 코드를 두고 except에서 구체적 예외를 처리합니다.",
+      "finally 블록은 자원 정리(파일 닫기 등), else는 예외가 없을 때 실행할 코드를 둡니다.",
+      "광범위한 except는 지양하고, 예외 계층에 맞게 구체적으로 처리하세요."
+    ],
     "question_author": "template",
-    "answer_author": "template",
+  "answer_author": ["template", "template", "template"],
     "timestamp": "2025-01-01"
   }
 ]

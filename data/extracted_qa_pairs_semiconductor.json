@@ -1,23 +1,35 @@
 [
   {
     "question": "반도체란 무엇이며 도핑이 중요한 이유는?",
-    "answer": "반도체는 도체와 부도체 사이의 전기적 특성을 갖습니다. 도핑은 불순물(도너/억셉터)을 주입해 캐리어 농도와 소자 동작을 제어합니다.",
+    "answers": [
+      "반도체는 도체와 부도체 사이의 전기적 특성을 갖는 물질입니다.",
+      "도핑은 도너/억셉터 불순물을 주입해 캐리어 농도와 도전성을 제어합니다.",
+      "도핑 농도/프로파일은 임계전압, 접합저항 등 소자 특성에 큰 영향을 줍니다."
+    ],
     "question_author": "template",
-    "answer_author": "template",
+  "answer_author": ["template", "template", "template"],
     "timestamp": "2025-01-01"
   },
   {
     "question": "NMOS와 PMOS의 차이는?",
-    "answer": "NMOS는 전자(음전하)가 주 캐리어로, 양(+)의 게이트 전압에서 턴온됩니다. PMOS는 정공(양전하)이 주 캐리어이며, 음(-)의 게이트 전압에서 턴온됩니다.",
+    "answers": [
+      "NMOS는 전자(음전하)가 주 캐리어이며 양(+)의 게이트 전압에서 턴온됩니다.",
+      "PMOS는 정공(양전하)이 주 캐리어이며 음(-)의 게이트 전압에서 턴온됩니다.",
+      "CMOS 회로는 NMOS와 PMOS를 조합해 저전력으로 논리를 구현합니다."
+    ],
     "question_author": "template",
-    "answer_author": "template",
+  "answer_author": ["template", "template", "template"],
     "timestamp": "2025-01-01"
   },
   {
     "question": "반도체 공정에서 리소그래피란?",
-    "answer": "리소그래피는 포토레지스트와 노광을 이용해 웨이퍼에 패턴을 전사하는 공정입니다. 해상도에는 파장, NA, 공정 조건 등이 영향을 줍니다.",
+    "answers": [
+      "포토레지스트를 도포하고 노광/현상으로 웨이퍼에 패턴을 전사하는 공정입니다.",
+      "해상도는 파장, NA, 공정 상수(k1), 공정 조건 등에 의해 결정됩니다.",
+      "EUV, 멀티패터닝 등의 기술로 미세 패턴을 구현합니다."
+    ],
     "question_author": "template",
-    "answer_author": "template",
+  "answer_author": ["template", "template", "template"],
     "timestamp": "2025-01-01"
   }
 ]

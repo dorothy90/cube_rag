@@ -146,7 +146,8 @@ def generate_answer(question: str, contexts: List[str], preface: Optional[str] =
                 ts = (meta.get("timestamp") or "").strip()
                 q = _truncate((meta.get("question") or "").strip(), 80)
                 qa = _truncate(((meta.get("question_author") or meta.get("q_author") or "").strip()), 60)
-                a = _truncate((meta.get("answer") or "").strip(), 80)
+                ans_list = meta.get("answers")
+                a = _truncate(" ".join([str(x).strip() for x in (ans_list or []) if str(x or "").strip()]), 80)
                 aa = _truncate(((meta.get("answer_author") or meta.get("a_author") or "").strip()), 60)
                 key = f"qa::{ts}::{q}"
                 if key in seen:

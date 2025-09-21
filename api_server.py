@@ -1,5 +1,6 @@
 import os
 from typing import Any, Dict, Optional
+from datetime import datetime
 
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import HTMLResponse
@@ -24,6 +25,8 @@ from answer_generator import SYSTEM_PROMPT, USER_PROMPT_TEMPLATE, CONTEXTS_WRAPP
 from query_analyzer_agent import QueryAnalyzerAgent
 import json
 from urllib.parse import urlparse
+import subprocess
+import shlex
 
 
 class AskRequest(BaseModel):
@@ -38,6 +41,31 @@ class AskResponse(BaseModel):
     analysis: Optional[Dict[str, Any]] = None
     conversation_id: Optional[str] = None
     selected_domain: Optional[str] = None
+
+
+class SummaryRequest(BaseModel):
+    from_date: str
+    to_date: str
+    email: str
+    mode: Optional[str] = None
+    conversation_id: Optional[str] = None
+
+
+class SummaryResponse(BaseModel):
+    ok: bool
+    message: str
+    conversation_id: Optional[str] = None
+
+
+class SendEmailRequest(BaseModel):
+    from_date: str
+    to_date: str
+    email: str
+
+
+class SendEmailResponse(BaseModel):
+    ok: bool
+    message: str
 
 
 app = FastAPI(title="Cube RAG API", version="0.1.0")
@@ -109,6 +137,14 @@ def normalize_sources(
             meta = (it or {}).get("metadata") or {}
             q = (meta.get("question") or "").strip()
             ts = (meta.get("timestamp") or "").strip()
+            q_author = (meta.get("question_author") or "").strip()
+            # '||' 조인 문자열 정규화 (간결화)
+            def _split_pipe(s):
+                return [p.strip() for p in str(s or "").split("||") if p and p.strip()]
+            answers = _split_pipe(meta.get("answers"))
+            answer_authors = _split_pipe(meta.get("answer_author") or meta.get("answer_authors"))
+            if answers and len(answer_authors) < len(answers):
+                answer_authors = answer_authors + ["알 수 없음"] * (len(answers) - len(answer_authors))
             key = f"qa::{ts}::{q}"
             if key in dedupe:
                 continue
@@ -117,8 +153,10 @@ def normalize_sources(
                 "type": "internal",
                 "score": (it or {}).get("score"),
                 "question": q,
-                "answer": (meta.get("answer") or "").strip(),
+                "answers": answers,
                 "timestamp": ts,
+                "question_author": q_author,
+                "answer_authors": answer_authors,
             })
         # sort by score desc then timestamp desc
         items.sort(key=lambda x: (x.get("score") or 0.0, x.get("timestamp") or ""), reverse=True)
@@ -145,6 +183,27 @@ def normalize_sources(
     return result
 
 
+def _normalize_domain_text(text: Optional[str]) -> Optional[str]:
+    """주어진 텍스트에서 도메인 선택 의도를 정규화하여 반환.
+
+    반환값: "python" | "sql" | "semiconductor" | None
+    """
+    if not text:
+        return None
+    s = (text or "").strip().lower()
+    # 간단한 정규화: 포함어 기반 매칭 (도메인 선택 답변 문맥에서만 사용)
+    if ("python" in s) or ("파이썬" in s) or ("py" == s):
+        return "python"
+    if ("sql" in s) or ("에스큐엘" in s) or ("씨큐엘" in s):
+        return "sql"
+    if ("semiconductor" in s) or ("반도체" in s) or ("semi" in s):
+        return "semiconductor"
+    return None
+
+
+ 
+
+
 @app.get("/", response_class=HTMLResponse)
 def index(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
@@ -169,11 +228,74 @@ def ask(req: AskRequest) -> AskResponse:
         # 대화별 마지막 도메인 저장소 (간단 구현)
         domain_memory = conversation_store.setdefault("__domain_memory__", {})
         last_domain = domain_memory.get(req.conversation_id or "")
+        # 도메인 확인 대기 중인 원 질문 저장소
+        pending_map: Dict[str, str] = conversation_store.setdefault("__pending_domain__", {})  # cid -> original question
+        pending_q = pending_map.get(req.conversation_id or "")
+
+        # 0) 직전 턴이 도메인 확인이었고, 이번 입력이 도메인 선택 응답이면 원 질문으로 이어서 답변
+        if pending_q:
+            forced_domain = _normalize_domain_text(req.question)
+            if forced_domain in ("python", "sql", "semiconductor"):
+                # 선택된 도메인을 메모리에 먼저 기록 (오케스트레이터는 last_domain을 활용)
+                result = orchestrator.run(pending_q, history=history, last_domain=forced_domain)
+                answer = result.get("answer") or ""
+                raw_internal = result.get("sources") or []
+                raw_web = result.get("web") or []
+                analysis_obj = result.get("analysis")
+                selected_domain = result.get("selected_domain") or forced_domain
+
+                analysis_payload: Optional[Dict[str, Any]] = None
+                if analysis_obj is not None:
+                    if hasattr(analysis_obj, "model_dump"):
+                        try:
+                            analysis_payload = analysis_obj.model_dump()  # pydantic v2
+                        except Exception:
+                            analysis_payload = None
+                    elif hasattr(analysis_obj, "dict"):
+                        try:
+                            analysis_payload = analysis_obj.dict()  # pydantic v1/dataclass-like
+                        except Exception:
+                            analysis_payload = None
+                    elif hasattr(analysis_obj, "__dict__"):
+                        try:
+                            analysis_payload = dict(vars(analysis_obj))
+                        except Exception:
+                            analysis_payload = None
+
+                # 히스토리 업데이트: 도메인 선택 입력은 질문으로 기록하지 않음 (원 질문은 이미 기록됨)
+                cid = req.conversation_id
+                if not cid:
+                    # 예외적으로 cid가 없으면 생성 후 어시스턴트만 기록
+                    cid = _append_turn(None, "assistant", answer)
+                else:
+                    _append_turn(cid, "assistant", answer)
+
+                # 도메인 메모리 업데이트 및 보류 상태 해제
+                if selected_domain in ("python", "sql", "semiconductor"):
+                    domain_memory[cid] = selected_domain
+                # 보류 해제
+                try:
+                    pending_map.pop(cid, None)
+                except Exception:
+                    pass
+
+                # Normalize sources: 내부가 있으면 내부만, 없으면 웹만 노출
+                only = "internal" if raw_internal else ("web" if raw_web else "internal")
+                normalized = normalize_sources(raw_internal, raw_web, only=only)
+                return AskResponse(
+                    answer=answer,
+                    sources=normalized,
+                    web=raw_web,
+                    analysis=analysis_payload,
+                    conversation_id=cid,
+                    selected_domain=selected_domain,
+                )
 
         result = orchestrator.run(req.question, history=history, last_domain=last_domain)
         answer = result.get("answer") or ""
         raw_internal = result.get("sources") or []
         raw_web = result.get("web") or []
+        stage = result.get("stage")
         analysis_obj = result.get("analysis")
         selected_domain = result.get("selected_domain")
 
@@ -198,6 +320,9 @@ def ask(req: AskRequest) -> AskResponse:
         # 히스토리 업데이트
         cid = _append_turn(req.conversation_id, "user", req.question)
         _append_turn(cid, "assistant", answer)
+        # 도메인 확인 요청을 보낸 경우, 다음 턴의 선택을 대기하기 위해 원 질문을 보관
+        if (stage == "clarify_domain") and req.question:
+            pending_map[cid] = req.question
         # 도메인 메모리 업데이트
         if selected_domain in ("python", "sql", "semiconductor"):
             domain_memory[cid] = selected_domain
@@ -209,6 +334,72 @@ def ask(req: AskRequest) -> AskResponse:
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+
+@app.post("/summarize", response_model=SummaryResponse)
+def summarize(req: SummaryRequest) -> SummaryResponse:
+    try:
+        # 간단한 유효성 검사
+        try:
+            d_from = datetime.strptime((req.from_date or "").strip(), "%Y-%m-%d")
+            d_to = datetime.strptime((req.to_date or "").strip(), "%Y-%m-%d")
+        except Exception:
+            raise HTTPException(status_code=400, detail="from_date/to_date는 YYYY-MM-DD 형식이어야 합니다.")
+        if d_from > d_to:
+            raise HTTPException(status_code=400, detail="from_date는 to_date보다 이후일 수 없습니다.")
+        email = (req.email or "").strip()
+        if ("@" not in email) or (len(email) < 5):
+            raise HTTPException(status_code=400, detail="유효한 이메일 주소를 입력해주세요.")
+
+        # 대화 히스토리에는 요약 요청을 간단히 남김
+        msg_user = f"[요약요청] {req.from_date} ~ {req.to_date} -> {email}"
+        cid = _append_turn(req.conversation_id, "user", msg_user)
+        ack = f"요약 요청이 접수되었습니다. 처리 후 {email} 로 결과를 전송합니다. (기간: {req.from_date} ~ {req.to_date})"
+        _append_turn(cid, "assistant", ack)
+
+        # TODO: 여기서 실제 요약 파이프라인을 비동기로 실행하도록 연계 가능합니다.
+        return SummaryResponse(ok=True, message=ack, conversation_id=cid)
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/send-summary-email", response_model=SendEmailResponse)
+def send_summary_email(req: SendEmailRequest) -> SendEmailResponse:
+    """요약 결과를 이메일로 보내는 워크플로를 트리거한다.
+    내부적으로 summary/analyze_data.py를 호출하여 from/to 범위에 해당하는 데이터 요약을 실행하도록 한다.
+    (현 구현은 analyze_data.py의 메인 로직 실행을 트리거하는 형태이며, 필요 시 인자로 구체 범위를 추가 연계 가능)
+    """
+    try:
+        # 입력 유효성 검사
+        try:
+            d_from = datetime.strptime((req.from_date or "").strip(), "%Y-%m-%d")
+            d_to = datetime.strptime((req.to_date or "").strip(), "%Y-%m-%d")
+        except Exception:
+            raise HTTPException(status_code=400, detail="from_date/to_date는 YYYY-MM-DD 형식이어야 합니다.")
+        if d_from > d_to:
+            raise HTTPException(status_code=400, detail="from_date는 to_date보다 이후일 수 없습니다.")
+        email = (req.email or "").strip()
+        if ("@" not in email) or (len(email) < 5):
+            raise HTTPException(status_code=400, detail="유효한 이메일 주소를 입력해주세요.")
+
+        # analyze_data.py를 동기 실행하여 완료까지 대기 (로딩 표시가 유효하도록)
+        # 인자 전달: --from, --to, --email, --print-only
+        script_path = "/Users/daehwankim/cube_rag/summary/analyze_data.py"
+        cmd = f"python3 {shlex.quote(script_path)} --from {shlex.quote(req.from_date)} --to {shlex.quote(req.to_date)} --email {shlex.quote(email)} --print-only"
+        try:
+            # 출력/에러를 캡처하지 않아 서버 콘솔(uvicorn 실행 터미널)에 그대로 표시되도록 함
+            subprocess.run(cmd, shell=True, check=True, timeout=120)
+        except subprocess.CalledProcessError as e:
+            raise HTTPException(status_code=500, detail=f"스크립트 종료 코드: {e.returncode}")
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"스크립트 실행 실패: {e}")
+
+        return SendEmailResponse(ok=True, message="메일 전송 스크립트가 실행되었습니다. (콘솔 출력 확인)")
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/ask/stream")
 def ask_stream(q: str, cid: Optional[str] = None):
@@ -241,38 +432,63 @@ def ask_stream(q: str, cid: Optional[str] = None):
     # domain memory store (shared with /ask)
     domain_memory = conversation_store.setdefault("__domain_memory__", {})
     last_domain = domain_memory.get(cid or "")
+    # pending domain selection store
+    pending_map: Dict[str, str] = conversation_store.setdefault("__pending_domain__", {})
+    pending_q = pending_map.get(cid or "")
+
+    # 사용자가 직전 턴의 도메인 확인에 응답한 경우 처리
+    forced_domain = None
+    skip_user_append = False
+    if pending_q:
+        nd = _normalize_domain_text(question)
+        if nd in ("python", "sql", "semiconductor"):
+            forced_domain = nd
+            # 원 질문으로 교체하여 이어서 처리
+            question = pending_q
+            skip_user_append = True
+            try:
+                pending_map.pop(cid or "", None)
+            except Exception:
+                pass
 
     is_new_chat = not history or len(history) == 0
-    if is_new_chat:
-        if domain not in ("python", "sql", "semiconductor") or dom_conf < dom_thr:
-            clarify_msg = "이 질문은 Python, SQL, 반도체 중 어떤 도메인과 가장 관련이 있나요? (예: '파이썬' 또는 'SQL' 또는 '반도체')"
-
-            def event_iterator_clarify():
-                yield {"event": "token", "data": clarify_msg}
-                # propagate cid if given or allocate new
-                saved_cid = _append_turn(cid, "user", question)
-                _append_turn(saved_cid, "assistant", clarify_msg)
-                yield {"event": "cid", "data": saved_cid}
-                yield {"event": "done", "data": "end"}
-
-            return EventSourceResponse(event_iterator_clarify(), media_type="text/event-stream")
-        selected_domain = domain
+    if forced_domain:
+        selected_domain = forced_domain
     else:
-        if domain in ("python", "sql", "semiconductor") and dom_conf >= dom_thr:
+        if is_new_chat:
+            if domain not in ("python", "sql", "semiconductor") or dom_conf < dom_thr:
+                clarify_msg = "이 질문은 Python, SQL, 반도체 중 어떤 도메인과 가장 관련이 있나요? (예: '파이썬' 또는 'SQL' 또는 '반도체')"
+
+                def event_iterator_clarify():
+                    yield {"event": "token", "data": clarify_msg}
+                    # propagate cid if given or allocate new
+                    saved_cid = _append_turn(cid, "user", question)
+                    _append_turn(saved_cid, "assistant", clarify_msg)
+                    # 다음 턴에서 도메인 선택을 받기 위해 원 질문 보관
+                    pending_map[saved_cid] = question
+                    yield {"event": "cid", "data": saved_cid}
+                    yield {"event": "done", "data": "end"}
+
+                return EventSourceResponse(event_iterator_clarify(), media_type="text/event-stream")
             selected_domain = domain
-        elif last_domain in ("python", "sql", "semiconductor"):
-            selected_domain = last_domain
         else:
-            clarify_msg = "이 질문은 Python, SQL, 반도체 중 어떤 도메인과 가장 관련이 있나요?"
+            if domain in ("python", "sql", "semiconductor") and dom_conf >= dom_thr:
+                selected_domain = domain
+            elif last_domain in ("python", "sql", "semiconductor"):
+                selected_domain = last_domain
+            else:
+                clarify_msg = "이 질문은 Python, SQL, 반도체 중 어떤 도메인과 가장 관련이 있나요?"
 
-            def event_iterator_clarify2():
-                yield {"event": "token", "data": clarify_msg}
-                saved_cid = _append_turn(cid, "user", question)
-                _append_turn(saved_cid, "assistant", clarify_msg)
-                yield {"event": "cid", "data": saved_cid}
-                yield {"event": "done", "data": "end"}
+                def event_iterator_clarify2():
+                    yield {"event": "token", "data": clarify_msg}
+                    saved_cid = _append_turn(cid, "user", question)
+                    _append_turn(saved_cid, "assistant", clarify_msg)
+                    # 다음 턴에서 도메인 선택을 받기 위해 원 질문 보관
+                    pending_map[saved_cid] = question
+                    yield {"event": "cid", "data": saved_cid}
+                    yield {"event": "done", "data": "end"}
 
-            return EventSourceResponse(event_iterator_clarify2(), media_type="text/event-stream")
+                return EventSourceResponse(event_iterator_clarify2(), media_type="text/event-stream")
 
     collection_name = _map_collection(selected_domain)
 
@@ -284,7 +500,9 @@ def ask_stream(q: str, cid: Optional[str] = None):
     for h in hits:
         meta = h.get("metadata") or {}
         q_meta = (meta.get("question") or "").strip()
-        a_meta = (meta.get("answer") or "").strip()
+        # '||' 분리
+        tokens = [t.strip() for t in str(meta.get("answers") or "").split("||") if t and t.strip()]
+        a_meta = " ".join(tokens)
         content = h.get("content")
         if q_meta or a_meta:
             contexts.append(f"Q: {q_meta}\nA: {a_meta}".strip())
@@ -413,9 +631,18 @@ def ask_stream(q: str, cid: Optional[str] = None):
 
         # 마지막에 히스토리 저장 (user 질문 + assistant 응답 전문은 클라이언트에서 재조합 필요)
         try:
-            saved_cid = _append_turn(cid, "user", question)
-            # 스트리밍 시 전체 답변은 클라이언트가 조합하므로, 여기서는 간단 표기
-            _append_turn(saved_cid, "assistant", "(streamed)")
+            if skip_user_append:
+                # 도메인 선택 응답은 사용자 질문으로 기록하지 않음
+                saved_cid = cid
+                if not saved_cid:
+                    # cid가 없으면 어시스턴트만 기록하면서 cid 생성
+                    saved_cid = _append_turn(None, "assistant", "(streamed)")
+                else:
+                    _append_turn(saved_cid, "assistant", "(streamed)")
+            else:
+                saved_cid = _append_turn(cid, "user", question)
+                # 스트리밍 시 전체 답변은 클라이언트가 조합하므로, 여기서는 간단 표기
+                _append_turn(saved_cid, "assistant", "(streamed)")
             # 도메인 메모리 업데이트
             if selected_domain in ("python", "sql", "semiconductor"):
                 domain_memory[saved_cid] = selected_domain

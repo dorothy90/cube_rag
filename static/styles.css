@@ -157,6 +157,10 @@ main.container { max-width: 1200px; }
   padding: 8px 10px;
 }
 
+.source-text {
+  white-space: pre-wrap;
+}
+
 /* Row click expand */
 .notes-row { cursor: pointer; }
 .notes-expand td { padding: 0; }
@@ -372,6 +376,12 @@ main.container { max-width: 1200px; }
   background: color-mix(in srgb, var(--accent) 90%, black 10%);
 }
 
+/* Loading state */
+.btn.loading {
+  opacity: 0.7;
+  cursor: progress;
+}
+
 /* 링크 상태 전환에도 밑줄이 생기지 않도록 고정 */
 .btn:link,
 .btn:visited,
@@ -483,5 +493,37 @@ section.hero .hero-input {
   padding: 12px 16px !important;
   border-radius: 14px !important;
   box-sizing: border-box !important;
+}
+
+/* Mode toggle */
+.mode-toggle {
+  display: inline-flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.mode-btn {
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 0.9rem;
+}
+
+/* 요약 입력 그리드 */
+.hero-summarize-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 2fr auto;
+  gap: 10px;
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+/* 컴포저 요약 입력 그리드: 4열 (from, to, email, 버튼) */
+.composer-wrap.summarize {
+  grid-template-columns: 1fr 1fr 2fr auto;
+}
+
+/* 메일보내기 버튼을 오른쪽에 배치하기 위해 5열 구성 */
+.composer-wrap.summarize {
+  grid-template-columns: 1fr 1fr 2fr auto auto;
 }
 

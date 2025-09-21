@@ -76,3 +76,11 @@ top1 = valid[0] if valid else 0.0
 consensus = sum(1 for v in valid[:K] if v>=t_mid)
 print({'scores':scores,'top1':top1,'consensus':consensus,'has_direct_match':(top1>=t_high) or (consensus>=C)})
 PY
+
+
+
+
+from agent_orchestrator import main
+
+res = main("정규화와 비정규화의 차이는?")
+print(res["answer"])

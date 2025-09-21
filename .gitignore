@@ -40,3 +40,15 @@ node_modules/
 .taskmaster/templates/example_prd.txt
 .taskmaster/config.json
 .taskmaster/config.json
+data/chunked_qa_pairs_python.json
+.gitignore
+data/chunked_qa_pairs_semiconductor.json
+data/chunked_qa_pairs_sql.json
+data/extracted_qa_pairs_python.json
+data/extracted_qa_pairs_semiconductor.json
+data/extracted_qa_pairs_sql.json
+data/extracted_qa_pairs_python.json
+data/extracted_qa_pairs_semiconductor.json
+data/extracted_qa_pairs_sql.json
+summary/scraped_messages_293msgs_20250831_152924.csv
+summary/direct_llm_summarizer.py

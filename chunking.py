@@ -14,8 +14,7 @@
 
 import os
 import json
-import argparse
-from typing import Dict, List, Tuple
+from typing import Dict, List, Tuple, Optional
 
 from dotenv import load_dotenv
 
@@ -46,11 +45,16 @@ def write_json_list(path: str, data: List[Dict]) -> None:
 
 def build_source_text(item: Dict) -> Tuple[str, Dict]:
     question = str(item.get("question", "")).strip()
-    answer = str(item.get("answer", "")).strip()
-    text = f"Q: {question}\nA: {answer}".strip()
+    answers_field = item.get("answers")
+    answers_list = [str(a).strip() for a in answers_field] if isinstance(answers_field, list) else []
+    answers_list = [a for a in answers_list if a]
+    answer_text = " ".join(answers_list)
+
+    text = f"Q: {question}\nA: {answer_text}".strip()
     metadata = {
         "question": question,
-        "answer": answer,
+        "answer": answer_text,
+        "answers": answers_list,
         "question_author": item.get("question_author") or item.get("q_author"),
         "answer_author": item.get("answer_author") or item.get("a_author"),
         "timestamp": item.get("timestamp"),
@@ -99,24 +103,29 @@ def chunk_items(
     return chunked
 
 
-def main():
+def main(
+    input_path: Optional[str] = None,
+    output_path: Optional[str] = None,
+    size: int = 1000,
+    overlap: int = 200,
+) -> int:
+    """Notebook/Script-friendly entry point to create chunked QA JSON.
+
+    Returns: number of generated chunks.
+    """
     load_dotenv()
 
-    defaults_in = os.path.join(os.path.dirname(__file__), "data", "extracted_qa_pairs.json")
-    defaults_out = os.path.join(os.path.dirname(__file__), "data", "chunked_qa_pairs.json")
+    defaults_in = os.path.join(os.path.dirname(__file__), "data", "extracted_qa_pairs_python.json")
+    defaults_out = os.path.join(os.path.dirname(__file__), "data", "chunked_qa_pairs_python.json")
 
-    parser = argparse.ArgumentParser(description="임베딩을 위한 Q&A 텍스트 청킹")
-    parser.add_argument("--input", default=defaults_in, help="입력 Q&A JSON 경로")
-    parser.add_argument("--output", default=defaults_out, help="출력 청킹 JSON 경로")
-    parser.add_argument("--size", type=int, default=1000, help="청크 크기(문자/토큰)")
-    parser.add_argument("--overlap", type=int, default=200, help="청크 겹침 크기(문자/토큰)")
-    # splitter 방식은 recursive로 고정
-    args = parser.parse_args()
+    input_path = input_path or defaults_in
+    output_path = output_path or defaults_out
 
-    items = read_json_list(args.input)
-    chunks = chunk_items(items, chunk_size=args.size, chunk_overlap=args.overlap, method=args.splitter)
-    write_json_list(args.output, chunks)
-    print(f"✅ 총 {len(chunks)}개 청크를 생성하여 저장했습니다 -> {args.output}")
+    items = read_json_list(input_path)
+    chunks = chunk_items(items, chunk_size=size, chunk_overlap=overlap)
+    write_json_list(output_path, chunks)
+    print(f"✅ 총 {len(chunks)}개 청크를 생성하여 저장했습니다 -> {output_path}")
+    return len(chunks)
 
 
 if __name__ == "__main__":

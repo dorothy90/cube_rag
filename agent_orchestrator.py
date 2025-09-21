@@ -93,7 +93,10 @@ class AgentOrchestrator:
             for h in hits:
                 meta = h.get("metadata") or {}
                 q_meta = (meta.get("question") or "").strip()
-                a_meta = (meta.get("answer") or "").strip()
+                # '||' 분리 (서버 규칙과 동일)
+                ans_csv = meta.get("answers")
+                tokens = [t.strip() for t in str(ans_csv or '').split('||') if t and t.strip()]
+                a_meta = " ".join(tokens)
                 content = h.get("content")
                 if q_meta or a_meta:
                     contexts.append(f"Q: {q_meta}\nA: {a_meta}".strip())
@@ -179,44 +182,12 @@ class AgentOrchestrator:
                 "selected_domain": selected_domain,
             }
 
-if __name__ == "__main__":
-    import argparse
-
-    parser = argparse.ArgumentParser(description="Run Agent Orchestrator")
-    parser.add_argument("question", type=str, help="사용자 질문 문장")
-    args = parser.parse_args()
-
+def main(question: str, history: Optional[List[Dict[str, str]]] = None, last_domain: Optional[str] = None) -> Dict:
     orchestrator = AgentOrchestrator()
-    result = orchestrator.run(args.question)
+    return orchestrator.run(question, history=history, last_domain=last_domain)
 
-    stage = result["stage"]
-    print(f"단계: {stage}")
 
-    analysis = result["analysis"]
-    print(f"질문 유형: {analysis.question_type}")
-    print(f"기술 스택: {', '.join(analysis.technical_stack)}")
-    print(f"추가 맥락 필요: {'예' if analysis.context_needed else '아니오'}")
-
-    if result["decision"]:
-        decision = result["decision"]
-        print(f"결정 액션: {decision.action}")
-        print(f"신뢰도: {decision.confidence:.2f}")
-        if decision.missing_context:
-            print(f"부족한 맥락: {', '.join(decision.missing_context)}")
-        if decision.suggested_questions:
-            print(f"제안 질문: {', '.join(decision.suggested_questions[:3])}")
-    elif stage == "generation":
-        contexts = result.get("contexts", [])
-        sources = result.get("sources", [])
-        if contexts and sources:
-            print("\n🔎 Retrieval Results:")
-            for i, (c, s) in enumerate(zip(contexts, sources), 1):
-                meta = s.get("metadata", {}) if isinstance(s, dict) else {}
-                score = s.get("score") if isinstance(s, dict) else None
-                ts = meta.get("timestamp", "")
-                print(f"\n[{i}] score={score if score is not None else 'NA'} {ts}")
-                preview = (c or "")[:400]
-                print(preview)
-
-        print("\n🧠 Answer:\n")
-        print(result.get("answer", "(no answer)"))
+if __name__ == "__main__":
+    q = os.getenv("QUESTION", "Django 기본값 설정 방법?")
+    out = main(q)
+    print(out.get("answer") or "(no answer)")
