@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Cube RAG</title>
+  <title>Cube LLM</title>
   <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@2.0.6/css/pico.min.css" />
   <link rel="stylesheet" href="/static/styles.css" />
   <link rel="stylesheet" href="https://unpkg.com/prismjs@1.29.0/themes/prism-tomorrow.css" />
 </head>
 <body>
   <header class="topbar">
-    <div class="brand">Cube RAG</div>
+    <div class="brand">Cube LLM</div>
     <nav><a href="/" class="btn primary">새 채팅</a></nav>
   </header>
 
@@ -26,30 +26,265 @@
       </div>
     </section>
 
-    <!-- Chat area -->
-    <section id="chat" style="display:none;">
-      <div id="messages" class="container-narrow messages"></div>
+    <!-- Workspace: Left(chat) / Right(notes) -->
+    <div id="workspace" class="workspace" style="display:none;">
+      <!-- Left: Chat Pane -->
+      <section class="chat-pane">
+        <div id="messages" class="container-narrow messages"></div>
+        <!-- Composer fixed at bottom -->
+        <form id="composer" class="composer">
+          <div class="container-narrow composer-wrap">
+            <input id="composer-input" class="composer-input" type="text" placeholder="메시지를 입력하세요" required />
+            <button class="btn primary" type="submit">보내기</button>
+          </div>
+          <div class="container-narrow"><span id="status" class="status" style="display:none;">요청 중…</span></div>
+        </form>
+      </section>
 
-      <!-- Composer fixed at bottom -->
-      <form id="composer" class="composer">
-        <div class="container-narrow composer-wrap">
-          <input id="composer-input" class="composer-input" type="text" placeholder="메시지를 입력하세요" required />
-          <button class="btn primary" type="submit">보내기</button>
+      <!-- Right: Notes Pane -->
+      <aside class="notes-pane">
+        <header class="notes-header">
+          <h3>메모</h3>
+          <div class="notes-toolbar">
+            <input id="notes-search" type="text" placeholder="검색(질문/내용)" aria-label="메모 검색" />
+            <div class="notes-actions">
+              <button id="export-json" class="btn" type="button">JSON</button>
+              <button id="export-csv" class="btn" type="button">CSV</button>
+              <button id="clear-notes" class="btn" type="button">모두삭제</button>
+            </div>
+          </div>
+        </header>
+        <div class="notes-body">
+          <table class="notes-table">
+            <thead>
+              <tr>
+                <th>날짜</th>
+                <th>질문</th>
+              </tr>
+            </thead>
+            <tbody id="notes-tbody"></tbody>
+          </table>
         </div>
-        <div class="container-narrow"><span id="status" class="status" style="display:none;">요청 중…</span></div>
-      </form>
-    </section>
+      </aside>
+    </div>
   </main>
 
   <script>
     const hero = document.getElementById('hero');
     const heroForm = document.getElementById('hero-form');
     const heroInput = document.getElementById('hero-input');
-    const chat = document.getElementById('chat');
+    const workspace = document.getElementById('workspace');
     const messages = document.getElementById('messages');
     const composer = document.getElementById('composer');
     const composerInput = document.getElementById('composer-input');
     const statusEl = document.getElementById('status');
+    const notesSearch = document.getElementById('notes-search');
+    const notesTbody = document.getElementById('notes-tbody');
+    const btnExportJSON = document.getElementById('export-json');
+    const btnExportCSV = document.getElementById('export-csv');
+    const btnClearNotes = document.getElementById('clear-notes');
+
+    // Track last user message for assistant memo question autofill
+    let lastUserText = '';
+    // Hold latest sources for current assistant answer (memo batch)
+    let currentSourcesMemo = [];
+
+    // Notes storage per conversation
+    const NotesStore = (() => {
+      let cid = null;
+      let notes = [];
+      function key(c) { return `notes:${c || ''}`; }
+      function setCID(newCid) {
+        cid = newCid || '';
+        notes = load(cid);
+        NotesUI.render();
+      }
+      function load(c) {
+        try {
+          const raw = localStorage.getItem(key(c));
+          return raw ? JSON.parse(raw) : [];
+        } catch (_) { return []; }
+      }
+      function save() {
+        try { localStorage.setItem(key(cid), JSON.stringify(notes)); } catch (_) {}
+      }
+      function nowStr() { return new Date().toISOString(); }
+      function add({ kind, question, content, sourceUrl, sources, score, tags }) {
+        const note = {
+          id: `${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+          cid,
+          createdAt: nowStr(),
+          kind: kind || 'answer',
+          question: (question || '').trim(),
+          content: (content || '').trim(),
+          sourceUrl: (sourceUrl || '').trim() || undefined,
+          sources: Array.isArray(sources) ? sources.map(s => ({
+            text: (s && s.text) ? String(s.text) : '',
+            url: (s && s.url) ? String(s.url) : undefined
+          })) : undefined,
+          score: typeof score === 'number' ? score : undefined,
+          tags: Array.isArray(tags) ? tags : []
+        };
+        notes.unshift(note);
+        save();
+        NotesUI.render();
+      }
+      function remove(id) {
+        notes = notes.filter(n => n.id !== id);
+        save();
+        NotesUI.render();
+      }
+      function clear() {
+        notes = [];
+        save();
+        NotesUI.render();
+      }
+      function list() { return notes.slice(); }
+      function update(id, patch) {
+        const idx = notes.findIndex(n => n.id === id);
+        if (idx === -1) return;
+        const base = notes[idx] || {};
+        notes[idx] = {
+          ...base,
+          question: (patch && typeof patch.question === 'string') ? patch.question : base.question,
+          content: (patch && typeof patch.content === 'string') ? patch.content : base.content,
+          sources: Array.isArray(patch && patch.sources) ? patch.sources : base.sources
+        };
+        save();
+        NotesUI.render();
+      }
+      function exportJSON() {
+        const blob = new Blob([JSON.stringify(notes, null, 2)], { type: 'application/json;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        triggerDownload(`notes_${cid || 'unknown'}.json`, url);
+      }
+      function exportCSV() {
+        const header = ['id','cid','createdAt','kind','question','content','sourceUrl','score','tags'];
+        const rows = notes.map(n => [n.id, n.cid, n.createdAt, n.kind, sanitizeCSV(n.question), sanitizeCSV(n.content), n.sourceUrl || '', n.score || '', (n.tags||[]).join('|')]);
+        const csv = [header.join(','), ...rows.map(r => r.join(','))].join('\n');
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        triggerDownload(`notes_${cid || 'unknown'}.csv`, url);
+      }
+      function triggerDownload(filename, url) {
+        const a = document.createElement('a');
+        a.href = url; a.download = filename; a.style.display = 'none';
+        document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 500);
+      }
+      function sanitizeCSV(value) {
+        const v = (value || '').replaceAll('"', '""');
+        return `"${v}"`;
+      }
+      return { setCID, add, remove, clear, list, exportJSON, exportCSV, update };
+    })();
+
+    // Notes UI rendering and events
+    const NotesUI = (() => {
+      function formatDateYMD(input) {
+        try {
+          const d = new Date(input);
+          if (isNaN(d.getTime())) return String(input || '');
+          const y = d.getFullYear();
+          const m = String(d.getMonth() + 1).padStart(2, '0');
+          const dd = String(d.getDate()).padStart(2, '0');
+          return `${y}. ${m}. ${dd}`;
+        } catch (_) { return String(input || ''); }
+      }
+      function render() {
+        const all = NotesStore.list();
+        const query = (notesSearch.value || '').toLowerCase();
+        const data = query ? all.filter(n => (n.question||'').toLowerCase().includes(query) || (n.content||'').toLowerCase().includes(query)) : all;
+        notesTbody.innerHTML = '';
+        for (const n of data) {
+          // main row
+          const tr = document.createElement('tr');
+          tr.className = 'notes-row';
+          const tdDate = document.createElement('td'); tdDate.textContent = formatDateYMD(n.createdAt);
+          const tdQ = document.createElement('td'); tdQ.textContent = n.question || '';
+          tr.appendChild(tdDate); tr.appendChild(tdQ);
+
+          // toggle expand on click
+          tr.addEventListener('click', (event) => {
+            const next = tr.nextElementSibling;
+            if (next && next.classList.contains('notes-expand')) {
+              next.remove();
+              return;
+            }
+            const exp = document.createElement('tr');
+            exp.className = 'notes-expand';
+            const td = document.createElement('td');
+            td.colSpan = 2;
+            const inner = document.createElement('div');
+            inner.className = 'note-expand-inner';
+            const content = document.createElement('pre');
+            content.className = 'note-content';
+            content.textContent = n.content || '';
+            inner.appendChild(content);
+            // edit actions
+            const actions = document.createElement('div');
+            actions.className = 'note-edit-actions';
+            const btnEdit = document.createElement('button'); btnEdit.className = 'btn'; btnEdit.type = 'button'; btnEdit.textContent = '수정';
+            const btnSave = document.createElement('button'); btnSave.className = 'btn'; btnSave.type = 'button'; btnSave.textContent = '저장'; btnSave.style.display = 'none';
+            const btnCancel = document.createElement('button'); btnCancel.className = 'btn'; btnCancel.type = 'button'; btnCancel.textContent = '취소'; btnCancel.style.display = 'none';
+            actions.appendChild(btnEdit); actions.appendChild(btnSave); actions.appendChild(btnCancel);
+            inner.appendChild(actions);
+            actions.addEventListener('click', (e) => e.stopPropagation());
+            // sources 배열을 목록으로 표시
+            if (Array.isArray(n.sources) && n.sources.length) {
+              const list = document.createElement('ul');
+              list.className = 'note-sources-list';
+              for (const s of n.sources) {
+                const li = document.createElement('li');
+                if (s && s.url) {
+                  const a = document.createElement('a');
+                  a.href = s.url; a.target = '_blank'; a.rel = 'noopener noreferrer';
+                  a.textContent = s.text || s.url;
+                  li.appendChild(a);
+                } else {
+                  li.textContent = (s && s.text) ? s.text : '';
+                }
+                list.appendChild(li);
+              }
+              inner.appendChild(list);
+            }
+            td.appendChild(inner);
+            exp.appendChild(td);
+            tr.insertAdjacentElement('afterend', exp);
+
+            // edit handlers: transform question cell to input, content to textarea
+            btnEdit.addEventListener('click', () => {
+              const qInput = document.createElement('input');
+              qInput.type = 'text'; qInput.className = 'note-input';
+              qInput.value = tdQ.textContent || '';
+              tdQ.textContent = '';
+              tdQ.appendChild(qInput);
+              const ta = document.createElement('textarea');
+              ta.className = 'note-textarea';
+              ta.value = n.content || '';
+              content.replaceWith(ta);
+              btnEdit.style.display = 'none';
+              btnSave.style.display = 'inline-block';
+              btnCancel.style.display = 'inline-block';
+              qInput.addEventListener('click', (e) => e.stopPropagation());
+              ta.addEventListener('click', (e) => e.stopPropagation());
+            });
+            btnSave.addEventListener('click', () => {
+              const newQuestionEl = tdQ.querySelector('input.note-input');
+              const newContentEl = tr.nextElementSibling ? tr.nextElementSibling.querySelector('textarea.note-textarea') : null;
+              const newQuestion = newQuestionEl ? newQuestionEl.value : (n.question || '');
+              const newContent = newContentEl ? newContentEl.value : (n.content || '');
+              NotesStore.update(n.id, { question: newQuestion, content: newContent });
+            });
+            btnCancel.addEventListener('click', () => {
+              NotesUI.render();
+            });
+          });
+          notesTbody.appendChild(tr);
+        }
+      }
+      return { render };
+    })();
 
     function addMessage(text, role) {
       const wrap = document.createElement('div');
@@ -63,6 +298,26 @@
       bubble.textContent = text;
       col.appendChild(bubble);
 
+      // Actions under bubble
+      if (role === 'assistant') {
+        const actions = document.createElement('div');
+        actions.className = 'bubble-actions';
+        const memoBtn = document.createElement('button');
+        memoBtn.className = 'btn memo-btn';
+        memoBtn.type = 'button';
+        memoBtn.textContent = '메모';
+        memoBtn.addEventListener('click', () => {
+          // 클릭 시점의 실제 버블 텍스트와 현재 수집된 출처들을 함께 저장
+          const bubbleText = (bubble.textContent || text || '').trim();
+          const question = lastUserText || '';
+          // 단일 레코드로 답변 + 출처를 함께 저장
+          const payloadSources = Array.isArray(currentSourcesMemo) ? currentSourcesMemo.map(it => ({ text: it.text || '', url: it.url || '' })) : [];
+          NotesStore.add({ kind: 'answer', question, content: bubbleText, sources: payloadSources });
+        });
+        actions.appendChild(memoBtn);
+        col.appendChild(actions);
+      }
+
       // 출처 UI는 스트리밍 sources 이벤트가 도착했을 때 동적으로 생성합니다.
       messages.appendChild(wrap);
       messages.scrollTop = messages.scrollHeight;
@@ -74,7 +329,7 @@
       const bubble = addMessage('', 'assistant');
       const col = bubble.parentElement; // .message-col
       let sourcesEl = null;
-      let sourcesContent = null;
+      let sourcesList = null;
 
       let es;
       try {
@@ -83,6 +338,8 @@
         const cid = sessionStorage.getItem('conversation_id');
         if (cid) url.searchParams.set('cid', cid);
         es = new EventSource(url.toString());
+        // reset sources for this answer
+        currentSourcesMemo = [];
         es.addEventListener('token', (e) => {
           bubble.textContent += e.data;
           messages.scrollTop = messages.scrollHeight;
@@ -98,8 +355,8 @@
             // Sources render: normalized schema [{type, score, ...}]
             try {
               const payload = JSON.parse(data || '[]');
-              const items = [];
               const seen = new Set();
+              const renderItems = [];
               for (const s of payload) {
                 if (!s || typeof s !== 'object') continue;
                 if (s.type === 'internal') {
@@ -109,32 +366,47 @@
                   const key = `qa::${ts}::${q}`;
                   if (seen.has(key)) continue;
                   seen.add(key);
-                  const line1 = ts ? `[${ts}] Question: ${q}` : `Question: ${q}`;
-                  const preview = a ? `\nAnswer: ${a.slice(0, 80)}${a.length > 80 ? '…' : ''}` : '';
-                  items.push(`${line1}${preview}`);
+                  renderItems.push({ kind: 'internal', text: `${ts ? `[${ts}] ` : ''}${q}${a ? `\n${a}` : ''}`.trim() });
                 } else if (s.type === 'web') {
-                  const url = (s.url || '').trim();
+                  const urlStr = (s.url || '').trim();
                   const title = (s.title || '').trim();
-                  const key = `web::${url}`;
-                  if (!url || seen.has(key)) continue;
+                  const key = `web::${urlStr}`;
+                  if (!urlStr || seen.has(key)) continue;
                   seen.add(key);
-                  items.push(`- 웹: ${title || url} (${url})`);
+                  renderItems.push({ kind: 'web', text: `${title || urlStr}`, url: urlStr });
                 }
               }
-              if (items.length) {
+              if (renderItems.length) {
+                // Save for batch memo
+                currentSourcesMemo = renderItems.slice();
                 if (!sourcesEl) {
                   sourcesEl = document.createElement('details');
                   sourcesEl.className = 'sources';
                   const summary = document.createElement('summary');
                   summary.textContent = '출처';
                   sourcesEl.appendChild(summary);
-                  sourcesContent = document.createElement('pre');
-                  sourcesContent.className = 'sources-content';
-                  sourcesContent.style.whiteSpace = 'pre-wrap';
-                  sourcesEl.appendChild(sourcesContent);
+                  sourcesList = document.createElement('div');
+                  sourcesList.className = 'sources-list';
+                  sourcesEl.appendChild(sourcesList);
                   col.appendChild(sourcesEl);
                 }
-                sourcesContent.textContent = items.join('\n\n');
+                sourcesList.innerHTML = '';
+                for (const it of renderItems) {
+                  const row = document.createElement('div');
+                  row.className = 'source-row';
+                  const span = document.createElement('span');
+                  // 웹 출처는 링크로 표시
+                  if (it.url) {
+                    const a = document.createElement('a');
+                    a.href = it.url; a.target = '_blank'; a.rel = 'noopener noreferrer';
+                    a.textContent = it.text;
+                    span.appendChild(a);
+                  } else {
+                    span.textContent = it.text;
+                  }
+                  row.appendChild(span);
+                  sourcesList.appendChild(row);
+                }
                 sourcesEl.open = true;
               }
             } catch (_) {}
@@ -159,8 +431,9 @@
       if (!q) return;
       // switch to chat view
       hero.style.display = 'none';
-      chat.style.display = 'block';
+      workspace.style.display = 'grid';
       addMessage(q, 'user');
+      lastUserText = q;
       composerInput.value = '';
       ask(q);
     });
@@ -170,9 +443,34 @@
       const q = composerInput.value.trim();
       if (!q) return;
       addMessage(q, 'user');
+      lastUserText = q;
       composerInput.value = '';
       ask(q);
     });
+
+    // Notes toolbar events
+    notesSearch.addEventListener('input', () => NotesUI.render());
+    btnExportJSON.addEventListener('click', () => NotesStore.exportJSON());
+    btnExportCSV.addEventListener('click', () => NotesStore.exportCSV());
+    btnClearNotes.addEventListener('click', () => NotesStore.clear());
+
+    // Sync notes with conversation_id when received
+    window.addEventListener('storage', (e) => {
+      if (e.key && e.key.startsWith('notes:')) NotesUI.render();
+    });
+
+    // When CID is set by server, update store
+    (function observeCID() {
+      const origSetItem = sessionStorage.setItem.bind(sessionStorage);
+      sessionStorage.setItem = function(k, v) {
+        origSetItem(k, v);
+        if (k === 'conversation_id') {
+          NotesStore.setCID(v);
+        }
+      };
+      const existing = sessionStorage.getItem('conversation_id');
+      if (existing) NotesStore.setCID(existing);
+    })();
   </script>
 </body>
 </html>

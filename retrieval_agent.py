@@ -122,64 +122,23 @@ def retrieve(
 
     try:
         # 1) relevance score가 제공되면 그대로 사용 (0..1 유사도)
-        used_relevance = False
-        try:
-            docs_with_scores = vs.similarity_search_with_relevance_scores(query, k=effective_k)
-            for doc, rel in docs_with_scores:
-                score = None
-                try:
-                    s = float(rel)
-                    if 0.0 <= s <= 1.0:
-                        score = s
-                except Exception:
-                    score = None
-
-                if (threshold is None) or (score is None) or (score >= threshold):
-                    results.append({
-                        "content": doc.page_content,
-                        "metadata": doc.metadata,
-                        "score": score,
-                    })
-            used_relevance = True
-        except Exception:
-            used_relevance = False
-
-        # 2) fallback: distance → cosine similarity 변환 (cos_sim = clamp01(1 - distance))
-        if not used_relevance:
+        docs_with_scores = vs.similarity_search_with_relevance_scores(query, k=effective_k)
+        for doc, rel in docs_with_scores:
+            score = None
             try:
-                docs_with_scores = vs.similarity_search_with_score(query, k=effective_k)
-                for doc, distance in docs_with_scores:
-                    score = None
-                    try:
-                        d = float(distance)
-                        if d < 0:
-                            d = 0.0
-                        # distance가 [0,1] 범위인 cosine distance라고 가정하고 1-d로 변환
-                        # (범위를 벗어나면 0..1로 클램프)
-                        cos_sim = 1.0 - d
-                        if cos_sim < 0.0:
-                            cos_sim = 0.0
-                        if cos_sim > 1.0:
-                            cos_sim = 1.0
-                        score = cos_sim
-                    except Exception:
-                        score = None
-
-                    if (threshold is None) or (score is None) or (score >= threshold):
-                        results.append({
-                            "content": doc.page_content,
-                            "metadata": doc.metadata,
-                            "score": score,
-                        })
+                s = float(rel)
+                if 0.0 <= s <= 1.0:
+                    score = s
             except Exception:
-                # 3) 최후: 점수 없이 문서만 반환
-                docs = vs.similarity_search(query, k=effective_k)
-                for doc in docs:
-                    results.append({
-                        "content": doc.page_content,
-                        "metadata": doc.metadata,
-                        "score": None,
-                    })
+                score = None
+
+            if (threshold is None) or (score is None) or (score >= threshold):
+                results.append({
+                    "content": doc.page_content,
+                    "metadata": doc.metadata,
+                    "score": score,
+                })
+        logger.info("retrieval branch=with_relevance_scores (primary)")
 
         elapsed = time.time() - start
         if elapsed > timeout_sec:
