@@ -380,6 +380,34 @@ main.container { max-width: 1200px; }
 .btn.loading {
   opacity: 0.7;
   cursor: progress;
+  position: relative;
+  color: transparent !important; /* 텍스트 숨기기 (폭 유지) */
+}
+
+/* 로딩 스피너 표시 */
+.btn.loading::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1.1em;
+  height: 1.1em;
+  margin-top: -0.55em;
+  margin-left: -0.55em;
+  border-radius: 50%;
+  border: 2px solid var(--text);
+  border-top-color: transparent;
+  animation: btn-spin 0.8s linear infinite;
+}
+
+/* 프라이머리 버튼에서는 흰색 스피너 */
+.btn.primary.loading::after {
+  border-color: rgba(255,255,255,0.9);
+  border-top-color: transparent;
+}
+
+@keyframes btn-spin {
+  to { transform: rotate(360deg); }
 }
 
 /* 링크 상태 전환에도 밑줄이 생기지 않도록 고정 */
@@ -525,5 +553,37 @@ section.hero .hero-input {
 /* 메일보내기 버튼을 오른쪽에 배치하기 위해 5열 구성 */
 .composer-wrap.summarize {
   grid-template-columns: 1fr 1fr 2fr auto auto;
+}
+
+/* Summary log panel */
+.summary-log {
+  margin-top: 16px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.summary-log-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.summary-log-body {
+  margin: 0;
+  padding: 12px;
+  max-height: 240px;
+  overflow: auto;
+  background: rgba(0,0,0,0.12);
+  white-space: pre-wrap;
+  font-size: 0.92rem;
+}
+
+.summary-log-actions {
+  display: flex;
+  gap: 8px;
 }
 

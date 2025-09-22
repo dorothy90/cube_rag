@@ -27,6 +27,7 @@ import json
 from urllib.parse import urlparse
 import subprocess
 import shlex
+import time
 
 
 class AskRequest(BaseModel):
@@ -383,23 +384,143 @@ def send_summary_email(req: SendEmailRequest) -> SendEmailResponse:
         if ("@" not in email) or (len(email) < 5):
             raise HTTPException(status_code=400, detail="유효한 이메일 주소를 입력해주세요.")
 
-        # analyze_data.py를 동기 실행하여 완료까지 대기 (로딩 표시가 유효하도록)
-        # 인자 전달: --from, --to, --email, --print-only
+        # analyze_data.py 실행: 로그 스트리밍 + 타임아웃 설정
+        # - PYTHONUNBUFFERED 또는 -u 옵션으로 버퍼링 비활성화하여 실시간 출력
+        # - SUMMARY_SCRIPT_TIMEOUT_SECS 환경변수로 타임아웃(초) 조정 가능 (기본 600초)
         script_path = "/Users/daehwankim/cube_rag/summary/analyze_data.py"
-        cmd = f"python3 {shlex.quote(script_path)} --from {shlex.quote(req.from_date)} --to {shlex.quote(req.to_date)} --email {shlex.quote(email)} --print-only"
+        timeout_secs = int(os.getenv("SUMMARY_SCRIPT_TIMEOUT_SECS", "600"))
+        cmd_list = [
+            "python3",
+            "-u",
+            script_path,
+            "--from",
+            req.from_date,
+            "--to",
+            req.to_date,
+            "--email",
+            email,
+        ]
+        env = os.environ.copy()
+        env["PYTHONUNBUFFERED"] = "1"
         try:
-            # 출력/에러를 캡처하지 않아 서버 콘솔(uvicorn 실행 터미널)에 그대로 표시되도록 함
-            subprocess.run(cmd, shell=True, check=True, timeout=120)
-        except subprocess.CalledProcessError as e:
-            raise HTTPException(status_code=500, detail=f"스크립트 종료 코드: {e.returncode}")
+            proc = subprocess.Popen(
+                cmd_list,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                text=True,
+                env=env,
+            )
         except Exception as e:
-            raise HTTPException(status_code=500, detail=f"스크립트 실행 실패: {e}")
+            raise HTTPException(status_code=500, detail=f"스크립트 시작 실패: {e}")
+
+        start_ts = time.monotonic()
+        try:
+            assert proc.stdout is not None
+            for line in proc.stdout:
+                print(f"[analyze_data] {line.rstrip()}")
+                if (time.monotonic() - start_ts) > timeout_secs:
+                    proc.kill()
+                    raise HTTPException(status_code=500, detail=f"스크립트 실행 타임아웃({timeout_secs}s)")
+        finally:
+            try:
+                rc = proc.wait(timeout=5)
+            except Exception:
+                proc.kill()
+                rc = -1
+        if rc != 0:
+            raise HTTPException(status_code=500, detail=f"스크립트 종료 코드: {rc}")
 
         return SendEmailResponse(ok=True, message="메일 전송 스크립트가 실행되었습니다. (콘솔 출력 확인)")
     except HTTPException:
         raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/send-summary-email/stream")
+def send_summary_email_stream(from_date: str, to_date: str, email: str):
+    """요약 스크립트 표준출력을 SSE로 스트리밍한다.
+
+    프론트에서는 EventSource로 연결하여 'log' 이벤트를 수신해 UI에 실시간 출력한다.
+    """
+    if EventSourceResponse is None:
+        raise HTTPException(status_code=500, detail="SSE dependency not installed")
+
+    # 입력 유효성 검사
+    try:
+        d_from = datetime.strptime((from_date or "").strip(), "%Y-%m-%d")
+        d_to = datetime.strptime((to_date or "").strip(), "%Y-%m-%d")
+    except Exception:
+        raise HTTPException(status_code=400, detail="from_date/to_date는 YYYY-MM-DD 형식이어야 합니다.")
+    if d_from > d_to:
+        raise HTTPException(status_code=400, detail="from_date는 to_date보다 이후일 수 없습니다.")
+    email_v = (email or "").strip()
+    if ("@" not in email_v) or (len(email_v) < 5):
+        raise HTTPException(status_code=400, detail="유효한 이메일 주소를 입력해주세요.")
+
+    script_path = "/Users/daehwankim/cube_rag/summary/analyze_data.py"
+    timeout_secs = int(os.getenv("SUMMARY_SCRIPT_TIMEOUT_SECS", "600"))
+    cmd_list = [
+        "python3",
+        "-u",
+        script_path,
+        "--from",
+        from_date,
+        "--to",
+        to_date,
+        "--email",
+        email_v,
+    ]
+
+    def event_iterator():
+        env = os.environ.copy()
+        env["PYTHONUNBUFFERED"] = "1"
+        try:
+            proc = subprocess.Popen(
+                cmd_list,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                text=True,
+                env=env,
+            )
+        except Exception as e:
+            yield {"event": "error", "data": f"스크립트 시작 실패: {e}"}
+            yield {"event": "done", "data": "end"}
+            return
+
+        start_ts = time.monotonic()
+        try:
+            assert proc.stdout is not None
+            # 시작 알림 한 줄
+            yield {"event": "log", "data": "요약 스크립트를 시작합니다…"}
+            for line in proc.stdout:
+                msg = (line or "").rstrip("\n")
+                if msg:
+                    yield {"event": "log", "data": msg}
+                # 타임아웃 체크
+                if (time.monotonic() - start_ts) > timeout_secs:
+                    try:
+                        proc.kill()
+                    except Exception:
+                        pass
+                    yield {"event": "error", "data": f"스크립트 실행 타임아웃({timeout_secs}s)"}
+                    yield {"event": "done", "data": "end"}
+                    return
+        finally:
+            try:
+                rc = proc.wait(timeout=5)
+            except Exception:
+                try:
+                    proc.kill()
+                except Exception:
+                    pass
+                rc = -1
+
+        if rc != 0:
+            yield {"event": "error", "data": f"스크립트 종료 코드: {rc}"}
+        yield {"event": "done", "data": "end"}
+
+    return EventSourceResponse(event_iterator(), media_type="text/event-stream")
 
 @app.get("/ask/stream")
 def ask_stream(q: str, cid: Optional[str] = None):

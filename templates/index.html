@@ -40,6 +40,11 @@
             <button type="button" id="hero-mode-ask" class="btn mode-btn primary">질문하기</button>
             <button type="button" id="hero-mode-summarize" class="btn mode-btn">요약하기</button>
           </div>
+          <!-- 실시간 요약 로그 패널 (메일 전송 시 노출) -->
+          <div id="summary-log" class="summary-log" style="display:none;">
+            <div class="summary-log-header"><strong>실시간 요약 로그</strong></div>
+            <pre id="summary-log-body" class="summary-log-body"></pre>
+          </div>
       </div>
     </section>
 
@@ -116,6 +121,11 @@
     const btnExportJSON = document.getElementById('export-json');
     const btnExportCSV = document.getElementById('export-csv');
     const btnClearNotes = document.getElementById('clear-notes');
+
+    // Summary log elements
+    const summaryLog = document.getElementById('summary-log');
+    const summaryLogBody = document.getElementById('summary-log-body');
+    let summaryEventSource = null;
 
     // Mode toggles
     let currentMode = 'ask'; // 'ask' | 'summarize'
@@ -619,26 +629,71 @@
           btn.disabled = true;
           btn.classList.add('loading');
           btn.textContent = '보내는 중…';
-          const res = await fetch('/send-summary-email', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ from_date: from, to_date: to, email })
-          });
-          if (!res.ok) {
-            let errText = '요청 실패';
-            try { const er = await res.json(); errText = er.detail || JSON.stringify(er); } catch (_) {}
-            alert(errText);
-            return;
+          // 로그 패널 초기화 및 노출
+          if (summaryLog && summaryLogBody) {
+            summaryLogBody.textContent = '';
+            summaryLog.style.display = '';
           }
-          const data = await res.json();
-          alert((data && data.message) ? data.message : '메일 전송 요청이 접수되었습니다.');
+          // 기존 스트림이 있다면 닫기
+          if (summaryEventSource) { try { summaryEventSource.close(); } catch (_) {} summaryEventSource = null; }
+          // SSE 연결 시작
+          let usingSSE = false;
+          try {
+            const url = new URL('/send-summary-email/stream', window.location.origin);
+            url.searchParams.set('from_date', from);
+            url.searchParams.set('to_date', to);
+            url.searchParams.set('email', email);
+            const es = new EventSource(url.toString());
+            summaryEventSource = es;
+            usingSSE = true;
+            es.addEventListener('log', (e) => {
+              const line = (e && e.data) ? e.data : '';
+              if (line) {
+                summaryLogBody.textContent += (summaryLogBody.textContent ? '\n' : '') + line;
+                summaryLogBody.scrollTop = summaryLogBody.scrollHeight;
+              }
+            });
+            es.addEventListener('error', (e) => {
+              const msg = (e && e.data) ? e.data : '알 수 없는 오류';
+              summaryLogBody.textContent += (summaryLogBody.textContent ? '\n' : '') + `[오류] ${msg}`;
+              summaryLogBody.scrollTop = summaryLogBody.scrollHeight;
+            });
+            es.addEventListener('done', () => {
+              es.close();
+              if (summaryEventSource === es) summaryEventSource = null;
+              statusEl.style.display = 'none';
+              // SSE 완료 시점에 버튼 상태 복구
+              btn.disabled = false;
+              btn.classList.remove('loading');
+              btn.textContent = prevText;
+            });
+          } catch (err) {
+            // SSE 연결 실패 시 폴백: 기존 API 호출
+            if (summaryLogBody) summaryLogBody.textContent += (summaryLogBody.textContent ? '\n' : '') + `[오류] 스트리밍 연결 실패: ${(err && err.message) || err}`;
+            const res = await fetch('/send-summary-email', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ from_date: from, to_date: to, email })
+            });
+            if (!res.ok) {
+              let errText = '요청 실패';
+              try { const er = await res.json(); errText = er.detail || JSON.stringify(er); } catch (_) {}
+              alert(errText);
+              return;
+            }
+            const data = await res.json();
+            alert((data && data.message) ? data.message : '메일 전송 요청이 접수되었습니다.');
+          }
         } catch (err) {
           alert(`오류: ${(err && err.message) || err}`);
         } finally {
-          statusEl.style.display = 'none';
-          btn.disabled = false;
-          btn.classList.remove('loading');
-          btn.textContent = prevText;
+          // 폴백(POST) 경로일 때만 즉시 해제, SSE는 'done'에서 해제
+          if (!summaryEventSource) {
+            statusEl.style.display = 'none';
+            btn.disabled = false;
+            btn.classList.remove('loading');
+            btn.textContent = prevText;
+          }
         }
       });
       if (heroBtn) heroBtn.addEventListener('click', async () => {
@@ -658,29 +713,76 @@
           heroBtn.disabled = true;
           heroBtn.classList.add('loading');
           heroBtn.textContent = '보내는 중…';
-          const res = await fetch('/send-summary-email', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ from_date: from, to_date: to, email })
-          });
-          if (!res.ok) {
-            let errText = '요청 실패';
-            try { const er = await res.json(); errText = er.detail || JSON.stringify(er); } catch (_) {}
-            alert(errText);
-            return;
+          // 로그 패널 초기화 및 노출
+          if (summaryLog && summaryLogBody) {
+            summaryLogBody.textContent = '';
+            summaryLog.style.display = '';
           }
-          const data = await res.json();
-          alert((data && data.message) ? data.message : '메일 전송 요청이 접수되었습니다.');
+          // 기존 스트림 종료
+          if (summaryEventSource) { try { summaryEventSource.close(); } catch (_) {} summaryEventSource = null; }
+          // SSE 연결
+          let usingSSE = false;
+          try {
+            const url = new URL('/send-summary-email/stream', window.location.origin);
+            url.searchParams.set('from_date', from);
+            url.searchParams.set('to_date', to);
+            url.searchParams.set('email', email);
+            const es = new EventSource(url.toString());
+            summaryEventSource = es;
+            usingSSE = true;
+            es.addEventListener('log', (e) => {
+              const line = (e && e.data) ? e.data : '';
+              if (line) {
+                summaryLogBody.textContent += (summaryLogBody.textContent ? '\n' : '') + line;
+                summaryLogBody.scrollTop = summaryLogBody.scrollHeight;
+              }
+            });
+            es.addEventListener('error', (e) => {
+              const msg = (e && e.data) ? e.data : '알 수 없는 오류';
+              summaryLogBody.textContent += (summaryLogBody.textContent ? '\n' : '') + `[오류] ${msg}`;
+              summaryLogBody.scrollTop = summaryLogBody.scrollHeight;
+            });
+            es.addEventListener('done', () => {
+              es.close();
+              if (summaryEventSource === es) summaryEventSource = null;
+              statusEl.style.display = 'none';
+              // SSE 완료 시점에 버튼 상태 복구
+              heroBtn.disabled = false;
+              heroBtn.classList.remove('loading');
+              heroBtn.textContent = prevText;
+            });
+          } catch (err) {
+            // 폴백: 기존 API 호출
+            if (summaryLogBody) summaryLogBody.textContent += (summaryLogBody.textContent ? '\n' : '') + `[오류] 스트리밍 연결 실패: ${(err && err.message) || err}`;
+            const res = await fetch('/send-summary-email', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ from_date: from, to_date: to, email })
+            });
+            if (!res.ok) {
+              let errText = '요청 실패';
+              try { const er = await res.json(); errText = er.detail || JSON.stringify(er); } catch (_) {}
+              alert(errText);
+              return;
+            }
+            const data = await res.json();
+            alert((data && data.message) ? data.message : '메일 전송 요청이 접수되었습니다.');
+          }
         } catch (err) {
           alert(`오류: ${(err && err.message) || err}`);
         } finally {
-          statusEl.style.display = 'none';
-          heroBtn.disabled = false;
-          heroBtn.classList.remove('loading');
-          heroBtn.textContent = prevText;
+          // 폴백(POST) 경로일 때만 즉시 해제, SSE는 'done'에서 해제
+          if (!summaryEventSource) {
+            statusEl.style.display = 'none';
+            heroBtn.disabled = false;
+            heroBtn.classList.remove('loading');
+            heroBtn.textContent = prevText;
+          }
         }
       });
     })();
+
+
 
     // Notes toolbar events
     notesSearch.addEventListener('input', () => NotesUI.render());
