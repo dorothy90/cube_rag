@@ -235,6 +235,65 @@ main.container { max-width: 1200px; }
   padding: 0 16px;
 }
 
+/* Mindmap overrides */
+.mindmap-wrap {
+  background: var(--panel);
+}
+.mindmap-svg .link { opacity: 0.9; }
+.mindmap-svg .node text { fill: var(--text); }
+.mindmap-svg .node.root circle { stroke: #fff; stroke-width: 1.5px; }
+.mindmap-svg .node.parent circle { opacity: 0.95; }
+.mindmap-svg .node.leaf circle { opacity: 0.95; }
+
+/* Mindmap messages panel */
+/* Mindmap grid (left: map, right: chat) */
+.mindmap-grid {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 14px;
+}
+.mindmap-left { min-height: 70vh; }
+.mindmap-right { min-height: 70vh; }
+
+/* Messages panel as chat */
+.messages-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+.messages-header {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+}
+.messages-header h3 { margin: 0; font-size: 1rem; }
+.chat-messages {
+  flex: 1;
+  padding: 12px;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.chat-row { display: flex; }
+.chat-row .bubble {
+  max-width: 86%;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--assistant-bubble);
+  white-space: pre-wrap;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+.chat-row .meta {
+  color: var(--muted);
+  font-size: 0.8rem;
+  margin-bottom: 4px;
+}
+
 /* Hero input */
 .hero {
   min-height: 42vh;

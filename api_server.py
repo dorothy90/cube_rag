@@ -1,11 +1,12 @@
 import os
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, List, Tuple
 from datetime import datetime
 
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from fastapi import Query
 from pydantic import BaseModel
 
 from agent_orchestrator import AgentOrchestrator
@@ -28,6 +29,7 @@ from urllib.parse import urlparse
 import subprocess
 import shlex
 import time
+from pathlib import Path
 
 
 class AskRequest(BaseModel):
@@ -202,7 +204,205 @@ def _normalize_domain_text(text: Optional[str]) -> Optional[str]:
     return None
 
 
- 
+def _find_latest_analysis_file() -> Optional[str]:
+    """analysis_results 디렉토리에서 가장 최신 분석 결과 파일 경로를 반환한다.
+
+    파일 네이밍 규칙: analysis_result_*.json
+    """
+    try:
+        base = os.path.abspath("analysis_results")
+        if not os.path.isdir(base):
+            return None
+        files = [
+            os.path.join(base, f)
+            for f in os.listdir(base)
+            if f.startswith("analysis_result_") and f.endswith(".json")
+        ]
+        files = [p for p in files if os.path.isfile(p)]
+        if not files:
+            return None
+        files.sort(key=lambda p: os.path.getmtime(p), reverse=True)
+        return files[0]
+    except Exception:
+        return None
+
+
+def _build_mindmap_from_analysis(analysis: Dict[str, Any]) -> Dict[str, Any]:
+    """analysis JSON에서 mindmap용 트리 데이터를 생성한다.
+
+    출력 스키마 (D3 tree 호환):
+    { name: str, children: [ { name: str, children: [ { name: str }, ... ] }, ... ] }
+    """
+    topics = analysis.get("topics") or []
+    children = []
+    for t_idx, t in enumerate(topics):
+        t_name = (t or {}).get("topic_name") or "(무제)"
+        sub_children = []
+        merged = (t or {}).get("merged_subtopics") or []
+        for m in merged:
+            idx = (m or {}).get("subtopic_index")
+            st_name = (m or {}).get("topic_name") or "(하위주제)"
+            # 노드 이름에 인덱스 표시
+            label = f"(#" + str(idx) + ") " + st_name if idx is not None else st_name
+            sub_children.append({
+                "name": label,
+                "meta": {
+                    "topic_index": t_idx,
+                    "subtopic_index": idx,
+                    "summary": (m or {}).get("summary"),
+                    "message_count": (m or {}).get("message_count"),
+                    "keywords": (m or {}).get("keywords") or [],
+                },
+            })
+        children.append({
+            "name": t_name,
+            "meta": {
+                "topic_index": t_idx,
+                "summary": (t or {}).get("summary"),
+                "message_count": (t or {}).get("message_count"),
+                "keywords": (t or {}).get("keywords") or [],
+            },
+            "children": sub_children,
+        })
+    return {"name": "주제 맵", "children": children}
+
+
+def _extract_time_minutes_prefix(text: Optional[str]) -> Optional[int]:
+    """문장 앞의 'H:MM' 또는 'HH:MM' 형태 시간을 분 단위로 변환.
+    발견 못하면 None.
+    """
+    try:
+        s = (text or "").strip()
+        if not s:
+            return None
+        # 앞쪽 토큰에서 시:분 패턴 추출
+        import re
+        m = re.match(r"^(\d{1,2}):(\d{2})\b", s)
+        if not m:
+            return None
+        h = int(m.group(1))
+        mm = int(m.group(2))
+        if h < 0 or h > 23 or mm < 0 or mm > 59:
+            return None
+        return h * 60 + mm
+    except Exception:
+        return None
+
+
+def _resolve_subtopic_messages(topic: Dict[str, Any], subtopic_index: int) -> Tuple[str, List[Dict[str, Any]]]:
+    """토픽 객체에서 특정 subtopic_index에 해당하는 메시지들을 찾아 시간순으로 정렬해 반환한다.
+
+    반환: (subtopic_name, messages[...])
+    메시지 원소 스키마: { message_id, content, reaction_count, content_length }
+    """
+    merged = (topic or {}).get("merged_subtopics") or []
+    target = None
+    for m in merged:
+        if (m or {}).get("subtopic_index") == subtopic_index:
+            target = m
+            break
+    if target is None:
+        return ("", [])
+    subtopic_name = (target or {}).get("topic_name") or ""
+    ids = ((target or {}).get("related_message_ids") or [])
+    ids_set = set([str(x) for x in ids])
+
+    # 토픽 레벨의 all_related_messages에서 상세 메시지 찾기
+    pool = (topic or {}).get("all_related_messages") or []
+    by_id = {}
+    for it in pool:
+        mid = str((it or {}).get("message_id"))
+        by_id[mid] = {
+            "message_id": mid,
+            "content": (it or {}).get("content"),
+            "reaction_count": (it or {}).get("reaction_count"),
+            "content_length": (it or {}).get("content_length"),
+        }
+
+    items = [by_id[mid] for mid in ids if str(mid) in by_id]
+
+    # 시간 파싱 정렬 (실패 시 기존 순서 유지)
+    def sort_key(x):
+        t = _extract_time_minutes_prefix(x.get("content"))
+        return (9999 if t is None else t, x.get("message_id"))
+
+    items_sorted = sorted(items, key=sort_key)
+    return (subtopic_name, items_sorted)
+
+
+@app.get("/mindmap", response_class=HTMLResponse)
+def mindmap_page(request: Request):
+    return templates.TemplateResponse("mindmap.html", {"request": request})
+
+
+@app.get("/api/mindmap-data")
+def mindmap_data(file: Optional[str] = Query(default=None, description="분석 결과 JSON 파일 경로(선택)")) -> Dict[str, Any]:
+    try:
+        target_path = None
+        if file:
+            abs_path = os.path.abspath(file)
+            if not os.path.isfile(abs_path):
+                raise HTTPException(status_code=404, detail=f"파일을 찾을 수 없습니다: {abs_path}")
+            target_path = abs_path
+        else:
+            latest = _find_latest_analysis_file()
+            if not latest:
+                raise HTTPException(status_code=404, detail="analysis_results 폴더에서 분석 파일을 찾을 수 없습니다.")
+            target_path = latest
+
+        with open(target_path, "r", encoding="utf-8") as f:
+            analysis = json.load(f)
+        tree = _build_mindmap_from_analysis(analysis)
+        return {"ok": True, "file": target_path, "tree": tree}
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/api/mindmap-messages")
+def mindmap_messages(
+    topic_index: int = Query(..., description="부모 토픽 인덱스 (0-base)"),
+    subtopic_index: int = Query(..., description="소주제 subtopic_index"),
+    file: Optional[str] = Query(default=None, description="분석 결과 JSON 파일 경로(선택)"),
+) -> Dict[str, Any]:
+    try:
+        # 파일 결정
+        if file:
+            target_path = os.path.abspath(file)
+            if not os.path.isfile(target_path):
+                raise HTTPException(status_code=404, detail=f"파일을 찾을 수 없습니다: {target_path}")
+        else:
+            target_path = _find_latest_analysis_file()
+            if not target_path:
+                raise HTTPException(status_code=404, detail="analysis_results 폴더에서 분석 파일을 찾을 수 없습니다.")
+
+        with open(target_path, "r", encoding="utf-8") as f:
+            analysis = json.load(f)
+
+        topics = analysis.get("topics") or []
+        if topic_index < 0 or topic_index >= len(topics):
+            raise HTTPException(status_code=400, detail="topic_index 범위 오류")
+        topic = topics[topic_index]
+        subtopic_name, msgs = _resolve_subtopic_messages(topic, subtopic_index)
+        return {
+            "ok": True,
+            "file": target_path,
+            "topic": {
+                "index": topic_index,
+                "name": (topic or {}).get("topic_name") or "",
+            },
+            "subtopic": {
+                "index": subtopic_index,
+                "name": subtopic_name,
+            },
+            "messages": msgs,
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 
 
 @app.get("/", response_class=HTMLResponse)

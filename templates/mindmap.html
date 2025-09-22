@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mindmap | Cube LLM</title>
+  <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@2.0.6/css/pico.min.css" />
+  <link rel="stylesheet" href="/static/styles.css" />
+  <style>
+    .mindmap-wrap { height: 80vh; margin: 1rem 0; border: 1px solid var(--muted-border-color, #ddd); border-radius: 8px; position: relative; }
+    .mindmap-toolbar { display: flex; gap: .5rem; align-items: center; }
+    .mindmap-tooltip { position: absolute; pointer-events: none; background: rgba(0,0,0,.75); color: #fff; padding: .4rem .6rem; font-size: .85rem; border-radius: 4px; display: none; z-index: 10; }
+    .mindmap-legend { font-size: .85rem; color: #666; }
+    .mindmap-svg { width: 100%; height: 100%; }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">Cube LLM</div>
+    <nav>
+      <a href="/" class="btn">홈</a>
+      <a href="/mindmap" class="btn primary">마인드맵</a>
+    </nav>
+  </header>
+  <main class="container">
+    <h2>토픽 마인드맵</h2>
+    <p class="mindmap-legend">analysis_results의 최신 JSON을 기반으로 부모-자식 토픽 구조를 시각화합니다.</p>
+    <section class="mindmap-toolbar">
+      <input id="file-input" type="text" placeholder="특정 JSON 경로 (선택)" style="flex:1;" />
+      <button id="btn-load" class="btn primary" type="button">불러오기</button>
+      <button id="btn-reset" class="btn" type="button">초기화</button>
+    </section>
+    <div class="mindmap-grid">
+      <section class="mindmap-left">
+        <div class="mindmap-wrap">
+          <svg id="mindmap" class="mindmap-svg"></svg>
+          <div id="tooltip" class="mindmap-tooltip"></div>
+        </div>
+      </section>
+      <aside class="mindmap-right">
+        <section id="messages-panel" class="messages-panel" style="display:none;">
+          <header class="messages-header">
+            <h3 id="messages-title">관련 메시지</h3>
+          </header>
+          <div id="messages-list" class="chat-messages"></div>
+        </section>
+      </aside>
+    </div>
+  </main>
+
+  <script src="https://unpkg.com/d3@7"></script>
+  <script src="/static/mindmap.js"></script>
+</body>
+</html>
+
+
