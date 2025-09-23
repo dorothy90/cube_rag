@@ -80,3 +80,7 @@ analysis_results/analysis_stats_20250922_225746.txt
 analysis_results/analysis_stats_20250922_231029.txt
 analysis_results/analysis_result_20250923_232110.json
 .gitignore
+analysis_results/analysis_result_20250923_235417.json
+.gitignore
+analysis_results/analysis_stats_20250923_235417.txt
+templates/index.html.tmp
