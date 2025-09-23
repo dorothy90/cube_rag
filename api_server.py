@@ -780,11 +780,29 @@ def ask_stream(q: str, cid: Optional[str] = None):
             if domain not in ("python", "sql", "semiconductor") or dom_conf < dom_thr:
                 clarify_msg = "이 질문은 Python, SQL, 반도체 중 어떤 도메인과 가장 관련이 있나요? (예: '파이썬' 또는 'SQL' 또는 '반도체')"
 
+                # 도메인 모호 + 맥락 부족 시, 두 요청을 한 번에 안내
+                combined_msg = clarify_msg
+                if getattr(analysis, "context_needed", False):
+                    try:
+                        from context_handler_agent import ContextHandlerAgent  # 지연 임포트
+                        ctx_agent_pre = ContextHandlerAgent()
+                        decision_tmp = ctx_agent_pre.handle_context_needed(analysis, question)
+                        extra = ctx_agent_pre.generate_context_request_message(decision_tmp, analysis)
+                        example = (
+                            "\n\n예시로 이렇게 구체화해 주세요:\n"
+                            "- 도메인: (파이썬/SQL/반도체 중 선택)\n"
+                            "- 현재 상황/목표: 무엇을 하고 싶은가요?\n"
+                            "- 관련 코드/에러/버전: 가능한 한 간단히\n"
+                        )
+                        combined_msg = f"{clarify_msg}\n\n{extra}{example}"
+                    except Exception:
+                        pass
+
                 def event_iterator_clarify():
-                    yield {"event": "token", "data": clarify_msg}
+                    yield {"event": "token", "data": combined_msg}
                     # propagate cid if given or allocate new
                     saved_cid = _append_turn(cid, "user", question)
-                    _append_turn(saved_cid, "assistant", clarify_msg)
+                    _append_turn(saved_cid, "assistant", combined_msg)
                     # 다음 턴에서 도메인 선택을 받기 위해 원 질문 보관
                     pending_map[saved_cid] = question
                     yield {"event": "cid", "data": saved_cid}
@@ -799,11 +817,27 @@ def ask_stream(q: str, cid: Optional[str] = None):
                 selected_domain = last_domain
             else:
                 clarify_msg = "이 질문은 Python, SQL, 반도체 중 어떤 도메인과 가장 관련이 있나요?"
+                combined_msg2 = clarify_msg
+                if getattr(analysis, "context_needed", False):
+                    try:
+                        from context_handler_agent import ContextHandlerAgent  # 지연 임포트
+                        ctx_agent_pre2 = ContextHandlerAgent()
+                        decision_tmp2 = ctx_agent_pre2.handle_context_needed(analysis, question)
+                        extra2 = ctx_agent_pre2.generate_context_request_message(decision_tmp2, analysis)
+                        example2 = (
+                            "\n\n예시로 이렇게 구체화해 주세요:\n"
+                            "- 도메인: (파이썬/SQL/반도체 중 선택)\n"
+                            "- 현재 상황/목표: 무엇을 하고 싶은가요?\n"
+                            "- 관련 코드/에러/버전: 가능한 한 간단히\n"
+                        )
+                        combined_msg2 = f"{clarify_msg}\n\n{extra2}{example2}"
+                    except Exception:
+                        pass
 
                 def event_iterator_clarify2():
-                    yield {"event": "token", "data": clarify_msg}
+                    yield {"event": "token", "data": combined_msg2}
                     saved_cid = _append_turn(cid, "user", question)
-                    _append_turn(saved_cid, "assistant", clarify_msg)
+                    _append_turn(saved_cid, "assistant", combined_msg2)
                     # 다음 턴에서 도메인 선택을 받기 위해 원 질문 보관
                     pending_map[saved_cid] = question
                     yield {"event": "cid", "data": saved_cid}
@@ -812,6 +846,33 @@ def ask_stream(q: str, cid: Optional[str] = None):
                 return EventSourceResponse(event_iterator_clarify2(), media_type="text/event-stream")
 
     collection_name = _map_collection(selected_domain)
+
+    # 추가 맥락 필요 여부 판단 및 요청 흐름 (오케스트레이터와 동일 기준)
+    # streaming 경로에서도 QueryAnalyzer 결과의 context_needed를 바로 반영
+    if getattr(analysis, "context_needed", False):
+        from context_handler_agent import ContextHandlerAgent  # 지연 임포트
+        ctx_agent = ContextHandlerAgent()
+        decision = ctx_agent.handle_context_needed(analysis, question)
+        answer_msg = None
+        try:
+            if (getattr(decision, "action", "") or "") == "request_context":
+                answer_msg = ctx_agent.generate_context_request_message(decision, analysis)
+        except Exception:
+            answer_msg = None
+
+        if answer_msg:
+            def event_iterator_ctx():
+                # 사용자에게 맥락 요청 메시지를 스트리밍으로 전송
+                yield {"event": "token", "data": answer_msg}
+                # 히스토리와 도메인 메모리 업데이트
+                saved_cid = _append_turn(cid, "user", question)
+                _append_turn(saved_cid, "assistant", answer_msg)
+                if selected_domain in ("python", "sql", "semiconductor"):
+                    domain_memory[saved_cid] = selected_domain
+                yield {"event": "cid", "data": saved_cid}
+                yield {"event": "done", "data": "end"}
+
+            return EventSourceResponse(event_iterator_ctx(), media_type="text/event-stream")
 
     # Retrieval (vector DB) with selected collection
     hits = retrieve(question, collection_name=collection_name)

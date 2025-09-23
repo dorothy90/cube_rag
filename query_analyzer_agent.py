@@ -78,6 +78,11 @@ class QueryAnalyzerAgent:
 - context_needed: 추가 정보가 필요한지 여부
 - domain: 질문이 가장 관련 있는 도메인 분류
 - domain_confidence: 0.0~1.0 사이 신뢰도 (모호하면 낮게)
+
+추가 규칙(도메인 매핑, 강한 힌트):
+- 질문에 'agile ipa' 또는 'datalake'가 포함되면 domain은 'sql'로 설정하고 domain_confidence는 0.9 이상으로 설정하세요.
+- 질문에 'syld' 또는 'nand' 또는 'dram'이 포함되면 domain은 'semiconductor'로 설정하고 domain_confidence는 0.9 이상으로 설정하세요.
+- 위 규칙은 다른 신호보다 우선 적용하며, 키워드는 대소문자 구분 없이 포함 여부(부분 일치)로 판단하세요.
 """
         
         try:

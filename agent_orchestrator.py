@@ -50,11 +50,26 @@ class AgentOrchestrator:
         if is_new_chat:
             if domain not in ("python", "sql", "semiconductor") or dom_conf < dom_thr:
                 clarify_msg = "이 질문은 Python, SQL, 반도체 중 어떤 도메인과 가장 관련이 있나요? (예: '파이썬' 또는 'SQL' 또는 '반도체')"
+                # 도메인도 모호하고 맥락도 부족한 경우, 두 요청을 한 번에 안내
+                combined_msg = clarify_msg
+                if getattr(analysis, "context_needed", False):
+                    try:
+                        decision_tmp = self.context_agent.handle_context_needed(analysis, question)
+                        extra = self.context_agent.generate_context_request_message(decision_tmp, analysis)
+                        example = (
+                            "\n\n예시로 이렇게 구체화해 주세요:\n"
+                            "- 도메인: (파이썬/SQL/반도체 중 선택)\n"
+                            "- 현재 상황/목표: 무엇을 하고 싶은가요?\n"
+                            "- 관련 코드/에러/버전: 가능한 한 간단히\n"
+                        )
+                        combined_msg = f"{clarify_msg}\n\n{extra}{example}"
+                    except Exception:
+                        pass
                 return {
                     "stage": "clarify_domain",
                     "analysis": analysis,
                     "decision": None,
-                    "answer": clarify_msg,
+                    "answer": combined_msg,
                     "selected_domain": None,
                 }
             selected_domain = domain
@@ -66,11 +81,25 @@ class AgentOrchestrator:
                 selected_domain = last_domain
             else:
                 clarify_msg = "이 질문은 Python, SQL, 반도체 중 어떤 도메인과 가장 관련이 있나요?"
+                combined_msg = clarify_msg
+                if getattr(analysis, "context_needed", False):
+                    try:
+                        decision_tmp = self.context_agent.handle_context_needed(analysis, question)
+                        extra = self.context_agent.generate_context_request_message(decision_tmp, analysis)
+                        example = (
+                            "\n\n예시로 이렇게 구체화해 주세요:\n"
+                            "- 도메인: (파이썬/SQL/반도체 중 선택)\n"
+                            "- 현재 상황/목표: 무엇을 하고 싶은가요?\n"
+                            "- 관련 코드/에러/버전: 가능한 한 간단히\n"
+                        )
+                        combined_msg = f"{clarify_msg}\n\n{extra}{example}"
+                    except Exception:
+                        pass
                 return {
                     "stage": "clarify_domain",
                     "analysis": analysis,
                     "decision": None,
-                    "answer": clarify_msg,
+                    "answer": combined_msg,
                     "selected_domain": None,
                 }
 
@@ -78,10 +107,19 @@ class AgentOrchestrator:
         # 2) 추가 맥락 필요 여부에 따라 분기
         if analysis.context_needed:
             decision = self.context_agent.handle_context_needed(analysis, question)
+            # 요청 맥락이 필요한 경우, 사용자에게 보낼 안내 메시지를 즉시 반환
+            answer_msg = None
+            try:
+                if (getattr(decision, "action", "") or "") == "request_context":
+                    answer_msg = self.context_agent.generate_context_request_message(decision, analysis)
+            except Exception:
+                answer_msg = None
+
             return {
-                "stage": "context_handling",
+                "stage": ("request_context" if answer_msg else "context_handling"),
                 "analysis": analysis,
                 "decision": decision,
+                "answer": answer_msg,
                 "selected_domain": selected_domain,
             }
         else:

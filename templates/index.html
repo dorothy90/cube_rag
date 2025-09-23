@@ -34,6 +34,8 @@
               <button id="hero-s-send-email" class="btn" type="button">메일보내기</button>
             </div>
           </div>
+      <!-- Enter 키 암시적 제출을 보장하기 위한 숨김 제출 버튼 -->
+      <button type="submit" style="display:none" aria-hidden="true"></button>
         </form>
           <!-- 모드 전환: 질문하기 / 요약하기 -->
           <div class="mode-toggle" id="hero-mode-toggle">
@@ -57,7 +59,7 @@
         <form id="composer" class="composer">
           <!-- 채팅 영역 내 모드 전환 -->
           <div class="container-narrow">
-            <div class="mode-toggle" id="composer-mode-toggle">
+            <div class="mode-toggle" id="composer-mode-toggle" style="display:none;">
               <button type="button" id="composer-mode-ask" class="btn mode-btn primary">질문하기</button>
               <button type="button" id="composer-mode-summarize" class="btn mode-btn">요약하기</button>
             </div>
@@ -67,14 +69,7 @@
             <input id="composer-input" class="composer-input" type="text" placeholder="메시지를 입력하세요" />
             <button class="btn primary" type="submit">보내기</button>
           </div>
-          <!-- 요약 모드 입력 -->
-          <div class="container-narrow composer-wrap summarize" id="composer-summarize-wrap" style="display:none;">
-            <input id="comp-s-from" type="date" class="composer-input" aria-label="from 날짜" />
-            <input id="comp-s-to" type="date" class="composer-input" aria-label="to 날짜" />
-            <input id="comp-s-email" type="email" class="composer-input" placeholder="수신 이메일 주소" aria-label="이메일" />
-            <button id="comp-s-submit" class="btn primary" type="submit">요약 요청</button>
-            <button id="comp-s-send-email" class="btn" type="button">메일보내기</button>
-          </div>
+          <!-- 요약 모드 입력 (채팅 영역 제거) -->
           <div class="container-narrow"><span id="status" class="status" style="display:none;">요청 중…</span></div>
         </form>
       </section>
@@ -549,13 +544,11 @@
           alert('요약 요청: From/To 날짜와 이메일을 모두 입력해주세요.');
           return;
         }
-        // 화면 전환 후 채팅에 요청 요약 표시
-        hero.style.display = 'none';
-        workspace.style.display = 'grid';
-        const msg = `요약 요청: ${from} ~ ${to} -> ${email}`;
-        addMessage(msg, 'user');
-        lastUserText = msg;
-        submitSummarize({ from, to, email });
+        // 채팅 화면 전환 없이 히어로 섹션의 메일 전송 버튼을 트리거
+        const heroSendBtn = document.getElementById('hero-s-send-email');
+        if (heroSendBtn) {
+          heroSendBtn.click();
+        }
       }
     });
 
@@ -569,20 +562,7 @@
         composerInput.value = '';
         ask(q);
       } else {
-        const fromEl = document.getElementById('comp-s-from');
-        const toEl = document.getElementById('comp-s-to');
-        const emailEl = document.getElementById('comp-s-email');
-        const from = fromEl && fromEl.value ? String(fromEl.value) : '';
-        const to = toEl && toEl.value ? String(toEl.value) : '';
-        const email = emailEl && emailEl.value ? String(emailEl.value).trim() : '';
-        if (!from || !to || !email) {
-          alert('요약 요청: From/To 날짜와 이메일을 모두 입력해주세요.');
-          return;
-        }
-        const msg = `요약 요청: ${from} ~ ${to} -> ${email}`;
-        addMessage(msg, 'user');
-        lastUserText = msg;
-        submitSummarize({ from, to, email });
+        alert('요약하기는 메인 화면에서만 가능합니다. 상단 요약 섹션을 이용해주세요.');
       }
     });
 
