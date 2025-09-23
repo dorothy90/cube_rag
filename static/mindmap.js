@@ -1,9 +1,10 @@
 (function() {
   const svg = document.getElementById('mindmap');
   const tooltip = document.getElementById('tooltip');
-  const btnLoad = document.getElementById('btn-load');
-  const btnReset = document.getElementById('btn-reset');
-  const fileInput = document.getElementById('file-input');
+  // 수동 입력 UI 제거: 버튼/입력 대신 URL 쿼리의 file만 사용
+  const btnLoad = null;
+  const btnReset = null;
+  const fileInput = null;
 
   const d3sel = d3.select(svg);
   const width = () => svg.clientWidth || 800;
@@ -20,7 +21,13 @@
   }
 
   async function fetchData() {
-    const file = (fileInput && fileInput.value && fileInput.value.trim()) ? fileInput.value.trim() : null;
+    // URL 쿼리에서 file만 수용
+    let file = null;
+    try {
+      const params = new URLSearchParams(window.location.search || '');
+      const qFile = params.get('file');
+      if (qFile) file = qFile;
+    } catch (e) {}
     const url = new URL('/api/mindmap-data', window.location.origin);
     if (file) url.searchParams.set('file', file);
     const res = await fetch(url.toString());
@@ -124,7 +131,12 @@
 
   async function loadMessages(topicIndex, subtopicIndex) {
     if (typeof topicIndex !== 'number') return;
-    const file = (fileInput && fileInput.value && fileInput.value.trim()) ? fileInput.value.trim() : null;
+    let file = null;
+    try {
+      const params = new URLSearchParams(window.location.search || '');
+      const qFile = params.get('file');
+      if (qFile) file = qFile;
+    } catch (e) {}
     const url = new URL('/api/mindmap-messages', window.location.origin);
     url.searchParams.set('topic_index', String(topicIndex));
     url.searchParams.set('subtopic_index', String(subtopicIndex));
@@ -161,13 +173,8 @@
     panel.style.display = '';
   }
 
-  btnLoad && btnLoad.addEventListener('click', () => load());
-  btnReset && btnReset.addEventListener('click', () => {
-    if (fileInput) fileInput.value = '';
-    load();
-  });
+  // 수동 버튼 제거됨
 
-  // 초기 로드
   load();
 })();
 

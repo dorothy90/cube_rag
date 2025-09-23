@@ -46,6 +46,9 @@
           <div id="summary-log" class="summary-log" style="display:none;">
             <div class="summary-log-header"><strong>실시간 요약 로그</strong></div>
             <pre id="summary-log-body" class="summary-log-body"></pre>
+            <div id="summary-actions" style="display:none; margin-top:8px;">
+              <button id="btn-view-mindmap" class="btn" type="button">마인드맵 보기</button>
+            </div>
           </div>
       </div>
     </section>
@@ -120,7 +123,10 @@
     // Summary log elements
     const summaryLog = document.getElementById('summary-log');
     const summaryLogBody = document.getElementById('summary-log-body');
+    const summaryActions = document.getElementById('summary-actions');
+    const btnViewMindmap = document.getElementById('btn-view-mindmap');
     let summaryEventSource = null;
+    let lastMindmapFile = null; // 분석 결과 파일 경로
 
     // Mode toggles
     let currentMode = 'ask'; // 'ask' | 'summarize'
@@ -614,6 +620,9 @@
             summaryLogBody.textContent = '';
             summaryLog.style.display = '';
           }
+          // 마인드맵 버튼 초기화/숨김
+          if (summaryActions) summaryActions.style.display = 'none';
+          lastMindmapFile = null;
           // 기존 스트림이 있다면 닫기
           if (summaryEventSource) { try { summaryEventSource.close(); } catch (_) {} summaryEventSource = null; }
           // SSE 연결 시작
@@ -632,6 +641,15 @@
                 summaryLogBody.textContent += (summaryLogBody.textContent ? '\n' : '') + line;
                 summaryLogBody.scrollTop = summaryLogBody.scrollHeight;
               }
+              // 분석 결과 파일 경로 파싱
+              try {
+                const marker = '분석 결과 저장:';
+                const idx = line.indexOf(marker);
+                if (idx >= 0) {
+                  const rest = line.substring(idx + marker.length).trim();
+                  if (rest && rest.endsWith('.json')) lastMindmapFile = rest;
+                }
+              } catch (_) {}
             });
             es.addEventListener('error', (e) => {
               const msg = (e && e.data) ? e.data : '알 수 없는 오류';
@@ -646,6 +664,19 @@
               btn.disabled = false;
               btn.classList.remove('loading');
               btn.textContent = prevText;
+              // 마인드맵 버튼 노출
+              if (summaryActions) {
+                summaryActions.style.display = '';
+                if (btnViewMindmap) {
+                  btnViewMindmap.onclick = () => {
+                    const base = '/mindmap';
+                    const url = (lastMindmapFile && lastMindmapFile.endsWith('.json'))
+                      ? `${base}?file=${encodeURIComponent(lastMindmapFile)}`
+                      : base;
+                    window.location.href = url;
+                  };
+                }
+              }
             });
           } catch (err) {
             // SSE 연결 실패 시 폴백: 기존 API 호출
@@ -663,6 +694,13 @@
             }
             const data = await res.json();
             alert((data && data.message) ? data.message : '메일 전송 요청이 접수되었습니다.');
+            // 비스트리밍 경로에서는 최신 파일 자동 사용
+            if (summaryActions) {
+              summaryActions.style.display = '';
+              if (btnViewMindmap) {
+                btnViewMindmap.onclick = () => { window.location.href = '/mindmap'; };
+              }
+            }
           }
         } catch (err) {
           alert(`오류: ${(err && err.message) || err}`);
@@ -700,6 +738,9 @@
           }
           // 기존 스트림 종료
           if (summaryEventSource) { try { summaryEventSource.close(); } catch (_) {} summaryEventSource = null; }
+          // 마인드맵 버튼 초기화/숨김
+          if (summaryActions) summaryActions.style.display = 'none';
+          lastMindmapFile = null;
           // SSE 연결
           let usingSSE = false;
           try {
@@ -716,6 +757,15 @@
                 summaryLogBody.textContent += (summaryLogBody.textContent ? '\n' : '') + line;
                 summaryLogBody.scrollTop = summaryLogBody.scrollHeight;
               }
+              // 분석 결과 파일 경로 파싱
+              try {
+                const marker = '분석 결과 저장:';
+                const idx = line.indexOf(marker);
+                if (idx >= 0) {
+                  const rest = line.substring(idx + marker.length).trim();
+                  if (rest && rest.endsWith('.json')) lastMindmapFile = rest;
+                }
+              } catch (_) {}
             });
             es.addEventListener('error', (e) => {
               const msg = (e && e.data) ? e.data : '알 수 없는 오류';
@@ -730,6 +780,19 @@
               heroBtn.disabled = false;
               heroBtn.classList.remove('loading');
               heroBtn.textContent = prevText;
+              // 마인드맵 버튼 노출
+              if (summaryActions) {
+                summaryActions.style.display = '';
+                if (btnViewMindmap) {
+                  btnViewMindmap.onclick = () => {
+                    const base = '/mindmap';
+                    const url = (lastMindmapFile && lastMindmapFile.endsWith('.json'))
+                      ? `${base}?file=${encodeURIComponent(lastMindmapFile)}`
+                      : base;
+                    window.location.href = url;
+                  };
+                }
+              }
             });
           } catch (err) {
             // 폴백: 기존 API 호출
@@ -747,6 +810,13 @@
             }
             const data = await res.json();
             alert((data && data.message) ? data.message : '메일 전송 요청이 접수되었습니다.');
+            // 비스트리밍 경로에서는 최신 파일 자동 사용
+            if (summaryActions) {
+              summaryActions.style.display = '';
+              if (btnViewMindmap) {
+                btnViewMindmap.onclick = () => { window.location.href = '/mindmap'; };
+              }
+            }
           }
         } catch (err) {
           alert(`오류: ${(err && err.message) || err}`);
