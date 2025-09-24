@@ -620,4 +620,26 @@ window.addEventListener('storage', (e) => {
   if (existing) NotesStore.setCID(existing);
 })();
 
+// 새 채팅(new=1) 진입 시 클라이언트 상태 초기화
+(function resetOnNewChat() {
+  try {
+    const sp = new URLSearchParams(window.location.search);
+    if (sp.get('new') === '1') {
+      // 대화 식별자 초기화 -> 서버 측 도메인 메모리도 새로운 CID로 분리됨
+      sessionStorage.removeItem('conversation_id');
+      // UI 초기화
+      if (messages) messages.innerHTML = '';
+      if (hero) hero.style.display = '';
+      if (workspace) workspace.style.display = 'none';
+      if (summaryLogBody) summaryLogBody.textContent = '';
+      if (summaryLog) summaryLog.style.display = 'none';
+      if (summaryActions) summaryActions.style.display = 'none';
+      lastUserText = '';
+      currentSourcesMemo = [];
+      // 메모 패널도 현재 CID 기준으로 비어있는 상태 렌더
+      NotesStore.setCID('');
+    }
+  } catch (_) {}
+})();
+
 

@@ -431,8 +431,6 @@ def ask(req: AskRequest) -> AskResponse:
         last_domain = domain_memory.get(req.conversation_id or "")
         # 도메인 확인 대기 중인 원 질문 저장소
         pending_map: Dict[str, str] = conversation_store.setdefault("__pending_domain__", {})  # cid -> original question
-        # 대화별 재질문 1회 제한 플래그 저장소
-        followup_map: Dict[str, bool] = conversation_store.setdefault("__followup_asked__", {})  # cid -> True
         pending_q = pending_map.get(req.conversation_id or "")
 
         # 0) 직전 턴이 도메인 확인이었고, 이번 입력이 도메인 선택 응답이면 원 질문으로 이어서 답변
@@ -440,8 +438,7 @@ def ask(req: AskRequest) -> AskResponse:
             forced_domain = _normalize_domain_text(req.question)
             if forced_domain in ("python", "sql", "semiconductor"):
                 # 선택된 도메인을 메모리에 먼저 기록 (오케스트레이터는 last_domain을 활용)
-                # 재질문은 이미 수행되었으므로 allow_followup=False 로 진행
-                result = orchestrator.run(pending_q, history=history, last_domain=forced_domain, allow_followup=False)
+                result = orchestrator.run(pending_q, history=history, last_domain=forced_domain)
                 answer = result.get("answer") or ""
                 raw_internal = result.get("sources") or []
                 raw_web = result.get("web") or []
@@ -495,9 +492,7 @@ def ask(req: AskRequest) -> AskResponse:
                     selected_domain=selected_domain,
                 )
 
-        # 재질문 허용 여부 결정 (cid가 없으면 최초 질문이므로 허용)
-        allow_followup = not followup_map.get(req.conversation_id or "", False)
-        result = orchestrator.run(req.question, history=history, last_domain=last_domain, allow_followup=allow_followup)
+        result = orchestrator.run(req.question, history=history, last_domain=last_domain)
         answer = result.get("answer") or ""
         raw_internal = result.get("sources") or []
         raw_web = result.get("web") or []
@@ -529,11 +524,6 @@ def ask(req: AskRequest) -> AskResponse:
         # 도메인 확인 요청을 보낸 경우, 다음 턴의 선택을 대기하기 위해 원 질문을 보관
         if (stage == "clarify_domain") and req.question:
             pending_map[cid] = req.question
-            # 재질문 1회 제한 플래그 설정
-            followup_map[cid] = True
-        # 맥락 요청을 보낸 경우에도 플래그 설정
-        if stage == "request_context":
-            followup_map[cid] = True
         # 도메인 메모리 업데이트
         if selected_domain in ("python", "sql", "semiconductor"):
             domain_memory[cid] = selected_domain
@@ -745,7 +735,6 @@ def ask_stream(q: str, cid: Optional[str] = None):
     history = _get_history(cid)
     analyzer = QueryAnalyzerAgent()
     analysis = analyzer.analyze_query(question)
-    is_concept = (getattr(analysis, "question_type", "") or "") == "개념질문"
     try:
         dom_thr = float(os.getenv("DOMAIN_CONFIDENCE_THRESHOLD", "0.6"))
     except Exception:
@@ -767,9 +756,6 @@ def ask_stream(q: str, cid: Optional[str] = None):
     # pending domain selection store
     pending_map: Dict[str, str] = conversation_store.setdefault("__pending_domain__", {})
     pending_q = pending_map.get(cid or "")
-    # followup asked store (shared with /ask)
-    followup_map: Dict[str, bool] = conversation_store.setdefault("__followup_asked__", {})
-    followup_asked = followup_map.get(cid or "", False)
 
     # 사용자가 직전 턴의 도메인 확인에 응답한 경우 처리
     forced_domain = None
@@ -792,14 +778,7 @@ def ask_stream(q: str, cid: Optional[str] = None):
     else:
         if is_new_chat:
             if domain not in ("python", "sql", "semiconductor") or dom_conf < dom_thr:
-                if followup_asked:
-                    # 재질문 제한으로 도메인 확인 생략
-                    selected_domain = domain
-                elif is_concept:
-                    # 개념질문은 재질문 없이 진행
-                    selected_domain = domain
-                else:
-                    clarify_msg = "이 질문은 Python, SQL, 반도체 중 어떤 도메인과 가장 관련이 있나요? (예: '파이썬' 또는 'SQL' 또는 '반도체')"
+                clarify_msg = "이 질문은 Python, SQL, 반도체 중 어떤 도메인과 가장 관련이 있나요? (예: '파이썬' 또는 'SQL' 또는 '반도체')"
 
                 # 도메인 모호 + 맥락 부족 시, 두 요청을 한 번에 안내
                 combined_msg = clarify_msg
@@ -826,8 +805,6 @@ def ask_stream(q: str, cid: Optional[str] = None):
                     _append_turn(saved_cid, "assistant", combined_msg)
                     # 다음 턴에서 도메인 선택을 받기 위해 원 질문 보관
                     pending_map[saved_cid] = question
-                    # 재질문 플래그 설정
-                    followup_map[saved_cid] = True
                     yield {"event": "cid", "data": saved_cid}
                     yield {"event": "done", "data": "end"}
 
@@ -839,49 +816,40 @@ def ask_stream(q: str, cid: Optional[str] = None):
             elif last_domain in ("python", "sql", "semiconductor"):
                 selected_domain = last_domain
             else:
-                if followup_asked:
-                    # 재질문 제한으로 도메인 확인 생략
-                    selected_domain = domain or last_domain or "unknown"
-                elif is_concept:
-                    # 개념질문은 재질문 없이 진행
-                    selected_domain = domain or last_domain or "unknown"
-                else:
-                    clarify_msg = "이 질문은 Python, SQL, 반도체 중 어떤 도메인과 가장 관련이 있나요?"
-                    combined_msg2 = clarify_msg
-                    if getattr(analysis, "context_needed", False):
-                        try:
-                            from context_handler_agent import ContextHandlerAgent  # 지연 임포트
-                            ctx_agent_pre2 = ContextHandlerAgent()
-                            decision_tmp2 = ctx_agent_pre2.handle_context_needed(analysis, question)
-                            extra2 = ctx_agent_pre2.generate_context_request_message(decision_tmp2, analysis)
-                            example2 = (
-                                "\n\n예시로 이렇게 구체화해 주세요:\n"
-                                "- 도메인: (파이썬/SQL/반도체 중 선택)\n"
-                                "- 현재 상황/목표: 무엇을 하고 싶은가요?\n"
-                                "- 관련 코드/에러/버전: 가능한 한 간단히\n"
-                            )
-                            combined_msg2 = f"{clarify_msg}\n\n{extra2}{example2}"
-                        except Exception:
-                            pass
+                clarify_msg = "이 질문은 Python, SQL, 반도체 중 어떤 도메인과 가장 관련이 있나요?"
+                combined_msg2 = clarify_msg
+                if getattr(analysis, "context_needed", False):
+                    try:
+                        from context_handler_agent import ContextHandlerAgent  # 지연 임포트
+                        ctx_agent_pre2 = ContextHandlerAgent()
+                        decision_tmp2 = ctx_agent_pre2.handle_context_needed(analysis, question)
+                        extra2 = ctx_agent_pre2.generate_context_request_message(decision_tmp2, analysis)
+                        example2 = (
+                            "\n\n예시로 이렇게 구체화해 주세요:\n"
+                            "- 도메인: (파이썬/SQL/반도체 중 선택)\n"
+                            "- 현재 상황/목표: 무엇을 하고 싶은가요?\n"
+                            "- 관련 코드/에러/버전: 가능한 한 간단히\n"
+                        )
+                        combined_msg2 = f"{clarify_msg}\n\n{extra2}{example2}"
+                    except Exception:
+                        pass
 
-                    def event_iterator_clarify2():
-                        yield {"event": "token", "data": combined_msg2}
-                        saved_cid = _append_turn(cid, "user", question)
-                        _append_turn(saved_cid, "assistant", combined_msg2)
-                        # 다음 턴에서 도메인 선택을 받기 위해 원 질문 보관
-                        pending_map[saved_cid] = question
-                        # 재질문 플래그 설정
-                        followup_map[saved_cid] = True
-                        yield {"event": "cid", "data": saved_cid}
-                        yield {"event": "done", "data": "end"}
+                def event_iterator_clarify2():
+                    yield {"event": "token", "data": combined_msg2}
+                    saved_cid = _append_turn(cid, "user", question)
+                    _append_turn(saved_cid, "assistant", combined_msg2)
+                    # 다음 턴에서 도메인 선택을 받기 위해 원 질문 보관
+                    pending_map[saved_cid] = question
+                    yield {"event": "cid", "data": saved_cid}
+                    yield {"event": "done", "data": "end"}
 
-                    return EventSourceResponse(event_iterator_clarify2(), media_type="text/event-stream")
+                return EventSourceResponse(event_iterator_clarify2(), media_type="text/event-stream")
 
     collection_name = _map_collection(selected_domain)
 
     # 추가 맥락 필요 여부 판단 및 요청 흐름 (오케스트레이터와 동일 기준)
     # streaming 경로에서도 QueryAnalyzer 결과의 context_needed를 바로 반영
-    if getattr(analysis, "context_needed", False) and (not followup_asked) and (not is_concept):
+    if getattr(analysis, "context_needed", False):
         from context_handler_agent import ContextHandlerAgent  # 지연 임포트
         ctx_agent = ContextHandlerAgent()
         decision = ctx_agent.handle_context_needed(analysis, question)
@@ -901,8 +869,6 @@ def ask_stream(q: str, cid: Optional[str] = None):
                 _append_turn(saved_cid, "assistant", answer_msg)
                 if selected_domain in ("python", "sql", "semiconductor"):
                     domain_memory[saved_cid] = selected_domain
-                # 재질문 플래그 설정
-                followup_map[saved_cid] = True
                 yield {"event": "cid", "data": saved_cid}
                 yield {"event": "done", "data": "end"}
 

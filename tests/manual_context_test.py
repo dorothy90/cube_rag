@@ -50,7 +50,7 @@ def load_questions(args: argparse.Namespace) -> List[str]:
             print(f"[오류] 파일을 읽을 수 없습니다: {e}", file=sys.stderr)
             sys.exit(1)
     # 기본 샘플
-    return ["마진성 불량에 대해 알려주세요"]
+    return ["etch tilt 불량에 대해 알려주세요"]
 
 
 def run_tests(questions: List[str]) -> List[Dict[str, Any]]:
