@@ -106,6 +106,9 @@ def retrieve(
     if not isinstance(query, str) or not query.strip():
         raise ValueError("query는 비어있지 않은 문자열이어야 합니다.")
 
+    # 케이스 정규화: 검색 일관성을 위해 casefold 적용
+    query_norm = query.casefold()
+
     vs, cfg = get_retriever(
         top_k=top_k,
         score_threshold=score_threshold,
@@ -122,7 +125,7 @@ def retrieve(
 
     try:
         # 1) relevance score가 제공되면 그대로 사용 (0..1 유사도)
-        docs_with_scores = vs.similarity_search_with_relevance_scores(query, k=effective_k)
+        docs_with_scores = vs.similarity_search_with_relevance_scores(query_norm, k=effective_k)
         for doc, rel in docs_with_scores:
             score = None
             try:

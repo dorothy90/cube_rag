@@ -152,7 +152,8 @@ def index_questions(
             question = _extract_question_from_content(str((item or {}).get("content", ""))) or ""
         if not question:
             continue
-        texts.append(question)
+        embed_text = question.casefold()
+        texts.append(embed_text)
         metadatas.append(meta)
 
     total = len(texts)
