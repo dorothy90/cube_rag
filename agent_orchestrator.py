@@ -29,6 +29,24 @@ class AgentOrchestrator:
     def run(self, question: str, history: Optional[List[Dict[str, str]]] = None, last_domain: Optional[str] = None):
         # 1) 질문 분석
         analysis = self.query_agent.analyze_query(question)
+
+        # 1-a) 스몰톡/인사 등 일반대화는 도메인 확인/리트리벌 없이 즉답
+        try:
+            qt = (getattr(analysis, "question_type", "") or "").strip()
+        except Exception:
+            qt = ""
+        if qt in ("일반대화", "인사", "스몰톡", "잡담"):
+            gen = generate_answer(question, contexts=[], preface=None, sources=None, history=history, casual=True)
+            return {
+                "stage": "generation",
+                "analysis": analysis,
+                "decision": None,
+                "contexts": [],
+                "sources": [],
+                "answer": gen.get("answer"),
+                "web": [],
+                "selected_domain": None,
+            }
         # 도메인 결정 로직
         try:
             dom_thr = float(os.getenv("DOMAIN_CONFIDENCE_THRESHOLD", "0.6"))

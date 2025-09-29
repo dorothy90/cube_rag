@@ -15,6 +15,9 @@ import os
 from typing import List, Dict, Optional, Any, Tuple
 from datetime import datetime
 import time
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # LLM APIs
 try:
@@ -24,12 +27,7 @@ except ImportError:
     HAS_OPENAI = False
     print("⚠️ OpenAI API: pip install openai")
 
-try:
-    from anthropic import Anthropic
-    HAS_ANTHROPIC = True
-except ImportError:
-    HAS_ANTHROPIC = False
-    print("⚠️ Anthropic API: pip install anthropic")
+# Anthropic 제거
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -41,9 +39,7 @@ class DirectLLMSummarizer:
     def __init__(
         self,
         openai_api_key: Optional[str] = None,
-        anthropic_api_key: Optional[str] = None,
         default_provider: str = "openai",
-        max_retries: int = 3,
         request_delay: float = 1.0,
         max_tokens_per_request: int = 4000
     ):
@@ -52,20 +48,15 @@ class DirectLLMSummarizer:
         
         Args:
             openai_api_key: OpenAI API 키
-            anthropic_api_key: Anthropic API 키  
-            default_provider: 기본 LLM 제공자 ("openai" 또는 "anthropic")
-            max_retries: 최대 재시도 횟수
+            default_provider: 기본 LLM 제공자 ("openai")
             request_delay: 요청 간 대기 시간 (초)
             max_tokens_per_request: 요청당 최대 토큰 수
         """
         self.openai_client = None
-        self.anthropic_client = None
         self.default_provider = default_provider
-        self.max_retries = max_retries
         self.request_delay = request_delay
         self.max_tokens_per_request = max_tokens_per_request
-        self.embedding_cache = {}  # 임베딩 캐시
-        self.batch_embeddings = {}  # 배치 임베딩 저장소
+        # 간결화를 위해 캐시 구조 제거
         
         # 환경변수로부터 키 로드 (명시 인자 우선)
         openai_api_key = openai_api_key or os.getenv("OPENAI_API_KEY")
@@ -78,16 +69,8 @@ class DirectLLMSummarizer:
             except Exception as e:
                 logger.error(f"❌ OpenAI 클라이언트 초기화 실패: {e}")
         
-        # Anthropic 클라이언트 초기화  
-        if anthropic_api_key and HAS_ANTHROPIC:
-            try:
-                self.anthropic_client = Anthropic(api_key=anthropic_api_key)
-                logger.info("✅ Anthropic 클라이언트 초기화 완료")
-            except Exception as e:
-                logger.error(f"❌ Anthropic 클라이언트 초기화 실패: {e}")
-        
         # 사용 가능한 클라이언트 확인
-        if not self.openai_client and not self.anthropic_client:
+        if not self.openai_client:
             logger.warning("⚠️ LLM 클라이언트가 없습니다.")
     
     def summarize_messages_directly(
@@ -103,7 +86,7 @@ class DirectLLMSummarizer:
         
         Args:
             messages: 요약할 메시지 리스트 (각 메시지는 {'content': str, 'reaction_count': int, 'message_id': str} 형태)
-            llm_provider: LLM 제공자 ("openai", "anthropic", "auto")
+            llm_provider: LLM 제공자 ("openai", "auto")
             model: 사용할 모델명
             language: 결과 언어 ("korean", "english")
             max_topics: 최대 주제 수
@@ -273,8 +256,6 @@ class DirectLLMSummarizer:
         # LLM 호출
         if llm_provider == "openai" and self.openai_client:
             return self._call_openai_for_summary(prompt, model, chunk)
-        elif llm_provider == "anthropic" and self.anthropic_client:
-            return self._call_anthropic_for_summary(prompt, model, chunk)
         else:
             logger.error(f"LLM 제공자 '{llm_provider}'를 사용할 수 없습니다")
             return []
@@ -434,54 +415,7 @@ Topic summaries:"""
             logger.error(f"OpenAI API 호출 실패: {e}")
             return []
     
-    def _call_anthropic_for_summary(self, prompt: str, model: str = None, chunk: List[Dict[str, Any]] = None) -> List[Dict[str, str]]:
-        """Anthropic API 호출하여 요약 생성"""
-        try:
-            model = model or "claude-3-haiku-20240307"  # 빠르고 저렴한 모델
-            
-            response = self.anthropic_client.messages.create(
-                model=model,
-                max_tokens=2000,
-                temperature=0.3,
-                messages=[{"role": "user", "content": prompt}]
-            )
-            
-            content = response.content[0].text.strip()
-            
-            # 🔍 디버깅: LLM 원본 응답 로깅
-            logger.info(f"🔍 Anthropic 원본 응답: {content[:500]}...")
-            
-            # JSON 파싱
-            try:
-                if "```json" in content:
-                    content = content.split("```json")[1].split("```")[0]
-                elif "```" in content:
-                    content = content.split("```")[1]
-                
-                topics = json.loads(content.strip())
-                
-                # 🔍 디버깅: 파싱된 topics의 related_message_ids 확인
-                logger.info(f"🔍 파싱된 주제 개수: {len(topics) if isinstance(topics, list) else 'N/A'}")
-                if isinstance(topics, list):
-                    for i, topic in enumerate(topics):
-                        topic_name = topic.get('topic_name', 'Unknown')
-                        related_ids = topic.get('related_message_ids', [])
-                        logger.info(f"🔍 주제 {i+1} '{topic_name}': related_message_ids = {related_ids}")
-                
-                if isinstance(topics, list):
-                    # related_message_ids 검증 및 보완
-                    validated_topics = self._validate_and_fix_topics(topics, chunk)
-                    return validated_topics
-                else:
-                    return []
-                    
-            except json.JSONDecodeError as e:
-                logger.error(f"JSON 파싱 실패: {e}")
-                return []
-            
-        except Exception as e:
-            logger.error(f"Anthropic API 호출 실패: {e}")
-            return []
+    # Anthropic 호출 경로 제거됨
     
     def _consolidate_topics(
         self,
@@ -509,8 +443,6 @@ Topic summaries:"""
         
         if llm_provider == "openai" and self.openai_client:
             consolidated = self._call_openai_for_summary(consolidation_prompt, model)
-        elif llm_provider == "anthropic" and self.anthropic_client:
-            consolidated = self._call_anthropic_for_summary(consolidation_prompt, model)
         else:
             # Fallback: 단순 중복 제거
             consolidated = self._simple_deduplication(topics, max_topics)
@@ -833,52 +765,7 @@ Final {max_topics} topics:"""
         
         return result
     
-    def _calculate_keyword_score(self, message_content: str, keywords: List[str], topic_name: str) -> float:
-        """메시지와 주제 간의 키워드 매칭 점수를 계산 (개선된 버전)"""
-        content_lower = message_content.lower()
-        score = 0.0
-        matched_keywords = []
-        
-        # 키워드 매칭 점수 (완전 일치 우선)
-        for keyword in keywords:
-            keyword_lower = keyword.lower().strip()
-            if not keyword_lower:
-                continue
-                
-            if keyword_lower == content_lower:
-                score += 15.0  # 완전 일치 (가중치 증가)
-                matched_keywords.append(keyword)
-            elif f' {keyword_lower} ' in f' {content_lower} ':
-                score += 8.0   # 단어 단위 일치 (가중치 증가)
-                matched_keywords.append(keyword)
-            elif keyword_lower in content_lower:
-                score += 3.0   # 부분 일치
-                matched_keywords.append(keyword)
-        
-        # 주제명 단어 매칭 점수 (한글 2글자, 영문 3글자 이상)
-        topic_words = []
-        for word in topic_name.lower().split():
-            # 한글인지 영문인지 판단
-            if any('\uac00' <= char <= '\ud7a3' for char in word):
-                # 한글: 2글자 이상
-                if len(word) >= 2:
-                    topic_words.append(word)
-            else:
-                # 영문/숫자: 3글자 이상
-                if len(word) >= 3:
-                    topic_words.append(word)
-        
-        for word in topic_words:
-            if f' {word} ' in f' {content_lower} ':
-                score += 4.0   # 주제명 단어 단위 일치 (가중치 증가)
-            elif word in content_lower:
-                score += 1.5   # 주제명 부분 일치
-        
-        # 키워드 매칭 개수에 따른 보너스 점수
-        if len(matched_keywords) > 1:
-            score += len(matched_keywords) * 0.5
-        
-        return score
+    # 제거: _calculate_keyword_score (사용처 없음)
     
     
     def _assign_messages_by_ids(self, topics: List[Dict[str, Any]], message_id_map: Dict[str, Dict[str, Any]]) -> tuple[Dict[int, List[Dict[str, Any]]], set]:
@@ -1157,12 +1044,8 @@ Final {max_topics} topics:"""
         """최적 LLM 제공자 자동 선택"""
         if self.openai_client and self.default_provider == "openai":
             return "openai"
-        elif self.anthropic_client and self.default_provider == "anthropic":
-            return "anthropic"
         elif self.openai_client:
             return "openai"
-        elif self.anthropic_client:
-            return "anthropic"
         else:
             return "fallback"
     

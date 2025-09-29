@@ -735,6 +735,50 @@ def ask_stream(q: str, cid: Optional[str] = None):
     history = _get_history(cid)
     analyzer = QueryAnalyzerAgent()
     analysis = analyzer.analyze_query(question)
+
+    # 스몰톡/인사 등 일반대화는 도메인 확인/리트리벌 없이 즉답 스트리밍
+    try:
+        qt = (getattr(analysis, "question_type", "") or "").strip()
+    except Exception:
+        qt = ""
+    if qt in ("일반대화", "인사", "스몰톡", "잡담"):
+        def event_iterator_smalltalk():
+            # casual 모드로 자연스러운 응답을 스트리밍
+            try:
+                model_name = os.getenv("OPENAI_MODEL_NAME") or "gpt-4o-mini"
+                model = ChatOpenAI(model=model_name, temperature=0.2)
+                casual_system = """
+당신은 친근하고 자연스럽게 대화하는 한국어 어시스턴트입니다.
+규칙:
+- 인사/스몰톡에는 짧고 자연스럽게 응답합니다.
+- 불필요한 목차나 형식을 사용하지 않습니다.
+- 상대의 말투를 거울처럼 맞추되, 예의 바르게 응답합니다.
+- 다음 행동을 과하게 요구하지 말고, 가볍게 질문을 유도해도 좋습니다.
+""".strip()
+                prompt = ChatPromptTemplate.from_messages([
+                    ("system", casual_system),
+                    ("user", "{question}"),
+                ])
+                formatted = prompt.format_messages(
+                    question=question,
+                )
+                for chunk in model.stream(formatted):
+                    piece = getattr(chunk, "content", "") or ""
+                    if piece:
+                        yield {"event": "token", "data": piece}
+            except Exception as e:
+                yield {"event": "error", "data": str(e)}
+
+            try:
+                saved_cid = _append_turn(cid, "user", question)
+                _append_turn(saved_cid, "assistant", "(streamed)")
+                yield {"event": "cid", "data": saved_cid}
+            except Exception:
+                pass
+
+            yield {"event": "done", "data": "end"}
+
+        return EventSourceResponse(event_iterator_smalltalk(), media_type="text/event-stream")
     try:
         dom_thr = float(os.getenv("DOMAIN_CONFIDENCE_THRESHOLD", "0.6"))
     except Exception:

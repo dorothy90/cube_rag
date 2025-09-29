@@ -76,37 +76,56 @@ HISTORY_WRAPPER = """
 """.strip()
 
 
-def generate_answer(question: str, contexts: List[str], preface: Optional[str] = None, sources: Optional[List[Dict]] = None, history: Optional[List[Dict[str, str]]] = None) -> Dict:
+def generate_answer(question: str, contexts: List[str], preface: Optional[str] = None, sources: Optional[List[Dict]] = None, history: Optional[List[Dict[str, str]]] = None, *, casual: bool = False) -> Dict:
     model = ChatOpenAI(model=_get_model_name(), temperature=0.2)
-    prompt = ChatPromptTemplate.from_messages([
-        ("system", SYSTEM_PROMPT),
-        ("user", USER_PROMPT_TEMPLATE + "\n\n" + (preface + "\n\n" if preface else "") + HISTORY_WRAPPER + "\n\n" + CONTEXTS_WRAPPER),
-    ])
+    if casual:
+        casual_system = """
+당신은 친근하고 자연스럽게 대화하는 한국어 어시스턴트입니다.
+규칙:
+- 인사/스몰톡에는 짧고 자연스럽게 응답합니다.
+- 불필요한 목차나 형식을 사용하지 않습니다.
+- 상대의 말투를 거울처럼 맞추되, 예의 바르게 응답합니다.
+- 다음 행동을 과하게 요구하지 말고, 가볍게 질문을 유도해도 좋습니다.
+""".strip()
+        prompt = ChatPromptTemplate.from_messages([
+            ("system", casual_system),
+            ("user", "{question}"),
+        ])
+    else:
+        prompt = ChatPromptTemplate.from_messages([
+            ("system", SYSTEM_PROMPT),
+            ("user", USER_PROMPT_TEMPLATE + "\n\n" + (preface + "\n\n" if preface else "") + HISTORY_WRAPPER + "\n\n" + CONTEXTS_WRAPPER),
+        ])
 
-    joined_contexts = "\n\n".join([c.strip() for c in contexts if c and c.strip()])
-    # role 기반 히스토리 문자열 생성 (최대 10개로 제한)
-    history = history or []
-    trimmed_history = history[-10:]
-    def _format_turn(turn: Dict[str, str]) -> str:
-        r = (turn.get("role") or "").lower()
-        c = (turn.get("content") or "").strip()
-        if not c:
-            return ""
-        label = "사용자" if r == "user" else ("시스템" if r == "system" else "어시스턴트")
-        return f"[{label}] {c}"
-    joined_history = "\n".join([s for s in map(_format_turn, trimmed_history) if s])
-    formatted = prompt.format_messages(
-        question=question.strip(),
-        ctx_count=len(contexts),
-        contexts=joined_contexts,
-        hist_count=len(trimmed_history),
-        history=joined_history,
-    )
+    if casual:
+        formatted = prompt.format_messages(
+            question=question.strip(),
+        )
+    else:
+        joined_contexts = "\n\n".join([c.strip() for c in contexts if c and c.strip()])
+        # role 기반 히스토리 문자열 생성 (최대 10개로 제한)
+        history = history or []
+        trimmed_history = history[-10:]
+        def _format_turn(turn: Dict[str, str]) -> str:
+            r = (turn.get("role") or "").lower()
+            c = (turn.get("content") or "").strip()
+            if not c:
+                return ""
+            label = "사용자" if r == "user" else ("시스템" if r == "system" else "어시스턴트")
+            return f"[{label}] {c}"
+        joined_history = "\n".join([s for s in map(_format_turn, trimmed_history) if s])
+        formatted = prompt.format_messages(
+            question=question.strip(),
+            ctx_count=len(contexts),
+            contexts=joined_contexts,
+            hist_count=len(trimmed_history),
+            history=joined_history,
+        )
 
     resp = model.invoke(formatted)
     answer = resp.content if hasattr(resp, "content") else str(resp)
 
-    if preface:
+    if (not casual) and preface:
         # 프리페이스를 본문 상단에 명시적으로 포함
         answer = f"알림: {preface}\n\n" + answer
 
@@ -174,9 +193,10 @@ def generate_answer(question: str, contexts: List[str], preface: Optional[str] =
 
         return "출처:\n" + "\n".join(items)
 
-    sources_section = _format_sources(sources)
-    if sources_section:
-        answer = f"{answer}\n\n{sources_section}"
+    if not casual:
+        sources_section = _format_sources(sources)
+        if sources_section:
+            answer = f"{answer}\n\n{sources_section}"
 
     return {"answer": answer, "sources": sources or []}
 

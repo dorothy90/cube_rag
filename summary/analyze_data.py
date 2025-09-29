@@ -108,13 +108,11 @@ def analyze_data(csv_path: str, output_dir: str = "analysis_results", from_date:
         
         summarizer = DirectLLMSummarizer(
             openai_api_key=openai_key,
-            anthropic_api_key=os.getenv('ANTHROPIC_API_KEY'),
             request_delay=1.0
         )
         
-        if not summarizer.openai_client and not summarizer.anthropic_client:
-            print("⚠️ API 키가 설정되지 않았습니다. 환경변수를 확인해주세요.")
-            print("OPENAI_API_KEY 또는 ANTHROPIC_API_KEY를 설정하세요.")
+        if not summarizer.openai_client:
+            print("⚠️ OPENAI_API_KEY가 설정되지 않았습니다. 환경변수를 확인해주세요.")
             return
         
     except Exception as e:
