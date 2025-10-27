@@ -322,6 +322,29 @@ main.container { max-width: 1200px; }
   line-height: 1.5;
 }
 
+/* Hero examples */
+.hero-examples {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 0 auto 10px auto;
+}
+.hero-examples .example-btn {
+  padding: 8px 12px;
+  font-size: 0.9rem;
+}
+
+/* Hero ask grid: input + send button */
+.hero-ask-grid {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  align-items: center;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
 .hero-input {
   width: 100%;
   padding: 16px 20px;
@@ -424,11 +447,11 @@ main.container { max-width: 1200px; }
   background: var(--border);
 }
 
-.btn.primary { 
-  font-weight: 600; 
-  background: var(--accent); 
-  color: #fff; 
-  border-color: transparent; 
+.btn.primary {
+  font-weight: 600;
+  background: var(--accent);
+  color: #fff;
+  border-color: transparent;
 }
 
 .btn.primary:hover {
@@ -477,11 +500,11 @@ main.container { max-width: 1200px; }
 
 /* Markdown / code */
 .bubble pre, .bubble code { background: transparent; }
-.bubble pre { 
-  border: 1px solid var(--border); 
-  padding: 12px; 
-  border-radius: 10px; 
-  overflow: auto; 
+.bubble pre {
+  border: 1px solid var(--border);
+  padding: 12px;
+  border-radius: 10px;
+  overflow: auto;
   font-size: 0.9rem;
 }
 .bubble code {
@@ -490,26 +513,26 @@ main.container { max-width: 1200px; }
   border-radius: 4px;
   font-size: 0.9rem;
 }
-.bubble h1 { 
-  font-size: 1.4rem; 
-  font-weight: 700; 
-  margin: 1rem 0 0.5rem 0; 
+.bubble h1 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin: 1rem 0 0.5rem 0;
   color: var(--text);
 }
-.bubble h2 { 
-  font-size: 1.2rem; 
-  font-weight: 600; 
-  margin: 0.8rem 0 0.4rem 0; 
+.bubble h2 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0.8rem 0 0.4rem 0;
   color: var(--text);
 }
-.bubble h3 { 
-  font-size: 1.1rem; 
-  font-weight: 600; 
-  margin: 0.6rem 0 0.3rem 0; 
+.bubble h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0.6rem 0 0.3rem 0;
   color: var(--text);
 }
-.bubble ul { 
-  margin: 0.6rem 0 0.6rem 1.2rem; 
+.bubble ul {
+  margin: 0.6rem 0 0.6rem 1.2rem;
   line-height: 1.6;
 }
 .bubble li {
@@ -524,10 +547,10 @@ main.container { max-width: 1200px; }
 }
 
 /* Status */
-.status { 
-  color: var(--muted); 
-  font-size: 0.9rem; 
-  margin-left: 8px; 
+.status {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-left: 8px;
   font-weight: 400;
 }
 

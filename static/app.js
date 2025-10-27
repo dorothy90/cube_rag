@@ -4,6 +4,8 @@
 const hero = document.getElementById('hero');
 const heroForm = document.getElementById('hero-form');
 const heroInput = document.getElementById('hero-input');
+const heroSendBtn = document.getElementById('hero-send');
+const heroExamplesWrap = document.getElementById('hero-examples');
 const workspace = document.getElementById('workspace');
 const messages = document.getElementById('messages');
 const composer = document.getElementById('composer');
@@ -569,6 +571,26 @@ heroForm.addEventListener('submit', (e) => {
     }
   }
 });
+
+// Hero send button should trigger the same submit flow
+if (heroSendBtn) {
+  heroSendBtn.addEventListener('click', (e) => {
+    // submit 이벤트로 통일하여 엔터와 동일 동작
+    if (heroForm) heroForm.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+  });
+}
+
+// Example questions click -> fill input and submit immediately
+if (heroExamplesWrap) {
+  heroExamplesWrap.addEventListener('click', (e) => {
+    const t = e.target;
+    if (t && t.matches('button.example-btn')) {
+      const q = t.getAttribute('data-q') || '';
+      heroInput.value = q;
+      if (heroForm) heroForm.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+    }
+  });
+}
 
 composer.addEventListener('submit', (e) => {
   e.preventDefault();

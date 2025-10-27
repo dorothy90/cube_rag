@@ -23,7 +23,16 @@
         <form id="hero-form">
           <!-- 질문 모드 입력 -->
           <div id="hero-ask-wrap">
-            <input id="hero-input" class="hero-input" type="text" placeholder="예: FastAPI에서 파일 업로드는 어떻게 하나요?" aria-label="질문" />
+            <!-- 예시 질문 -->
+            <div id="hero-examples" class="hero-examples">
+              <button type="button" class="btn example-btn" data-q="FASTAPI는 어떻게 파일업로드하나요?">FASTAPI는 어떻게 파일업로드하나요?</button>
+              <button type="button" class="btn example-btn" data-q="사내 ORACLE 사용 방법이 뭔가요?">사내 ORACLE 사용 방법이 뭔가요?</button>
+            </div>
+            <!-- 입력 + 보내기 버튼 -->
+            <div class="hero-ask-grid">
+              <input id="hero-input" class="hero-input" type="text" placeholder="예: FastAPI에서 파일 업로드는 어떻게 하나요?" aria-label="질문" />
+              <button id="hero-send" class="btn primary" type="submit" aria-label="보내기">보내기</button>
+            </div>
           </div>
           <!-- 요약 모드 입력 -->
           <div id="hero-summarize-wrap" style="display:none;">

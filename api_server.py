@@ -82,15 +82,18 @@ templates = Jinja2Templates(directory="templates")
 """
 conversation_store: Dict[str, list] = {}
 
+
 def _get_history(cid: Optional[str]) -> list:
     if not cid:
         return []
     return conversation_store.get(cid, [])
 
+
 def _append_turn(cid: Optional[str], role: str, content: str) -> Optional[str]:
     if not cid:
         # cid 미제공 시 간단히 생성 (주의: 충돌 가능성 낮추기 위해 접두사 사용)
         import uuid
+
         cid = f"cid_{uuid.uuid4().hex[:12]}"
     turns = conversation_store.setdefault(cid, [])
     turns.append({"role": role, "content": content})
@@ -141,28 +144,39 @@ def normalize_sources(
             q = (meta.get("question") or "").strip()
             ts = (meta.get("timestamp") or "").strip()
             q_author = (meta.get("question_author") or "").strip()
+
             # '||' 조인 문자열 정규화 (간결화)
             def _split_pipe(s):
                 return [p.strip() for p in str(s or "").split("||") if p and p.strip()]
+
             answers = _split_pipe(meta.get("answers"))
-            answer_authors = _split_pipe(meta.get("answer_author") or meta.get("answer_authors"))
+            answer_authors = _split_pipe(
+                meta.get("answer_author") or meta.get("answer_authors")
+            )
             if answers and len(answer_authors) < len(answers):
-                answer_authors = answer_authors + ["알 수 없음"] * (len(answers) - len(answer_authors))
+                answer_authors = answer_authors + ["알 수 없음"] * (
+                    len(answers) - len(answer_authors)
+                )
             key = f"qa::{ts}::{q}"
             if key in dedupe:
                 continue
             dedupe.add(key)
-            items.append({
-                "type": "internal",
-                "score": (it or {}).get("score"),
-                "question": q,
-                "answers": answers,
-                "timestamp": ts,
-                "question_author": q_author,
-                "answer_authors": answer_authors,
-            })
+            items.append(
+                {
+                    "type": "internal",
+                    "score": (it or {}).get("score"),
+                    "question": q,
+                    "answers": answers,
+                    "timestamp": ts,
+                    "question_author": q_author,
+                    "answer_authors": answer_authors,
+                }
+            )
         # sort by score desc then timestamp desc
-        items.sort(key=lambda x: (x.get("score") or 0.0, x.get("timestamp") or ""), reverse=True)
+        items.sort(
+            key=lambda x: (x.get("score") or 0.0, x.get("timestamp") or ""),
+            reverse=True,
+        )
         result.extend(items[:max_internal])
 
     if only == "web" and web:
@@ -175,15 +189,160 @@ def normalize_sources(
             if not key or key in dedupe:
                 continue
             dedupe.add(key)
-            items.append({
-                "type": "web",
-                "score": (w or {}).get("score"),
-                "title": title.strip(),
-                "url": url.strip(),
-            })
+            items.append(
+                {
+                    "type": "web",
+                    "score": (w or {}).get("score"),
+                    "title": title.strip(),
+                    "url": url.strip(),
+                }
+            )
         result.extend(items[:max_web])
 
     return result
+
+
+def _map_collection_name(d: Optional[str]) -> Optional[str]:
+    try:
+        mapping = {
+            "python": "qa_questions_python",
+            "sql": "qa_questions_sql",
+            "semiconductor": "qa_questions_semiconductor",
+        }
+        return mapping.get((d or "").lower())
+    except Exception:
+        return None
+
+
+def _format_history_lines(turns: List[Dict[str, str]]) -> str:
+    def _format_turn(turn: Dict[str, str]) -> str:
+        r = (turn.get("role") or "").lower()
+        c = (turn.get("content") or "").strip()
+        if not c:
+            return ""
+        label = (
+            "사용자" if r == "user" else ("시스템" if r == "system" else "어시스턴트")
+        )
+        return f"[{label}] {c}"
+
+    return "\n".join([s for s in map(_format_turn, turns[-10:]) if s])
+
+
+def _answer_via_retrieval_nonstream(
+    question: str,
+    selected_domain: Optional[str],
+    history_turns: List[Dict[str, str]],
+) -> Tuple[str, list]:
+    """벡터DB(+옵션 웹검색)로 컨텍스트를 구성해 단발 응답을 생성하고, 노출용 소스 목록을 반환한다."""
+    try:
+        collection_name = _map_collection_name(selected_domain)
+        hits = retrieve(question, collection_name=collection_name)
+        contexts: List[str] = []
+        sources_vec: List[Dict[str, Any]] = []
+        for h in hits:
+            meta = h.get("metadata") or {}
+            q_meta = (meta.get("question") or "").strip()
+            tokens = [
+                t.strip()
+                for t in str(meta.get("answers") or "").split("||")
+                if t and t.strip()
+            ]
+            a_meta = " ".join(tokens)
+            content = h.get("content")
+            contexts.append(
+                (f"Q: {q_meta}\nA: {a_meta}" if (q_meta or a_meta) else content) or ""
+            )
+            sources_vec.append({"metadata": meta, "score": h.get("score")})
+
+        def _as_float(x):
+            try:
+                return float(x)
+            except Exception:
+                return None
+
+        try:
+            t_high = float(os.getenv("DIRECT_MATCH_HIGH", "0.5"))
+        except Exception:
+            t_high = 0.5
+        try:
+            t_mid = float(os.getenv("DIRECT_MATCH_SCORE_THRESHOLD", "0.45"))
+        except Exception:
+            t_mid = 0.45
+        try:
+            top_k_cons = int(os.getenv("DIRECT_MATCH_TOPK", "3"))
+        except Exception:
+            top_k_cons = 3
+        try:
+            count_cons = int(os.getenv("DIRECT_MATCH_COUNT", "2"))
+        except Exception:
+            count_cons = 2
+
+        raw_scores = [
+            _as_float(s.get("score")) if isinstance(s, dict) else None
+            for s in sources_vec
+        ]
+        valid_scores = [v for v in raw_scores if v is not None]
+        valid_scores.sort(reverse=True)
+        top1 = valid_scores[0] if valid_scores else 0.0
+        topk_scores = valid_scores[: max(0, top_k_cons)] if valid_scores else []
+        consensus = sum(1 for v in topk_scores if v >= t_mid)
+        has_direct_match = (top1 >= t_high) or (consensus >= count_cons)
+
+        use_search = os.getenv("USE_WEB_SEARCH", "false").lower() in (
+            "1",
+            "true",
+            "yes",
+            "on",
+        )
+        web_results = []
+        web_contexts: List[str] = []
+        if (not has_direct_match) and use_search:
+            web_results = search_web(question, max_results=8)
+            for w in web_results:
+                title = (w.get("title") or "").strip()
+                url = (w.get("url") or "").strip()
+                snippet = (w.get("snippet") or "").strip()
+                if title or snippet:
+                    web_contexts.append(f"{title}\n{snippet}\n출처: {url}")
+
+        # Prompt 구성 (history + contexts)
+        model_name = os.getenv("OPENAI_MODEL_NAME") or "gpt-4o-mini"
+        model = ChatOpenAI(model=model_name, temperature=0.2)
+        prompt = ChatPromptTemplate.from_messages(
+            [
+                ("system", SYSTEM_PROMPT),
+                (
+                    "user",
+                    USER_PROMPT_TEMPLATE + "\n\n" + CONTEXTS_WRAPPER,
+                ),
+            ]
+        )
+        joined_contexts = "\n\n".join(
+            [c.strip() for c in (contexts + web_contexts) if c and c.strip()]
+        )
+        joined_history = _format_history_lines(history_turns)
+        formatted = prompt.format_messages(
+            question=question,
+            ctx_count=len(contexts + web_contexts),
+            contexts=joined_contexts,
+            hist_count=len(history_turns[-10:]),
+            history=joined_history,
+        )
+        msg = model.invoke(formatted)
+        answer_text = getattr(msg, "content", "") or ""
+
+        # 소스 정규화
+        if has_direct_match:
+            normalized = normalize_sources(sources_vec, None, only="internal")
+        else:
+            normalized = (
+                normalize_sources(None, web_results, only="web") if use_search else []
+            )
+
+        return (answer_text, normalized)
+    except Exception:
+        # 폴백 실패 시 빈값 반환 (호출측이 기존 답변 유지)
+        return ("", [])
 
 
 def _normalize_domain_text(text: Optional[str]) -> Optional[str]:
@@ -244,26 +403,30 @@ def _build_mindmap_from_analysis(analysis: Dict[str, Any]) -> Dict[str, Any]:
             st_name = (m or {}).get("topic_name") or "(하위주제)"
             # 노드 이름에 인덱스 표시
             label = f"(#" + str(idx) + ") " + st_name if idx is not None else st_name
-            sub_children.append({
-                "name": label,
+            sub_children.append(
+                {
+                    "name": label,
+                    "meta": {
+                        "topic_index": t_idx,
+                        "subtopic_index": idx,
+                        "summary": (m or {}).get("summary"),
+                        "message_count": (m or {}).get("message_count"),
+                        "keywords": (m or {}).get("keywords") or [],
+                    },
+                }
+            )
+        children.append(
+            {
+                "name": t_name,
                 "meta": {
                     "topic_index": t_idx,
-                    "subtopic_index": idx,
-                    "summary": (m or {}).get("summary"),
-                    "message_count": (m or {}).get("message_count"),
-                    "keywords": (m or {}).get("keywords") or [],
+                    "summary": (t or {}).get("summary"),
+                    "message_count": (t or {}).get("message_count"),
+                    "keywords": (t or {}).get("keywords") or [],
                 },
-            })
-        children.append({
-            "name": t_name,
-            "meta": {
-                "topic_index": t_idx,
-                "summary": (t or {}).get("summary"),
-                "message_count": (t or {}).get("message_count"),
-                "keywords": (t or {}).get("keywords") or [],
-            },
-            "children": sub_children,
-        })
+                "children": sub_children,
+            }
+        )
     return {"name": "주제 맵", "children": children}
 
 
@@ -277,6 +440,7 @@ def _extract_time_minutes_prefix(text: Optional[str]) -> Optional[int]:
             return None
         # 앞쪽 토큰에서 시:분 패턴 추출
         import re
+
         m = re.match(r"^(\d{1,2}):(\d{2})\b", s)
         if not m:
             return None
@@ -289,7 +453,9 @@ def _extract_time_minutes_prefix(text: Optional[str]) -> Optional[int]:
         return None
 
 
-def _resolve_subtopic_messages(topic: Dict[str, Any], subtopic_index: int) -> Tuple[str, List[Dict[str, Any]]]:
+def _resolve_subtopic_messages(
+    topic: Dict[str, Any], subtopic_index: int
+) -> Tuple[str, List[Dict[str, Any]]]:
     """토픽 객체에서 특정 subtopic_index에 해당하는 메시지들을 찾아 시간순으로 정렬해 반환한다.
 
     반환: (subtopic_name, messages[...])
@@ -304,7 +470,7 @@ def _resolve_subtopic_messages(topic: Dict[str, Any], subtopic_index: int) -> Tu
     if target is None:
         return ("", [])
     subtopic_name = (target or {}).get("topic_name") or ""
-    ids = ((target or {}).get("related_message_ids") or [])
+    ids = (target or {}).get("related_message_ids") or []
     ids_set = set([str(x) for x in ids])
 
     # 토픽 레벨의 all_related_messages에서 상세 메시지 찾기
@@ -336,18 +502,27 @@ def mindmap_page(request: Request):
 
 
 @app.get("/api/mindmap-data")
-def mindmap_data(file: Optional[str] = Query(default=None, description="분석 결과 JSON 파일 경로(선택)")) -> Dict[str, Any]:
+def mindmap_data(
+    file: Optional[str] = Query(
+        default=None, description="분석 결과 JSON 파일 경로(선택)"
+    )
+) -> Dict[str, Any]:
     try:
         target_path = None
         if file:
             abs_path = os.path.abspath(file)
             if not os.path.isfile(abs_path):
-                raise HTTPException(status_code=404, detail=f"파일을 찾을 수 없습니다: {abs_path}")
+                raise HTTPException(
+                    status_code=404, detail=f"파일을 찾을 수 없습니다: {abs_path}"
+                )
             target_path = abs_path
         else:
             latest = _find_latest_analysis_file()
             if not latest:
-                raise HTTPException(status_code=404, detail="analysis_results 폴더에서 분석 파일을 찾을 수 없습니다.")
+                raise HTTPException(
+                    status_code=404,
+                    detail="analysis_results 폴더에서 분석 파일을 찾을 수 없습니다.",
+                )
             target_path = latest
 
         with open(target_path, "r", encoding="utf-8") as f:
@@ -364,18 +539,25 @@ def mindmap_data(file: Optional[str] = Query(default=None, description="분석 �
 def mindmap_messages(
     topic_index: int = Query(..., description="부모 토픽 인덱스 (0-base)"),
     subtopic_index: int = Query(..., description="소주제 subtopic_index"),
-    file: Optional[str] = Query(default=None, description="분석 결과 JSON 파일 경로(선택)"),
+    file: Optional[str] = Query(
+        default=None, description="분석 결과 JSON 파일 경로(선택)"
+    ),
 ) -> Dict[str, Any]:
     try:
         # 파일 결정
         if file:
             target_path = os.path.abspath(file)
             if not os.path.isfile(target_path):
-                raise HTTPException(status_code=404, detail=f"파일을 찾을 수 없습니다: {target_path}")
+                raise HTTPException(
+                    status_code=404, detail=f"파일을 찾을 수 없습니다: {target_path}"
+                )
         else:
             target_path = _find_latest_analysis_file()
             if not target_path:
-                raise HTTPException(status_code=404, detail="analysis_results 폴더에서 분석 파일을 찾을 수 없습니다.")
+                raise HTTPException(
+                    status_code=404,
+                    detail="analysis_results 폴더에서 분석 파일을 찾을 수 없습니다.",
+                )
 
         with open(target_path, "r", encoding="utf-8") as f:
             analysis = json.load(f)
@@ -404,7 +586,6 @@ def mindmap_messages(
         raise HTTPException(status_code=500, detail=str(e))
 
 
-
 @app.get("/", response_class=HTMLResponse)
 def index(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
@@ -430,7 +611,9 @@ def ask(req: AskRequest) -> AskResponse:
         domain_memory = conversation_store.setdefault("__domain_memory__", {})
         last_domain = domain_memory.get(req.conversation_id or "")
         # 도메인 확인 대기 중인 원 질문 저장소
-        pending_map: Dict[str, str] = conversation_store.setdefault("__pending_domain__", {})  # cid -> original question
+        pending_map: Dict[str, str] = conversation_store.setdefault(
+            "__pending_domain__", {}
+        )  # cid -> original question
         pending_q = pending_map.get(req.conversation_id or "")
 
         # 0) 직전 턴이 도메인 확인이었고, 이번 입력이 도메인 선택 응답이면 원 질문으로 이어서 답변
@@ -438,7 +621,9 @@ def ask(req: AskRequest) -> AskResponse:
             forced_domain = _normalize_domain_text(req.question)
             if forced_domain in ("python", "sql", "semiconductor"):
                 # 선택된 도메인을 메모리에 먼저 기록 (오케스트레이터는 last_domain을 활용)
-                result = orchestrator.run(pending_q, history=history, last_domain=forced_domain)
+                result = orchestrator.run(
+                    pending_q, history=history, last_domain=forced_domain
+                )
                 answer = result.get("answer") or ""
                 raw_internal = result.get("sources") or []
                 raw_web = result.get("web") or []
@@ -454,7 +639,9 @@ def ask(req: AskRequest) -> AskResponse:
                             analysis_payload = None
                     elif hasattr(analysis_obj, "dict"):
                         try:
-                            analysis_payload = analysis_obj.dict()  # pydantic v1/dataclass-like
+                            analysis_payload = (
+                                analysis_obj.dict()
+                            )  # pydantic v1/dataclass-like
                         except Exception:
                             analysis_payload = None
                     elif hasattr(analysis_obj, "__dict__"):
@@ -481,7 +668,9 @@ def ask(req: AskRequest) -> AskResponse:
                     pass
 
                 # Normalize sources: 내부가 있으면 내부만, 없으면 웹만 노출
-                only = "internal" if raw_internal else ("web" if raw_web else "internal")
+                only = (
+                    "internal" if raw_internal else ("web" if raw_web else "internal")
+                )
                 normalized = normalize_sources(raw_internal, raw_web, only=only)
                 return AskResponse(
                     answer=answer,
@@ -492,13 +681,38 @@ def ask(req: AskRequest) -> AskResponse:
                     selected_domain=selected_domain,
                 )
 
-        result = orchestrator.run(req.question, history=history, last_domain=last_domain)
+        result = orchestrator.run(
+            req.question, history=history, last_domain=last_domain
+        )
         answer = result.get("answer") or ""
         raw_internal = result.get("sources") or []
         raw_web = result.get("web") or []
         stage = result.get("stage")
         analysis_obj = result.get("analysis")
         selected_domain = result.get("selected_domain")
+
+        # 폴백: 내부/웹 소스 모두 비어 있거나 답변이 과도하게 짧을 때, 직접 리트리벌로 보강
+        need_fallback = (not raw_internal) and (not raw_web)
+        if need_fallback:
+            try:
+                fb_answer, fb_sources = _answer_via_retrieval_nonstream(
+                    req.question, selected_domain or last_domain, history
+                )
+                if fb_answer:
+                    answer = fb_answer
+                if fb_sources:
+                    raw_internal = (
+                        fb_sources
+                        if (fb_sources and fb_sources[0].get("type") == "internal")
+                        else []
+                    )
+                    raw_web = (
+                        fb_sources
+                        if (fb_sources and fb_sources[0].get("type") == "web")
+                        else []
+                    )
+            except Exception:
+                pass
 
         analysis_payload: Optional[Dict[str, Any]] = None
         if analysis_obj is not None:
@@ -531,7 +745,14 @@ def ask(req: AskRequest) -> AskResponse:
         # Normalize sources: 내부가 있으면 내부만, 없으면 웹만 노출
         only = "internal" if raw_internal else ("web" if raw_web else "internal")
         normalized = normalize_sources(raw_internal, raw_web, only=only)
-        return AskResponse(answer=answer, sources=normalized, web=raw_web, analysis=analysis_payload, conversation_id=cid, selected_domain=selected_domain)
+        return AskResponse(
+            answer=answer,
+            sources=normalized,
+            web=raw_web,
+            analysis=analysis_payload,
+            conversation_id=cid,
+            selected_domain=selected_domain,
+        )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -544,12 +765,19 @@ def summarize(req: SummaryRequest) -> SummaryResponse:
             d_from = datetime.strptime((req.from_date or "").strip(), "%Y-%m-%d")
             d_to = datetime.strptime((req.to_date or "").strip(), "%Y-%m-%d")
         except Exception:
-            raise HTTPException(status_code=400, detail="from_date/to_date는 YYYY-MM-DD 형식이어야 합니다.")
+            raise HTTPException(
+                status_code=400,
+                detail="from_date/to_date는 YYYY-MM-DD 형식이어야 합니다.",
+            )
         if d_from > d_to:
-            raise HTTPException(status_code=400, detail="from_date는 to_date보다 이후일 수 없습니다.")
+            raise HTTPException(
+                status_code=400, detail="from_date는 to_date보다 이후일 수 없습니다."
+            )
         email = (req.email or "").strip()
         if ("@" not in email) or (len(email) < 5):
-            raise HTTPException(status_code=400, detail="유효한 이메일 주소를 입력해주세요.")
+            raise HTTPException(
+                status_code=400, detail="유효한 이메일 주소를 입력해주세요."
+            )
 
         # 대화 히스토리에는 요약 요청을 간단히 남김
         msg_user = f"[요약요청] {req.from_date} ~ {req.to_date} -> {email}"
@@ -577,12 +805,19 @@ def send_summary_email(req: SendEmailRequest) -> SendEmailResponse:
             d_from = datetime.strptime((req.from_date or "").strip(), "%Y-%m-%d")
             d_to = datetime.strptime((req.to_date or "").strip(), "%Y-%m-%d")
         except Exception:
-            raise HTTPException(status_code=400, detail="from_date/to_date는 YYYY-MM-DD 형식이어야 합니다.")
+            raise HTTPException(
+                status_code=400,
+                detail="from_date/to_date는 YYYY-MM-DD 형식이어야 합니다.",
+            )
         if d_from > d_to:
-            raise HTTPException(status_code=400, detail="from_date는 to_date보다 이후일 수 없습니다.")
+            raise HTTPException(
+                status_code=400, detail="from_date는 to_date보다 이후일 수 없습니다."
+            )
         email = (req.email or "").strip()
         if ("@" not in email) or (len(email) < 5):
-            raise HTTPException(status_code=400, detail="유효한 이메일 주소를 입력해주세요.")
+            raise HTTPException(
+                status_code=400, detail="유효한 이메일 주소를 입력해주세요."
+            )
 
         # analyze_data.py 실행: 로그 스트리밍 + 타임아웃 설정
         # - PYTHONUNBUFFERED 또는 -u 옵션으로 버퍼링 비활성화하여 실시간 출력
@@ -620,7 +855,10 @@ def send_summary_email(req: SendEmailRequest) -> SendEmailResponse:
                 print(f"[analyze_data] {line.rstrip()}")
                 if (time.monotonic() - start_ts) > timeout_secs:
                     proc.kill()
-                    raise HTTPException(status_code=500, detail=f"스크립트 실행 타임아웃({timeout_secs}s)")
+                    raise HTTPException(
+                        status_code=500,
+                        detail=f"스크립트 실행 타임아웃({timeout_secs}s)",
+                    )
         finally:
             try:
                 rc = proc.wait(timeout=5)
@@ -630,7 +868,9 @@ def send_summary_email(req: SendEmailRequest) -> SendEmailResponse:
         if rc != 0:
             raise HTTPException(status_code=500, detail=f"스크립트 종료 코드: {rc}")
 
-        return SendEmailResponse(ok=True, message="메일 전송 스크립트가 실행되었습니다. (콘솔 출력 확인)")
+        return SendEmailResponse(
+            ok=True, message="메일 전송 스크립트가 실행되었습니다. (콘솔 출력 확인)"
+        )
     except HTTPException:
         raise
     except Exception as e:
@@ -651,12 +891,18 @@ def send_summary_email_stream(from_date: str, to_date: str, email: str):
         d_from = datetime.strptime((from_date or "").strip(), "%Y-%m-%d")
         d_to = datetime.strptime((to_date or "").strip(), "%Y-%m-%d")
     except Exception:
-        raise HTTPException(status_code=400, detail="from_date/to_date는 YYYY-MM-DD 형식이어야 합니다.")
+        raise HTTPException(
+            status_code=400, detail="from_date/to_date는 YYYY-MM-DD 형식이어야 합니다."
+        )
     if d_from > d_to:
-        raise HTTPException(status_code=400, detail="from_date는 to_date보다 이후일 수 없습니다.")
+        raise HTTPException(
+            status_code=400, detail="from_date는 to_date보다 이후일 수 없습니다."
+        )
     email_v = (email or "").strip()
     if ("@" not in email_v) or (len(email_v) < 5):
-        raise HTTPException(status_code=400, detail="유효한 이메일 주소를 입력해주세요.")
+        raise HTTPException(
+            status_code=400, detail="유효한 이메일 주소를 입력해주세요."
+        )
 
     script_path = "/Users/daehwankim/cube_rag/summary/analyze_data.py"
     timeout_secs = int(os.getenv("SUMMARY_SCRIPT_TIMEOUT_SECS", "600"))
@@ -703,7 +949,10 @@ def send_summary_email_stream(from_date: str, to_date: str, email: str):
                         proc.kill()
                     except Exception:
                         pass
-                    yield {"event": "error", "data": f"스크립트 실행 타임아웃({timeout_secs}s)"}
+                    yield {
+                        "event": "error",
+                        "data": f"스크립트 실행 타임아웃({timeout_secs}s)",
+                    }
                     yield {"event": "done", "data": "end"}
                     return
         finally:
@@ -721,6 +970,7 @@ def send_summary_email_stream(from_date: str, to_date: str, email: str):
         yield {"event": "done", "data": "end"}
 
     return EventSourceResponse(event_iterator(), media_type="text/event-stream")
+
 
 @app.get("/ask/stream")
 def ask_stream(q: str, cid: Optional[str] = None):
@@ -741,7 +991,9 @@ def ask_stream(q: str, cid: Optional[str] = None):
         qt = (getattr(analysis, "question_type", "") or "").strip()
     except Exception:
         qt = ""
-    if qt in ("일반대화", "인사", "스몰톡", "잡담"):
+    # 스몰톡 분기는 최소화: 일반 질의는 리트리벌 경로로 유도
+    if qt in ("인사", "스몰톡", "잡담"):
+
         def event_iterator_smalltalk():
             # casual 모드로 자연스러운 응답을 스트리밍
             try:
@@ -755,30 +1007,61 @@ def ask_stream(q: str, cid: Optional[str] = None):
 - 상대의 말투를 거울처럼 맞추되, 예의 바르게 응답합니다.
 - 다음 행동을 과하게 요구하지 말고, 가볍게 질문을 유도해도 좋습니다.
 """.strip()
-                prompt = ChatPromptTemplate.from_messages([
-                    ("system", casual_system),
-                    ("user", "{question}"),
-                ])
+
+                # 최근 히스토리(최대 10턴) 주입
+                def _format_turn_st(t: Dict[str, str]) -> str:
+                    r = (t.get("role") or "").lower()
+                    c = (t.get("content") or "").strip()
+                    if not c:
+                        return ""
+                    label = (
+                        "사용자"
+                        if r == "user"
+                        else ("시스템" if r == "system" else "어시스턴트")
+                    )
+                    return f"[{label}] {c}"
+
+                joined_history_st = "\n".join(
+                    [s for s in map(_format_turn_st, history[-10:]) if s]
+                )
+
+                prompt = ChatPromptTemplate.from_messages(
+                    [
+                        ("system", casual_system),
+                        ("system", "이전 대화(최근 10개):\n{history}"),
+                        ("user", "{question}"),
+                    ]
+                )
                 formatted = prompt.format_messages(
                     question=question,
+                    history=joined_history_st,
                 )
+                answer_chunks: List[str] = []
                 for chunk in model.stream(formatted):
                     piece = getattr(chunk, "content", "") or ""
                     if piece:
                         yield {"event": "token", "data": piece}
+                        answer_chunks.append(piece)
             except Exception as e:
                 yield {"event": "error", "data": str(e)}
 
             try:
                 saved_cid = _append_turn(cid, "user", question)
-                _append_turn(saved_cid, "assistant", "(streamed)")
+                full_answer = (
+                    "".join(answer_chunks)
+                    if "answer_chunks" in locals() and answer_chunks
+                    else "(streamed)"
+                )
+                _append_turn(saved_cid, "assistant", full_answer)
                 yield {"event": "cid", "data": saved_cid}
             except Exception:
                 pass
 
             yield {"event": "done", "data": "end"}
 
-        return EventSourceResponse(event_iterator_smalltalk(), media_type="text/event-stream")
+        return EventSourceResponse(
+            event_iterator_smalltalk(), media_type="text/event-stream"
+        )
     try:
         dom_thr = float(os.getenv("DOMAIN_CONFIDENCE_THRESHOLD", "0.6"))
     except Exception:
@@ -798,7 +1081,9 @@ def ask_stream(q: str, cid: Optional[str] = None):
     domain_memory = conversation_store.setdefault("__domain_memory__", {})
     last_domain = domain_memory.get(cid or "")
     # pending domain selection store
-    pending_map: Dict[str, str] = conversation_store.setdefault("__pending_domain__", {})
+    pending_map: Dict[str, str] = conversation_store.setdefault(
+        "__pending_domain__", {}
+    )
     pending_q = pending_map.get(cid or "")
 
     # 사용자가 직전 턴의 도메인 확인에 응답한 경우 처리
@@ -828,10 +1113,17 @@ def ask_stream(q: str, cid: Optional[str] = None):
                 combined_msg = clarify_msg
                 if getattr(analysis, "context_needed", False):
                     try:
-                        from context_handler_agent import ContextHandlerAgent  # 지연 임포트
+                        from context_handler_agent import (
+                            ContextHandlerAgent,
+                        )  # 지연 임포트
+
                         ctx_agent_pre = ContextHandlerAgent()
-                        decision_tmp = ctx_agent_pre.handle_context_needed(analysis, question)
-                        extra = ctx_agent_pre.generate_context_request_message(decision_tmp, analysis)
+                        decision_tmp = ctx_agent_pre.handle_context_needed(
+                            analysis, question
+                        )
+                        extra = ctx_agent_pre.generate_context_request_message(
+                            decision_tmp, analysis
+                        )
                         example = (
                             "\n\n예시로 이렇게 구체화해 주세요:\n"
                             "- 도메인: (파이썬/SQL/반도체 중 선택)\n"
@@ -852,7 +1144,9 @@ def ask_stream(q: str, cid: Optional[str] = None):
                     yield {"event": "cid", "data": saved_cid}
                     yield {"event": "done", "data": "end"}
 
-                return EventSourceResponse(event_iterator_clarify(), media_type="text/event-stream")
+                return EventSourceResponse(
+                    event_iterator_clarify(), media_type="text/event-stream"
+                )
             selected_domain = domain
         else:
             if domain in ("python", "sql", "semiconductor") and dom_conf >= dom_thr:
@@ -860,14 +1154,23 @@ def ask_stream(q: str, cid: Optional[str] = None):
             elif last_domain in ("python", "sql", "semiconductor"):
                 selected_domain = last_domain
             else:
-                clarify_msg = "이 질문은 Python, SQL, 반도체 중 어떤 도메인과 가장 관련이 있나요?"
+                clarify_msg = (
+                    "이 질문은 Python, SQL, 반도체 중 어떤 도메인과 가장 관련이 있나요?"
+                )
                 combined_msg2 = clarify_msg
                 if getattr(analysis, "context_needed", False):
                     try:
-                        from context_handler_agent import ContextHandlerAgent  # 지연 임포트
+                        from context_handler_agent import (
+                            ContextHandlerAgent,
+                        )  # 지연 임포트
+
                         ctx_agent_pre2 = ContextHandlerAgent()
-                        decision_tmp2 = ctx_agent_pre2.handle_context_needed(analysis, question)
-                        extra2 = ctx_agent_pre2.generate_context_request_message(decision_tmp2, analysis)
+                        decision_tmp2 = ctx_agent_pre2.handle_context_needed(
+                            analysis, question
+                        )
+                        extra2 = ctx_agent_pre2.generate_context_request_message(
+                            decision_tmp2, analysis
+                        )
                         example2 = (
                             "\n\n예시로 이렇게 구체화해 주세요:\n"
                             "- 도메인: (파이썬/SQL/반도체 중 선택)\n"
@@ -887,7 +1190,9 @@ def ask_stream(q: str, cid: Optional[str] = None):
                     yield {"event": "cid", "data": saved_cid}
                     yield {"event": "done", "data": "end"}
 
-                return EventSourceResponse(event_iterator_clarify2(), media_type="text/event-stream")
+                return EventSourceResponse(
+                    event_iterator_clarify2(), media_type="text/event-stream"
+                )
 
     collection_name = _map_collection(selected_domain)
 
@@ -895,16 +1200,20 @@ def ask_stream(q: str, cid: Optional[str] = None):
     # streaming 경로에서도 QueryAnalyzer 결과의 context_needed를 바로 반영
     if getattr(analysis, "context_needed", False):
         from context_handler_agent import ContextHandlerAgent  # 지연 임포트
+
         ctx_agent = ContextHandlerAgent()
         decision = ctx_agent.handle_context_needed(analysis, question)
         answer_msg = None
         try:
             if (getattr(decision, "action", "") or "") == "request_context":
-                answer_msg = ctx_agent.generate_context_request_message(decision, analysis)
+                answer_msg = ctx_agent.generate_context_request_message(
+                    decision, analysis
+                )
         except Exception:
             answer_msg = None
 
         if answer_msg:
+
             def event_iterator_ctx():
                 # 사용자에게 맥락 요청 메시지를 스트리밍으로 전송
                 yield {"event": "token", "data": answer_msg}
@@ -916,7 +1225,9 @@ def ask_stream(q: str, cid: Optional[str] = None):
                 yield {"event": "cid", "data": saved_cid}
                 yield {"event": "done", "data": "end"}
 
-            return EventSourceResponse(event_iterator_ctx(), media_type="text/event-stream")
+            return EventSourceResponse(
+                event_iterator_ctx(), media_type="text/event-stream"
+            )
 
     # Retrieval (vector DB) with selected collection
     hits = retrieve(question, collection_name=collection_name)
@@ -927,7 +1238,11 @@ def ask_stream(q: str, cid: Optional[str] = None):
         meta = h.get("metadata") or {}
         q_meta = (meta.get("question") or "").strip()
         # '||' 분리
-        tokens = [t.strip() for t in str(meta.get("answers") or "").split("||") if t and t.strip()]
+        tokens = [
+            t.strip()
+            for t in str(meta.get("answers") or "").split("||")
+            if t and t.strip()
+        ]
         a_meta = " ".join(tokens)
         content = h.get("content")
         if q_meta or a_meta:
@@ -961,8 +1276,7 @@ def ask_stream(q: str, cid: Optional[str] = None):
             return None
 
     raw_scores = [
-        _as_float(s.get("score")) if isinstance(s, dict) else None
-        for s in sources_vec
+        _as_float(s.get("score")) if isinstance(s, dict) else None for s in sources_vec
     ]
     valid_scores = [v for v in raw_scores if v is not None]
     valid_scores.sort(reverse=True)
@@ -972,7 +1286,12 @@ def ask_stream(q: str, cid: Optional[str] = None):
     has_direct_match = (top1 >= t_high) or (consensus >= count_cons)
 
     # Web search toggle
-    use_search = os.getenv("USE_WEB_SEARCH", "false").lower() in ("1", "true", "yes", "on")
+    use_search = os.getenv("USE_WEB_SEARCH", "false").lower() in (
+        "1",
+        "true",
+        "yes",
+        "on",
+    )
     web_results = []
     web_contexts = []
     if (not has_direct_match) and use_search:
@@ -1009,22 +1328,33 @@ def ask_stream(q: str, cid: Optional[str] = None):
     # 대화 이력 주입
     history = _get_history(cid)
     # history는 answer_generator의 포맷과 동일한 형태
-    prompt = ChatPromptTemplate.from_messages([
-        ("system", SYSTEM_PROMPT),
-        (
-            "user",
-            USER_PROMPT_TEMPLATE + "\n\n" + (preface + "\n\n" if preface else "") + CONTEXTS_WRAPPER,
-        ),
-    ])
-    joined_contexts = "\n\n".join([c.strip() for c in combined_contexts if c and c.strip()])
+    prompt = ChatPromptTemplate.from_messages(
+        [
+            ("system", SYSTEM_PROMPT),
+            (
+                "user",
+                USER_PROMPT_TEMPLATE
+                + "\n\n"
+                + (preface + "\n\n" if preface else "")
+                + CONTEXTS_WRAPPER,
+            ),
+        ]
+    )
+    joined_contexts = "\n\n".join(
+        [c.strip() for c in combined_contexts if c and c.strip()]
+    )
+
     # history용 문자열 구성
     def _format_turn(turn: Dict[str, str]) -> str:
         r = (turn.get("role") or "").lower()
         c = (turn.get("content") or "").strip()
         if not c:
             return ""
-        label = "사용자" if r == "user" else ("시스템" if r == "system" else "어시스턴트")
+        label = (
+            "사용자" if r == "user" else ("시스템" if r == "system" else "어시스턴트")
+        )
         return f"[{label}] {c}"
+
     joined_history = "\n".join([s for s in map(_format_turn, history[-10:]) if s])
 
     formatted = prompt.format_messages(
@@ -1040,11 +1370,13 @@ def ask_stream(q: str, cid: Optional[str] = None):
         # Send preface first if exists so users can see source type immediately
         if preface:
             yield {"event": "token", "data": f"알림: {preface}\n\n"}
+        answer_acc: List[str] = []
         try:
             for chunk in model.stream(formatted):
                 piece = getattr(chunk, "content", "") or ""
                 if piece:
                     yield {"event": "token", "data": piece}
+                    answer_acc.append(piece)
         except Exception as e:
             yield {"event": "error", "data": str(e)}
 
@@ -1062,13 +1394,28 @@ def ask_stream(q: str, cid: Optional[str] = None):
                 saved_cid = cid
                 if not saved_cid:
                     # cid가 없으면 어시스턴트만 기록하면서 cid 생성
-                    saved_cid = _append_turn(None, "assistant", "(streamed)")
+                    full_answer2 = (
+                        "".join(answer_acc)
+                        if "answer_acc" in locals() and answer_acc
+                        else "(streamed)"
+                    )
+                    saved_cid = _append_turn(None, "assistant", full_answer2)
                 else:
-                    _append_turn(saved_cid, "assistant", "(streamed)")
+                    full_answer2 = (
+                        "".join(answer_acc)
+                        if "answer_acc" in locals() and answer_acc
+                        else "(streamed)"
+                    )
+                    _append_turn(saved_cid, "assistant", full_answer2)
             else:
                 saved_cid = _append_turn(cid, "user", question)
                 # 스트리밍 시 전체 답변은 클라이언트가 조합하므로, 여기서는 간단 표기
-                _append_turn(saved_cid, "assistant", "(streamed)")
+                full_answer3 = (
+                    "".join(answer_acc)
+                    if "answer_acc" in locals() and answer_acc
+                    else "(streamed)"
+                )
+                _append_turn(saved_cid, "assistant", full_answer3)
             # 도메인 메모리 업데이트
             if selected_domain in ("python", "sql", "semiconductor"):
                 domain_memory[saved_cid] = selected_domain
@@ -1087,5 +1434,3 @@ if __name__ == "__main__":
     host = os.getenv("HOST", "0.0.0.0")
     port = int(os.getenv("PORT", "8000"))
     uvicorn.run("api_server:app", host=host, port=port, reload=False)
-
-
